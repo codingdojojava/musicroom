@@ -11,7 +11,6 @@ app.use(bodyParser.json());
 // static content 
 app.use(express.static(path.join(__dirname, "./musicroom/dist")));
 // setting up ejs and our views folder
-app.set('views', path.join(__dirname, './client/views'));
 require('./server/config/mongoose');
 
 var routes_setter = require('./server/config/routes.js');
