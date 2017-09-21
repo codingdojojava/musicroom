@@ -5,7 +5,7 @@
 <a [routerLink]="['/register']">Register</a>
 <a [routerLink]="['/logout']">Logout</a>
 
-
+<router-outlet></router-outlet>
 <div>
   <input type="text" #msgInput name="" value="">
   <button (click)="sendMsg(msgInput.value)">Send</button>

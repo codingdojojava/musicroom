@@ -1,3 +1,4 @@
+import { User } from './../models/user';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
+  user = new User();
   constructor() { }
 
   ngOnInit() {
+  }
+
+  loginUser() {
+    console.log('login User');
   }
 
 }
