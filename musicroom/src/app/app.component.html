@@ -5,6 +5,11 @@
 <a [routerLink]="['/register']">Register</a>
 <a [routerLink]="['/logout']">Logout</a>
 
+<!--<form (submit) = "redirectToSearchPageWithSearchVal()">
+  <input type="text" name="search" placeholder="Search" [(ngModel)]="searchVal" #searchVal = "ngModel" />
+  <input type="submit" value="Search" />
+</form>-->
+
 <router-outlet></router-outlet>
 <div>
   <input type="text" #msgInput name="" value="">
