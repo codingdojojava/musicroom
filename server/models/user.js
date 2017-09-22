@@ -38,6 +38,9 @@ var UserSchema = new mongoose.Schema({
         required: [true, 'Password is required'],
         minlength: [8, 'Last name must have at least 8 characters']
     },
+    description: {
+        type: String,
+    },
     favoriteSongs: [{type: Schema.Types.ObjectId, ref: 'Song'}],
     joinedRooms: [{type: Schema.Types.ObjectId, ref: 'MusicRoom'}],
     ownedRooms: [{type: Schema.Types.ObjectId, ref: 'MusicRoom'}],

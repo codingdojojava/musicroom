@@ -14,6 +14,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LogoutComponent } from './logout/logout.component';
+import { SearchManagerComponent } from './search-manager/search-manager.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
 
@@ -26,6 +27,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
     LoginComponent,
     RegistrationComponent,
     LogoutComponent,
+    SearchManagerComponent,
   ],
   imports: [
     BrowserModule,

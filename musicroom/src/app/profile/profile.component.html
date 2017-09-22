@@ -1,3 +1,14 @@
-<p>
-  profile works!
-</p>
+<div *ngIf="currentUser">
+  <h1>Current User's Profile</h1>
+  <h2>Username: {{currentUser.username}}</h2>
+  <p>Email: {{currentUser.email}}</p>
+  <p>First Name: {{currentUser.firstName}}</p>
+  <p>Last Name: {{currentUser.lastName}}</p>
+  <p>Description: {{currentUser.description}}</p>
+  <h3>Friends</h3>
+  <ul>
+    <li></li>
+  </ul>
+</div>
+
+<app-search-manager></app-search-manager>

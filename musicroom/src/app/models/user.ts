@@ -6,6 +6,7 @@ export class User {
         public firstName: string = '',
         public lastName: string = '',
         public password: string = '',
+        public description: string = '',
         public favoriteSongs = [],
         public joinedRooms = [],
         public ownedRooms = [],
