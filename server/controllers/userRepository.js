@@ -80,7 +80,7 @@ module.exports = {
     },
     getUserByUserId: (req, res) => {
         console.log('server getting user by id');
-        User.findOne({userId: req.body.userId})
+        User.findOne({userId: req.params.id})
             .populate('friends favoriteSongs joinedRooms ownedRooms')
             .exec((error, foundUser) => {
                 if(error){

@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   msg = "";
+  searchVal='';
   constructor(private chatService:ChatService) { }
 
   ngOnInit() {
@@ -21,5 +22,9 @@ export class AppComponent {
 
   sendMsg(msg){
      this.chatService.sendMessage(msg);
+  }
+
+  redirectToSearchPageWithSearchVal() {
+    console.log('redirecting to Search page with keyword SearchVal');
   }
 }

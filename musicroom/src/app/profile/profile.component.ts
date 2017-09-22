@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  currentUser;
+  currentUser: User;
   constructor(private _apicallService: ApiCallService, private _router: Router) {
     this.getCurrentUserInSession();
    }
@@ -24,6 +24,7 @@ export class ProfileComponent implements OnInit {
         if (data) {
           console.log('success getting current user');
           this.currentUser = data;
+          console.log(this.currentUser);
         } else {
           console.log('user not in session');
           this._router.navigate(['']);
