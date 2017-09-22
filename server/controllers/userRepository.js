@@ -10,7 +10,7 @@ module.exports = {
             if (error) {
                 console.log('something went wrong');
             } else {
-                if (users) {
+                if(users && users.length > 0) {
                     console.log('users true, got all users, now updating newUser id');
                     newUserId = users[0].userId + 1;
                 }
