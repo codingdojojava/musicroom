@@ -57,16 +57,40 @@ module.exports = {
     getCurrentUser: (req, res) => {
         console.log('server getting current user');
         if(req.session.currentUser) {
-            res.json(req.session.currentUser)
+            User.findOne({_id: req.session.currentUser._id})
+                .populate('friends favoriteSongs joinedRooms ownedRooms')
+                .exec((error, foundUser) => {
+                    if (foundUser) {
+                        console.log('found current User');
+                        res.json(foundUser);
+                    } else {
+                        console.log('not found current User');
+                        res.json(false);
+                    }
+                });
         } else {
+            console.log('server did not find a user in session');
             res.json(false);
         }
     },
     logoutUser: (req, res) => {
         console.log('server logging out user');
+        delete req.session.currentUser;
+        res.json(true);
     },
-    getUser: (req, res) => {
-        console.log('server logging out user');
+    getUserByUserId: (req, res) => {
+        console.log('server getting user by id');
+        User.findOne({userId: req.body.userId})
+            .populate('friends favoriteSongs joinedRooms ownedRooms')
+            .exec((error, foundUser) => {
+                if(error){
+                    console.log('server error getting user');
+                    console.log(error);
+                } else {
+                    console.log('server success getting user');
+                    res.json(foundUser);
+                }
+            });
     },
     addAFriendToCurrentUser: (req, res) => {
         console.log('server adding a friend to user');
