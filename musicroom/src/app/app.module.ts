@@ -6,13 +6,14 @@ import { AppComponent } from './app.component';
 import { TestComponent } from './test/test.component';
 import { ApiCallService } from './api-call.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms'; // <-- Import FormsModule
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // <-- Import FormsModule
 import { HttpModule } from '@angular/http'; // <-- Import HttpModule
 import { IndexComponent } from './index/index.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { LogoutComponent } from './logout/logout.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
 
@@ -24,13 +25,15 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
     ProfileComponent,
     LoginComponent,
     RegistrationComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SocketIoModule.forRoot(config),
     FormsModule,
-    HttpModule
+    HttpModule,
+    ReactiveFormsModule
   ],
   providers: [
     ChatService,
