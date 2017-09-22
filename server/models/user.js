@@ -1,4 +1,5 @@
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
 var UserSchema = new mongoose.Schema({
@@ -8,7 +9,8 @@ var UserSchema = new mongoose.Schema({
     username: {
         type: String,
         required: [true, 'Username is required'],
-        minlength: [5, 'Username must have at least 5 characters']
+        minlength: [5, 'Username must have at least 5 characters'],
+        unique: true
     },
     email: {
         type: String,
@@ -41,5 +43,12 @@ var UserSchema = new mongoose.Schema({
     ownedRooms: [{type: Schema.Types.ObjectId, ref: 'MusicRoom'}],
     friends: [{type: Schema.Types.ObjectId, ref: 'User'}],
 }, {timestamps: true});
+
+UserSchema.pre('save', function(done){
+    this.password=bcrypt.hashSync(this.password, bcrypt.genSaltSync(8));
+    this.hashed = true;
+    done();
+})
+
 
 var User = mongoose.model('User', UserSchema);
