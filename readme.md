@@ -42,6 +42,7 @@ User
  * favoriteSongs - array ref: Song
  * joinedRooms - array ref: MusicRoom
  * ownedRooms - array ref: MusicRoom
+ * friends - array ref: User
 
 MusicRoom
  * roomId - number
