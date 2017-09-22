@@ -1,6 +1,9 @@
 <fieldset>
   <legend>Registration</legend>
-  <form (submit)="registerUser()">
+    <div style="color: red;" *ngIf="isDuplicate">
+    <p *ngIf="username.errors.required">Username has already been taken.</p> 
+  </div>
+  <form (submit)="registerUser(); form.reset()" #form="ngForm" >
     <p>
       <label>Username: 
         <input 

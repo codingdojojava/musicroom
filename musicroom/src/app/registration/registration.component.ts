@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class RegistrationComponent implements OnInit {
   user: User = new User();
+  isDuplicate = false;
   constructor(private _apicallService: ApiCallService, private _router: Router) {
     console.log('hellooo registrations!!');
    }
@@ -22,10 +23,19 @@ export class RegistrationComponent implements OnInit {
     console.log(this.user);
     this._apicallService.registerAUser(this.user)
       .then((data) => {
-        console.log('success registering user');
         console.log(data);
-        this.user = new User();
-        this._router.navigate(['/login']);
+        if (data.code) {
+          if (data.code === 11000) {
+            console.log('duplicate data please try again');
+            this.isDuplicate = true;
+            this.user = new User();
+          }
+        } else {
+          console.log('success registering user');
+          this.isDuplicate = false;
+          this.user = new User();
+          this._router.navigate(['/login']);
+        }
       })
       .catch((error) => {
         console.log('error registering user');

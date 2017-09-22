@@ -27,4 +27,11 @@ export class ApiCallService {
       .toPromise();
   }
 
+  logoutUser() {
+    console.log('service logging out current user');
+    return this._http.get('/api/users/logout')
+      .map(response => response.json())
+      .toPromise();
+  }
+
 }
