@@ -37,4 +37,29 @@ export class ProfileComponent implements OnInit {
       });
   }
 
+  acceptInvite(invite_id) {
+    console.log('controller accepting invite');
+    const receivedInvites = this.currentUser.received_invites;
+    for (const invite of receivedInvites) {
+      if (invite._id === invite_id) {
+        console.log('found invite');
+        const inviteId = { inviteId : invite_id };
+        this._apicallService.addFriendAndUpdateReceivedInvite(inviteId)
+          .then(data => {
+            console.log('then response addFriendAndUpdateReceivedInvite');
+            console.log(data);
+            this.getCurrentUserInSession();
+          })
+          .catch(error => {
+            console.log('catch response addFriendAndUpdateReceivedInvite');
+            console.log(error);
+          });
+      }
+    }
+  }
+
+  rejectInvite() {
+    console.log('controller rejecting invite');
+  }
+
 }

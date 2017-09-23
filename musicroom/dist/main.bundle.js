@@ -43,44 +43,50 @@ var ApiCallService = (function () {
         this._http = _http;
     }
     ApiCallService.prototype.registerAUser = function (userData) {
-        console.log('service sending user data for registration');
+        // console.log('service sending user data for registration');
         return this._http.post('/api/users/register', userData)
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     ApiCallService.prototype.loginUser = function (userData) {
-        console.log('service sending user data for login');
+        // console.log('service sending user data for login');
         return this._http.post('/api/users/login', userData)
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     ApiCallService.prototype.getCurrentUserInSession = function () {
-        console.log('service getting current user session');
+        // console.log('service getting current user session');
         return this._http.get('/api/users/current')
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     ApiCallService.prototype.logoutUser = function () {
-        console.log('service logging out current user');
+        // console.log('service logging out current user');
         return this._http.get('/api/users/logout')
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     ApiCallService.prototype.getAllUsers = function () {
-        console.log('service getting all users');
+        // console.log('service getting all users');
         return this._http.get('/api/users')
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     ApiCallService.prototype.getUserByUserId = function (userParams) {
-        console.log('service getting users by id');
+        // console.log('service getting users by id');
         return this._http.get('/api/users/' + userParams)
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     ApiCallService.prototype.sendInviteToUserById = function (userIdData) {
-        console.log('service sending invite to user by id');
+        // console.log('service sending invite to user by id');
         return this._http.post('/api/users/invite', userIdData)
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    ApiCallService.prototype.addFriendAndUpdateReceivedInvite = function (inviteData) {
+        // console.log('service adding friend to user and updating received invites list');
+        return this._http.post('/api/users/friend/accept', inviteData)
             .map(function (response) { return response.json(); })
             .toPromise();
     };
@@ -217,8 +223,8 @@ var AppComponent = (function () {
         this.chatService
             .getMessage()
             .subscribe(function (data) {
-            console.log("GOT IT");
-            // console.log(data);
+            // console.log("GOT IT");
+            console.log(data);
             _this.msg = data;
         });
     };
@@ -226,31 +232,31 @@ var AppComponent = (function () {
         this.chatService.sendMessage(msg);
     };
     AppComponent.prototype.searchUsers = function () {
-        console.log('hello');
+        // console.log('hello');
         this._searchService.searchUsers(this.searchVal);
     };
     AppComponent.prototype.redirectToSearchPageWithSearchVal = function () {
-        console.log('redirecting to Search page with keyword SearchVal');
-        console.log(this.searchVal);
+        // console.log('redirecting to Search page with keyword SearchVal');
+        // console.log(this.searchVal);
         this._route.navigate(['search', 'results', { q: this.searchVal }]);
     };
     AppComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            console.log(data);
+            // console.log(data);
             if (data) {
-                console.log('success getting current user');
+                // console.log('success getting current user');
                 _this.currentUser = data;
             }
             else {
-                console.log('user not in session');
+                // console.log('user not in session');
                 _this.currentUser = false;
             }
         })
             .catch(function (error) {
-            console.log('error getting current user');
-            console.log(error);
+            // console.log('error getting current user');
+            // console.log(error);
         });
     };
     return AppComponent;
@@ -468,19 +474,19 @@ var DashboardComponent = (function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            console.log(data);
+            // console.log(data);
             if (data) {
-                console.log('success getting current user');
+                // console.log('success getting current user');
                 _this.currentUser = data;
             }
             else {
-                console.log('user not in session');
+                // console.log('user not in session');
                 _this._router.navigate(['']);
             }
         })
             .catch(function (error) {
-            console.log('error getting current user');
-            console.log(error);
+            // console.log('error getting current user');
+            // console.log(error);
             _this._router.navigate(['']);
         });
     };
@@ -582,7 +588,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<fieldset>\n  <legend>Login</legend>\n<form (submit)=\"loginUser()\">\n  <p>\n    <label>Username: \n      <input type=\"text\" name=\"username\" required [(ngModel)] = \"user.username\" #username=\"ngModel\"/>\n    </label>\n  </p>\n    <div style=\"color: red;\" *ngIf=\"!username.valid && (username.dirty || username.touched)\">\n      <p *ngIf=\"username.errors.required\">Username is Required</p> \n    </div>\n  <p>\n    <label>Password: \n      <input type=\"password\" name=\"password\" required [(ngModel)] = \"user.password\" #password=\"ngModel\" />\n    </label>\n  </p>\n    <div style=\"color: red;\" *ngIf=\"!password.valid && (password.dirty || password.touched)\">\n      <p *ngIf=\"password.errors.required\">Password is Required</p> \n    </div>\n  <input type=\"submit\" value=\"Login\" [disabled] = \"password.invalid || username.invalid\" />\n</form>\n</fieldset>\n"
+module.exports = "<fieldset>\n  <legend>Login</legend>\n<div style=\"color: red;\" *ngIf=\"incorrectLogin\">\n  <p>Invalid Login Credentials. Please try again.</p> \n</div>\n<form (submit)=\"loginUser(); form.reset()\" #form=\"ngForm\">\n  <p>\n    <label>Username: \n      <input type=\"text\" name=\"username\" required [(ngModel)] = \"user.username\" #username=\"ngModel\"/>\n    </label>\n  </p>\n    <div style=\"color: red;\" *ngIf=\"!username.valid && (username.dirty || username.touched)\">\n      <p *ngIf=\"username.errors.required\">Username is Required</p> \n    </div>\n  <p>\n    <label>Password: \n      <input type=\"password\" name=\"password\" required [(ngModel)] = \"user.password\" #password=\"ngModel\" />\n    </label>\n  </p>\n    <div style=\"color: red;\" *ngIf=\"!password.valid && (password.dirty || password.touched)\">\n      <p *ngIf=\"password.errors.required\">Password is Required</p> \n    </div>\n  <input type=\"submit\" value=\"Login\" [disabled] = \"password.invalid || username.invalid\" />\n</form>\n</fieldset>\n"
 
 /***/ }),
 
@@ -616,23 +622,31 @@ var LoginComponent = (function () {
         this._router = _router;
         this._appComponent = _appComponent;
         this.user = new __WEBPACK_IMPORTED_MODULE_3__models_user__["a" /* User */]();
+        this.incorrectLogin = false;
     }
     LoginComponent.prototype.ngOnInit = function () {
     };
     LoginComponent.prototype.loginUser = function () {
         var _this = this;
-        console.log('login User');
-        console.log(this.user);
+        // console.log('login User');
+        // console.log(this.user);
         this._apicallService.loginUser(this.user)
             .then(function (data) {
-            console.log('success logging in user');
-            console.log(data);
-            _this._appComponent.getCurrentUserInSession();
-            _this._router.navigate(['/home']);
+            // console.log('success logging in user');
+            // console.log(data);
+            if (!data) {
+                _this.incorrectLogin = true;
+                _this.user = new __WEBPACK_IMPORTED_MODULE_3__models_user__["a" /* User */]();
+            }
+            else {
+                _this.incorrectLogin = false;
+                _this._appComponent.getCurrentUserInSession();
+                _this._router.navigate(['/home']);
+            }
         })
             .catch(function (error) {
-            console.log('error logging in user');
-            console.log(error);
+            // console.log('error logging in user');
+            // console.log(error);
         });
     };
     return LoginComponent;
@@ -706,12 +720,12 @@ var LogoutComponent = (function () {
         this._appComponent = _appComponent;
         this._apicallService.logoutUser()
             .then(function (data) {
-            console.log('success logging user out');
+            // console.log('success logging user out');
             _this._appComponent.getCurrentUserInSession();
             _this._router.navigate(['']);
         })
             .catch(function (error) {
-            console.log('error logging user out');
+            // console.log('error logging user out');
             _this._router.navigate(['']);
         });
     }
@@ -739,7 +753,8 @@ var _a, _b, _c;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return User; });
 var User = (function () {
-    function User(userId, username, email, firstName, lastName, password, description, favoriteSongs, joinedRooms, ownedRooms, friends, received_invites, sent_invites, created_at, updated_at) {
+    function User(_id, userId, username, email, firstName, lastName, password, description, favoriteSongs, joinedRooms, ownedRooms, friends, received_invites, sent_invites, created_at, updated_at) {
+        if (_id === void 0) { _id = null; }
         if (userId === void 0) { userId = null; }
         if (username === void 0) { username = ''; }
         if (email === void 0) { email = ''; }
@@ -755,6 +770,7 @@ var User = (function () {
         if (sent_invites === void 0) { sent_invites = []; }
         if (created_at === void 0) { created_at = new Date(); }
         if (updated_at === void 0) { updated_at = new Date(); }
+        this._id = _id;
         this.userId = userId;
         this.username = username;
         this.email = email;
@@ -835,11 +851,11 @@ var OtherUserProfileComponent = (function () {
         var _this = this;
         this.subscription = this._route.paramMap
             .switchMap(function (params) {
-            console.log('got params id: ' + params.get('id'));
+            // console.log('got params id: ' + params.get('id'));
             return _this._apicallService.getUserByUserId(params.get('id'));
         }).subscribe(function (user) {
             _this.user = user;
-            console.log(_this.user);
+            // console.log(this.user);
         });
     };
     return OtherUserProfileComponent;
@@ -879,7 +895,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/profile/profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"currentUser\">\n  <h1>Current User's Profile</h1>\n  <h2>Username: {{currentUser.username}}</h2>\n  <p>Email: {{currentUser.email}}</p>\n  <p>First Name: {{currentUser.firstName}}</p>\n  <p>Last Name: {{currentUser.lastName}}</p>\n  <p>Description: {{currentUser.description}}</p>\n  <h3>Invites</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr>\n      <td>usernames goes here</td>\n      <td>\n        <a href=\"#\">Accept Invite</a>\n        <a href=\"#\">Reject Invite</a>\n      </td>\n    </tr>\n  </table>\n  <h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr>\n      <td>usernames goes here</td>\n      <td>\n        <a href=\"#\">Show Profile</a>\n        <a href=\"#\">Remove Friend</a>\n      </td>\n    </tr>\n  </table>\n</div>\n\n"
+module.exports = "<div *ngIf=\"currentUser\">\n  <h1>Current User's Profile</h1>\n  <h2>Username: {{currentUser.username}}</h2>\n  <p>Email: {{currentUser.email}}</p>\n  <p>First Name: {{currentUser.firstName}}</p>\n  <p>Last Name: {{currentUser.lastName}}</p>\n  <p>Description: {{currentUser.description}}</p>\n  <h3>Invites</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let invite of currentUser.received_invites\">\n      <td>{{invite.username}}</td>\n      <td>\n        <button (click)=\"acceptInvite(invite._id)\">Accept Invite</button>\n        <a href=\"#\">Reject Invite</a>\n      </td>\n    </tr>\n  </table>\n  <h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let friend of currentUser.friends\">\n      <td>\n        <a [routerLink]=\"['/home/users', friend.userId]\">{{friend.username}}</a>\n      </td>\n      <td>\n        <a href=\"#\">Remove Friend</a>\n      </td>\n    </tr>\n  </table>\n</div>\n\n"
 
 /***/ }),
 
@@ -932,6 +948,31 @@ var ProfileComponent = (function () {
             _this._router.navigate(['']);
         });
     };
+    ProfileComponent.prototype.acceptInvite = function (invite_id) {
+        var _this = this;
+        console.log('controller accepting invite');
+        var receivedInvites = this.currentUser.received_invites;
+        for (var _i = 0, receivedInvites_1 = receivedInvites; _i < receivedInvites_1.length; _i++) {
+            var invite = receivedInvites_1[_i];
+            if (invite._id === invite_id) {
+                console.log('found invite');
+                var inviteId = { inviteId: invite_id };
+                this._apicallService.addFriendAndUpdateReceivedInvite(inviteId)
+                    .then(function (data) {
+                    console.log('then response addFriendAndUpdateReceivedInvite');
+                    console.log(data);
+                    _this.getCurrentUserInSession();
+                })
+                    .catch(function (error) {
+                    console.log('catch response addFriendAndUpdateReceivedInvite');
+                    console.log(error);
+                });
+            }
+        }
+    };
+    ProfileComponent.prototype.rejectInvite = function () {
+        console.log('controller rejecting invite');
+    };
     return ProfileComponent;
 }());
 ProfileComponent = __decorate([
@@ -969,7 +1010,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/registration/registration.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<fieldset>\n  <legend>Registration</legend>\n    <div style=\"color: red;\" *ngIf=\"isDuplicate\">\n    <p *ngIf=\"username.errors.required\">Username has already been taken.</p> \n  </div>\n  <form (submit)=\"registerUser(); form.reset()\" #form=\"ngForm\" >\n    <p>\n      <label>Username: \n        <input \n          type=\"text\" \n          name=\"username\" \n          required \n          minlength=\"5\" \n          [(ngModel)]=\"user.username\"\n          #username='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!username.valid && (username.dirty || username.touched)\">\n    <p *ngIf=\"username.errors.required\">Username is Required</p> \n    <p *ngIf=\"username.errors.minlength\">Username must be at least 5 characters long</p> \n  </div>\n    <p>\n      <label>Email: \n          <input \n            type=\"text\" \n            name=\"email\" \n            required \n            pattern='(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))'\n            [(ngModel)]=\"user.email\"\n            #email='ngModel'\n          />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!email.valid && (email.dirty || email.touched)\">\n    <p *ngIf=\"email.errors.required\">Email is Required</p> \n    <p *ngIf=\"email.errors.pattern\">Please enter a valid email</p> \n  </div>\n    <p>\n      <label>First Name: \n        <input \n          type=\"text\" \n          name=\"firstName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"user.firstName\"\n          #firstName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!firstName.valid && (firstName.dirty || firstName.touched)\">\n    <p *ngIf=\"firstName.errors.required\">First Name is Required</p> \n    <p *ngIf=\"firstName.errors.minlength\">First Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Last Name: \n        <input \n          type=\"text\" \n          name=\"lastName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"user.lastName\"\n          #lastName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!lastName.valid && (lastName.dirty || lastName.touched)\">\n    <p *ngIf=\"lastName.errors.required\">Last Name is Required</p> \n    <p *ngIf=\"lastName.errors.minlength\">Last Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Password: \n        <input \n          type=\"password\" \n          name=\"password\" \n          required \n          minlength=\"8\" \n          [(ngModel)]=\"user.password\"\n          #password='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!password.valid && (password.dirty || password.touched)\">\n    <p *ngIf=\"password.errors.required\">Password is Required</p> \n    <p *ngIf=\"password.errors.minlength\">Password must be at least 8 characters long</p> \n  </div>\n    <p>\n      <label>Password Confirmation: \n        <input type=\"password\" name=\"passwordConfirmation\" required [(ngModel)] = \"user.passwordConfirmation\" pattern=\"{{user.password}}\" #passwordConfirmation=\"ngModel\"/>\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!passwordConfirmation.valid && (passwordConfirmation.dirty || passwordConfirmation.touched)\">\n    <p *ngIf=\"passwordConfirmation.errors.required\">Password Confirmation is Required</p> \n    <p *ngIf=\"passwordConfirmation.errors.pattern\">Password Confirmation must match with Password</p> \n  </div>\n    <input type=\"submit\" value=\"Register\" [disabled] = \"password.invalid || lastName.invalid || firstName.invalid || passwordConfirmation.invalid || email.invalid || username.invalid\">\n  </form>\n</fieldset>\n"
+module.exports = "<fieldset>\n  <legend>Registration</legend>\n    <div style=\"color: red;\" *ngIf=\"isDuplicate && username\">\n    <p *ngIf=\"username.errors.required\">Username has already been taken.</p> \n  </div>\n  <form (submit)=\"registerUser(); form.reset()\" #form=\"ngForm\" >\n    <p>\n      <label>Username: \n        <input \n          type=\"text\" \n          name=\"username\" \n          required \n          minlength=\"5\" \n          [(ngModel)]=\"user.username\"\n          #username='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!username.valid && (username.dirty || username.touched)\">\n    <p *ngIf=\"username.errors.required\">Username is Required</p> \n    <p *ngIf=\"username.errors.minlength\">Username must be at least 5 characters long</p> \n  </div>\n    <p>\n      <label>Email: \n          <input \n            type=\"text\" \n            name=\"email\" \n            required \n            pattern='(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))'\n            [(ngModel)]=\"user.email\"\n            #email='ngModel'\n          />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!email.valid && (email.dirty || email.touched)\">\n    <p *ngIf=\"email.errors.required\">Email is Required</p> \n    <p *ngIf=\"email.errors.pattern\">Please enter a valid email</p> \n  </div>\n    <p>\n      <label>First Name: \n        <input \n          type=\"text\" \n          name=\"firstName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"user.firstName\"\n          #firstName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!firstName.valid && (firstName.dirty || firstName.touched)\">\n    <p *ngIf=\"firstName.errors.required\">First Name is Required</p> \n    <p *ngIf=\"firstName.errors.minlength\">First Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Last Name: \n        <input \n          type=\"text\" \n          name=\"lastName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"user.lastName\"\n          #lastName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!lastName.valid && (lastName.dirty || lastName.touched)\">\n    <p *ngIf=\"lastName.errors.required\">Last Name is Required</p> \n    <p *ngIf=\"lastName.errors.minlength\">Last Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Password: \n        <input \n          type=\"password\" \n          name=\"password\" \n          required \n          minlength=\"8\" \n          [(ngModel)]=\"user.password\"\n          #password='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!password.valid && (password.dirty || password.touched)\">\n    <p *ngIf=\"password.errors.required\">Password is Required</p> \n    <p *ngIf=\"password.errors.minlength\">Password must be at least 8 characters long</p> \n  </div>\n    <p>\n      <label>Password Confirmation: \n        <input type=\"password\" name=\"passwordConfirmation\" required [(ngModel)] = \"user.passwordConfirmation\" pattern=\"{{user.password}}\" #passwordConfirmation=\"ngModel\"/>\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!passwordConfirmation.valid && (passwordConfirmation.dirty || passwordConfirmation.touched)\">\n    <p *ngIf=\"passwordConfirmation.errors.required\">Password Confirmation is Required</p> \n    <p *ngIf=\"passwordConfirmation.errors.pattern\">Password Confirmation must match with Password</p> \n  </div>\n    <input type=\"submit\" value=\"Register\" [disabled] = \"password.invalid || lastName.invalid || firstName.invalid || passwordConfirmation.invalid || email.invalid || username.invalid\">\n  </form>\n</fieldset>\n"
 
 /***/ }),
 
@@ -1001,34 +1042,35 @@ var RegistrationComponent = (function () {
         this._router = _router;
         this.user = new __WEBPACK_IMPORTED_MODULE_1__models_user__["a" /* User */]();
         this.isDuplicate = false;
-        console.log('hellooo registrations!!');
+        // console.log('hellooo registrations!!');
     }
     RegistrationComponent.prototype.ngOnInit = function () {
     };
     RegistrationComponent.prototype.registerUser = function () {
         var _this = this;
-        console.log('registering User');
-        console.log(this.user);
+        // console.log('registering User');
+        // console.log(this.user);
         this._apicallService.registerAUser(this.user)
             .then(function (data) {
-            console.log(data);
+            // console.log(data);
             if (data.code) {
+                console.log(data.code);
                 if (data.code === 11000) {
-                    console.log('duplicate data please try again');
+                    // console.log('duplicate data please try again');
                     _this.isDuplicate = true;
-                    _this.user = new __WEBPACK_IMPORTED_MODULE_1__models_user__["a" /* User */]();
                 }
+                _this.user = new __WEBPACK_IMPORTED_MODULE_1__models_user__["a" /* User */]();
             }
             else {
-                console.log('success registering user');
+                // console.log('success registering user');
                 _this.isDuplicate = false;
                 _this.user = new __WEBPACK_IMPORTED_MODULE_1__models_user__["a" /* User */]();
                 _this._router.navigate(['/login']);
             }
         })
             .catch(function (error) {
-            console.log('error registering user');
-            console.log(error);
+            // console.log('error registering user');
+            // console.log(error);
         });
     };
     return RegistrationComponent;
@@ -1068,7 +1110,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/search-manager/search-manager.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<h1>Search User Results</h1>\n<table>\n  <tr>\n    <th>Username</th>\n    <th>Actions</th>\n  </tr>\n  <tr *ngFor=\"let user of showSearchResultUsers\">\n      <td *ngIf=\"user && user._id != currentUser._id\">{{user.username}}</td>\n      <td *ngIf=\"user && user._id != currentUser._id\">\n        <a [routerLink]=\"['/home/users', user.userId]\">Show Profile</a>\n        <button *ngIf=\"!user.received_invites.includes(currentUser._id)\" (click)=\"sendInvite(user.userId)\">Send Invite</button>\n        <span *ngIf=\"user.received_invites.includes(currentUser._id)\">Invite Sent</span>\n      </td>\n  </tr>\n</table>\n\n\n\n"
+module.exports = "\n<h1>Search User Results</h1>\n<table>\n  <tr>\n    <th>Username</th>\n    <th>Actions</th>\n  </tr>\n  <tr *ngFor=\"let user of showSearchResultUsers\">\n      <td *ngIf=\"user && user._id != currentUser._id\">{{user.username}}</td>\n      <td *ngIf=\"user && user._id != currentUser._id\">\n        <a [routerLink]=\"['/home/users', user.userId]\">Show Profile</a>\n        <button *ngIf=\"!user.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(user.friends)\" (click)=\"sendInvite(user.userId)\">Send Invite</button>\n        <span *ngIf=\"user.received_invites.includes(currentUser._id)\">Invite Sent</span>\n        <span *ngIf=\"isFriendOfCurrentUser(user.friends)\">Friend</span>\n      </td>\n  </tr>\n</table>\n\n\n\n"
 
 /***/ }),
 
@@ -1113,15 +1155,15 @@ var SearchManagerComponent = (function () {
         var _this = this;
         this.subscription2 = this._route.paramMap.subscribe(function (params) {
             _this.searchVal = params.get('q');
-            console.log(_this.searchVal);
+            // console.log(this.searchVal);
         });
         this.getAllUsers(this.searchVal);
     };
     SearchManagerComponent.prototype.subscribeToSearchVal = function () {
         var _this = this;
         this.subscription = this._searchService.searchValue$.subscribe(function (search) {
-            console.log('hiiiii');
-            console.log(search);
+            // console.log('hiiiii');
+            // console.log(search);
             _this.showSearchResultUsers = _this.filterUsers(_this.searchResults, search);
         });
     };
@@ -1132,38 +1174,38 @@ var SearchManagerComponent = (function () {
         }
         this._apicallService.getAllUsers()
             .then(function (data) {
-            console.log('success then response getting all users');
+            // console.log('success then response getting all users');
             _this.searchResults = data;
             _this.showSearchResultUsers = _this.filterUsers(data, search);
             console.log(_this.showSearchResultUsers);
         })
             .catch(function (error) {
-            console.log('error catch response getting all users');
-            console.log(error);
+            // console.log('error catch response getting all users');
+            // console.log(error);
         });
     };
     SearchManagerComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            console.log(data);
+            // console.log(data);
             if (data) {
-                console.log('success getting current user');
+                // console.log('success getting current user');
                 _this.currentUser = data;
             }
             else {
-                console.log('user not in session');
+                // console.log('user not in session');
                 _this._router.navigate(['']);
             }
         })
             .catch(function (error) {
-            console.log('error getting current user');
-            console.log(error);
+            // console.log('error getting current user');
+            // console.log(error);
             _this._router.navigate(['']);
         });
     };
     SearchManagerComponent.prototype.filterUsers = function (data, val) {
-        console.log('filtering....');
+        // console.log('filtering....');
         return data.filter(function (index) {
             return index.username.toLowerCase().includes(val.toLowerCase()) || index.firstName.toLowerCase().includes(val.toLowerCase()) || index.lastName.toLowerCase().includes(val.toLowerCase());
         });
@@ -1173,13 +1215,24 @@ var SearchManagerComponent = (function () {
         var user_Id = { userId: userId };
         this._apicallService.sendInviteToUserById(user_Id)
             .then(function (data) {
-            console.log('sucess then response sendInvite');
-            console.log(data);
+            // console.log('sucess then response sendInvite');
+            // console.log(data);
             _this.getAllUsers(_this.searchVal);
         })
             .catch(function (error) {
-            console.log('error catch response sendInvite');
+            // console.log('error catch response sendInvite');
         });
+    };
+    SearchManagerComponent.prototype.isFriendOfCurrentUser = function (userFriends) {
+        var _this = this;
+        var friend = userFriends.find(function (index) {
+            return index._id === _this.currentUser._id;
+        });
+        // console.log(friend);
+        if (friend) {
+            return true;
+        }
+        return false;
     };
     SearchManagerComponent.prototype.ngAfterViewInit = function () {
     };

@@ -19,18 +19,18 @@ export class DashboardComponent implements OnInit {
   getCurrentUserInSession() {
     this._apicallService.getCurrentUserInSession()
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data) {
-          console.log('success getting current user');
+          // console.log('success getting current user');
           this.currentUser = data;
         } else {
-          console.log('user not in session');
+          // console.log('user not in session');
           this._router.navigate(['']);
         }
       })
       .catch((error) => {
-        console.log('error getting current user');
-        console.log(error);
+        // console.log('error getting current user');
+        // console.log(error);
         this._router.navigate(['']);
       });
   }

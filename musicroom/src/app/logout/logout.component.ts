@@ -13,12 +13,12 @@ export class LogoutComponent implements OnInit {
   constructor(private _apicallService: ApiCallService, private _router: Router, private _appComponent: AppComponent) {
     this._apicallService.logoutUser()
       .then(data => {
-        console.log('success logging user out');
+        // console.log('success logging user out');
         this._appComponent.getCurrentUserInSession();
         this._router.navigate(['']);
       })
       .catch(error => {
-        console.log('error logging user out');
+        // console.log('error logging user out');
         this._router.navigate(['']);
       });
    }

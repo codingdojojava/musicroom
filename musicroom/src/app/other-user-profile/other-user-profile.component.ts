@@ -22,11 +22,11 @@ export class OtherUserProfileComponent implements OnInit {
   subscribeToUserIdParams() {
     this.subscription = this._route.paramMap
       .switchMap(params => {
-        console.log('got params id: ' + params.get('id'));
+        // console.log('got params id: ' + params.get('id'));
         return this._apicallService.getUserByUserId(params.get('id'));
     }).subscribe(user => {
       this.user = user;
-      console.log(this.user);
+      // console.log(this.user);
     });
   }
 
