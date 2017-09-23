@@ -1,3 +1,4 @@
+import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
 import { SearchManagerComponent } from './search-manager/search-manager.component';
 import { LogoutComponent } from './logout/logout.component';
 import { RegistrationComponent } from './registration/registration.component';
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path: 'home', pathMatch: 'full', component: DashboardComponent },
   { path: 'home/profile', pathMatch: 'full', component: ProfileComponent },
   { path: 'logout', pathMatch: 'full', component: LogoutComponent },
-  { path: 'search/results', component: SearchManagerComponent }
+  { path: 'search/results', component: SearchManagerComponent },
+  { path: 'home/users/:id', component: OtherUserProfileComponent }
 ];
 
 @NgModule({

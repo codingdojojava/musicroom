@@ -66,6 +66,24 @@ var ApiCallService = (function () {
             .map(function (response) { return response.json(); })
             .toPromise();
     };
+    ApiCallService.prototype.getAllUsers = function () {
+        console.log('service getting all users');
+        return this._http.get('/api/users')
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    ApiCallService.prototype.getUserByUserId = function (userParams) {
+        console.log('service getting users by id');
+        return this._http.get('/api/users/' + userParams)
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    ApiCallService.prototype.sendInviteToUserById = function (userIdData) {
+        console.log('service sending invite to user by id');
+        return this._http.post('/api/users/invite', userIdData)
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
     return ApiCallService;
 }());
 ApiCallService = __decorate([
@@ -83,14 +101,16 @@ var _a;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -105,13 +125,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
+
 var routes = [
-    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_5__index_index_component__["a" /* IndexComponent */] },
-    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_2__login_login_component__["a" /* LoginComponent */] },
-    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_1__registration_registration_component__["a" /* RegistrationComponent */] },
-    { path: 'home', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_4__dashboard_dashboard_component__["a" /* DashboardComponent */] },
-    { path: 'home/profile', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_3__profile_profile_component__["a" /* ProfileComponent */] },
-    { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_0__logout_logout_component__["a" /* LogoutComponent */] }
+    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_7__index_index_component__["a" /* IndexComponent */] },
+    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_4__login_login_component__["a" /* LoginComponent */] },
+    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_3__registration_registration_component__["a" /* RegistrationComponent */] },
+    { path: 'home', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_6__dashboard_dashboard_component__["a" /* DashboardComponent */] },
+    { path: 'home/profile', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_5__profile_profile_component__["a" /* ProfileComponent */] },
+    { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_2__logout_logout_component__["a" /* LogoutComponent */] },
+    { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_1__search_manager_search_manager_component__["a" /* SearchManagerComponent */] },
+    { path: 'home/users/:id', component: __WEBPACK_IMPORTED_MODULE_0__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -119,9 +143,9 @@ var AppRoutingModule = (function () {
     return AppRoutingModule;
 }());
 AppRoutingModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_6__angular_core__["M" /* NgModule */])({
-        imports: [__WEBPACK_IMPORTED_MODULE_7__angular_router__["b" /* RouterModule */].forRoot(routes)],
-        exports: [__WEBPACK_IMPORTED_MODULE_7__angular_router__["b" /* RouterModule */]]
+    Object(__WEBPACK_IMPORTED_MODULE_8__angular_core__["M" /* NgModule */])({
+        imports: [__WEBPACK_IMPORTED_MODULE_9__angular_router__["c" /* RouterModule */].forRoot(routes)],
+        exports: [__WEBPACK_IMPORTED_MODULE_9__angular_router__["c" /* RouterModule */]]
     })
 ], AppRoutingModule);
 
@@ -132,7 +156,7 @@ AppRoutingModule = __decorate([
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Navigation goes here</h1>\n<a [routerLink]=\"['/home']\">Home</a>\n<a [routerLink]=\"['/home/profile']\">Profile</a>\n<a [routerLink]=\"['/login']\">Login</a>\n<a [routerLink]=\"['/register']\">Register</a>\n<a [routerLink]=\"['/logout']\">Logout</a>\n\n<form (submit) = \"redirectToSearchPageWithSearchVal()\">\n  <input type=\"text\" name=\"search\" placeholder=\"Search\" [(ngModel)]=\"searchVal\" (keyup) = \"searchUsers()\" />\n  <input type=\"submit\" value=\"Search Users\" />\n</form>\n\n<router-outlet></router-outlet>\n<div>\n  <input type=\"text\" #msgInput name=\"\" value=\"\">\n  <button (click)=\"sendMsg(msgInput.value)\">Send</button>\n  <br>\n  <p>{{msg}}  </p>\n</div>\nasdf"
+module.exports = "<h1>Nav Bar</h1>\n\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/login']\">Login</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/register']\">Register</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home']\">Home</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home/profile']\">Profile</a>\n  <div style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchPageWithSearchVal()\">\n      <input type=\"text\" name=\"search\" placeholder=\"Search\" [(ngModel)]=\"searchVal\" (keyup) = \"searchUsers()\" />\n      <input type=\"submit\" value=\"Search Users\" />\n    </form>\n  </div>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/search/results']\">Browse Users</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/logout']\">Logout</a>\n\n\n<router-outlet></router-outlet>\n<div>\n  <input type=\"text\" #msgInput name=\"\" value=\"\">\n  <button (click)=\"sendMsg(msgInput.value)\">Send</button>\n  <br>\n  <p>{{msg}}  </p>\n</div>\nasdf"
 
 /***/ }),
 
@@ -159,8 +183,11 @@ module.exports = module.exports.toString();
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -172,10 +199,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
+
+
 var AppComponent = (function () {
-    function AppComponent(chatService) {
+    function AppComponent(chatService, _route, _searchService, _apicallService) {
         this.chatService = chatService;
+        this._route = _route;
+        this._searchService = _searchService;
+        this._apicallService = _apicallService;
         this.msg = "";
+        this.searchVal = '';
+        this.getCurrentUserInSession();
     }
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -190,18 +225,46 @@ var AppComponent = (function () {
     AppComponent.prototype.sendMsg = function (msg) {
         this.chatService.sendMessage(msg);
     };
+    AppComponent.prototype.searchUsers = function () {
+        console.log('hello');
+        this._searchService.searchUsers(this.searchVal);
+    };
+    AppComponent.prototype.redirectToSearchPageWithSearchVal = function () {
+        console.log('redirecting to Search page with keyword SearchVal');
+        console.log(this.searchVal);
+        this._route.navigate(['search', 'results', { q: this.searchVal }]);
+    };
+    AppComponent.prototype.getCurrentUserInSession = function () {
+        var _this = this;
+        this._apicallService.getCurrentUserInSession()
+            .then(function (data) {
+            console.log(data);
+            if (data) {
+                console.log('success getting current user');
+                _this.currentUser = data;
+            }
+            else {
+                console.log('user not in session');
+                _this.currentUser = false;
+            }
+        })
+            .catch(function (error) {
+            console.log('error getting current user');
+            console.log(error);
+        });
+    };
     return AppComponent;
 }());
 AppComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
         selector: 'app-root',
         template: __webpack_require__("../../../../../src/app/app.component.html"),
         styles: [__webpack_require__("../../../../../src/app/app.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__chat_service__["a" /* ChatService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__search_service__["a" /* SearchService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _d || Object])
 ], AppComponent);
 
-var _a;
+var _a, _b, _c, _d;
 //# sourceMappingURL=app.component.js.map
 
 /***/ }),
@@ -229,6 +292,7 @@ var _a;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -245,6 +309,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
  // <-- Import FormsModule
  // <-- Import HttpModule
+
 
 
 
@@ -269,6 +334,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_14__registration_registration_component__["a" /* RegistrationComponent */],
             __WEBPACK_IMPORTED_MODULE_15__logout_logout_component__["a" /* LogoutComponent */],
             __WEBPACK_IMPORTED_MODULE_16__search_manager_search_manager_component__["a" /* SearchManagerComponent */],
+            __WEBPACK_IMPORTED_MODULE_17__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */],
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_7__angular_platform_browser__["a" /* BrowserModule */],
@@ -363,7 +429,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "You now in dashboard\n"
+module.exports = "<div>\n    <p>You are now in Home Page</p>\n</div>\n"
 
 /***/ }),
 
@@ -426,7 +492,7 @@ DashboardComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/dashboard/dashboard.component.html"),
         styles: [__webpack_require__("../../../../../src/app/dashboard/dashboard.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], DashboardComponent);
 
 var _a, _b;
@@ -525,10 +591,11 @@ module.exports = "<fieldset>\n  <legend>Login</legend>\n<form (submit)=\"loginUs
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_user__ = __webpack_require__("../../../../../src/app/models/user.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_user__ = __webpack_require__("../../../../../src/app/models/user.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -542,11 +609,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var LoginComponent = (function () {
-    function LoginComponent(_apicallService, _router) {
+    function LoginComponent(_apicallService, _router, _appComponent) {
         this._apicallService = _apicallService;
         this._router = _router;
-        this.user = new __WEBPACK_IMPORTED_MODULE_2__models_user__["a" /* User */]();
+        this._appComponent = _appComponent;
+        this.user = new __WEBPACK_IMPORTED_MODULE_3__models_user__["a" /* User */]();
     }
     LoginComponent.prototype.ngOnInit = function () {
     };
@@ -558,6 +627,7 @@ var LoginComponent = (function () {
             .then(function (data) {
             console.log('success logging in user');
             console.log(data);
+            _this._appComponent.getCurrentUserInSession();
             _this._router.navigate(['/home']);
         })
             .catch(function (error) {
@@ -568,15 +638,15 @@ var LoginComponent = (function () {
     return LoginComponent;
 }());
 LoginComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
         selector: 'app-login',
         template: __webpack_require__("../../../../../src/app/login/login.component.html"),
         styles: [__webpack_require__("../../../../../src/app/login/login.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__app_component__["a" /* AppComponent */]) === "function" && _c || Object])
 ], LoginComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=login.component.js.map
 
 /***/ }),
@@ -611,6 +681,133 @@ module.exports = "<p>\n  logout works!\n</p>\n"
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LogoutComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var LogoutComponent = (function () {
+    function LogoutComponent(_apicallService, _router, _appComponent) {
+        var _this = this;
+        this._apicallService = _apicallService;
+        this._router = _router;
+        this._appComponent = _appComponent;
+        this._apicallService.logoutUser()
+            .then(function (data) {
+            console.log('success logging user out');
+            _this._appComponent.getCurrentUserInSession();
+            _this._router.navigate(['']);
+        })
+            .catch(function (error) {
+            console.log('error logging user out');
+            _this._router.navigate(['']);
+        });
+    }
+    LogoutComponent.prototype.ngOnInit = function () {
+    };
+    return LogoutComponent;
+}());
+LogoutComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["o" /* Component */])({
+        selector: 'app-logout',
+        template: __webpack_require__("../../../../../src/app/logout/logout.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/logout/logout.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__app_component__["a" /* AppComponent */]) === "function" && _c || Object])
+], LogoutComponent);
+
+var _a, _b, _c;
+//# sourceMappingURL=logout.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/models/user.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return User; });
+var User = (function () {
+    function User(userId, username, email, firstName, lastName, password, description, favoriteSongs, joinedRooms, ownedRooms, friends, received_invites, sent_invites, created_at, updated_at) {
+        if (userId === void 0) { userId = null; }
+        if (username === void 0) { username = ''; }
+        if (email === void 0) { email = ''; }
+        if (firstName === void 0) { firstName = ''; }
+        if (lastName === void 0) { lastName = ''; }
+        if (password === void 0) { password = ''; }
+        if (description === void 0) { description = ''; }
+        if (favoriteSongs === void 0) { favoriteSongs = []; }
+        if (joinedRooms === void 0) { joinedRooms = []; }
+        if (ownedRooms === void 0) { ownedRooms = []; }
+        if (friends === void 0) { friends = []; }
+        if (received_invites === void 0) { received_invites = []; }
+        if (sent_invites === void 0) { sent_invites = []; }
+        if (created_at === void 0) { created_at = new Date(); }
+        if (updated_at === void 0) { updated_at = new Date(); }
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.description = description;
+        this.favoriteSongs = favoriteSongs;
+        this.joinedRooms = joinedRooms;
+        this.ownedRooms = ownedRooms;
+        this.friends = friends;
+        this.received_invites = received_invites;
+        this.sent_invites = sent_invites;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+    }
+    return User;
+}());
+
+//# sourceMappingURL=user.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/other-user-profile/other-user-profile.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/other-user-profile/other-user-profile.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div *ngIf=\"user\">\n  <h1>Current User's Profile</h1>\n  <h2>Username: {{user.username}}</h2>\n  <p>Email: {{user.email}}</p>\n  <p>First Name: {{user.firstName}}</p>\n  <p>Last Name: {{user.lastName}}</p>\n  <p>Description: {{user.description}}</p>\n<h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr>\n      <td>usernames goes here</td>\n      <td>\n        <a href=\"#\">Show Profile</a>\n      </td>\n    </tr>\n  </table>\n</div>\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/other-user-profile/other-user-profile.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OtherUserProfileComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
@@ -626,75 +823,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var LogoutComponent = (function () {
-    function LogoutComponent(_apicallService, _router) {
-        var _this = this;
+var OtherUserProfileComponent = (function () {
+    function OtherUserProfileComponent(_apicallService, _route) {
         this._apicallService = _apicallService;
-        this._router = _router;
-        this._apicallService.logoutUser()
-            .then(function (data) {
-            console.log('success logging user out');
-            _this._router.navigate(['']);
-        })
-            .catch(function (error) {
-            console.log('error logging user out');
-            _this._router.navigate(['']);
-        });
+        this._route = _route;
+        this.subscribeToUserIdParams();
     }
-    LogoutComponent.prototype.ngOnInit = function () {
+    OtherUserProfileComponent.prototype.ngOnInit = function () {
     };
-    return LogoutComponent;
+    OtherUserProfileComponent.prototype.subscribeToUserIdParams = function () {
+        var _this = this;
+        this.subscription = this._route.paramMap
+            .switchMap(function (params) {
+            console.log('got params id: ' + params.get('id'));
+            return _this._apicallService.getUserByUserId(params.get('id'));
+        }).subscribe(function (user) {
+            _this.user = user;
+            console.log(_this.user);
+        });
+    };
+    return OtherUserProfileComponent;
 }());
-LogoutComponent = __decorate([
+OtherUserProfileComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["o" /* Component */])({
-        selector: 'app-logout',
-        template: __webpack_require__("../../../../../src/app/logout/logout.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/logout/logout.component.css")]
+        selector: 'app-other-user-profile',
+        template: __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router */]) === "function" && _b || Object])
-], LogoutComponent);
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object])
+], OtherUserProfileComponent);
 
 var _a, _b;
-//# sourceMappingURL=logout.component.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/models/user.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return User; });
-var User = (function () {
-    function User(userId, username, email, firstName, lastName, password, favoriteSongs, joinedRooms, ownedRooms, friends, created_at, updated_at) {
-        if (userId === void 0) { userId = null; }
-        if (username === void 0) { username = ''; }
-        if (email === void 0) { email = ''; }
-        if (firstName === void 0) { firstName = ''; }
-        if (lastName === void 0) { lastName = ''; }
-        if (password === void 0) { password = ''; }
-        if (favoriteSongs === void 0) { favoriteSongs = []; }
-        if (joinedRooms === void 0) { joinedRooms = []; }
-        if (ownedRooms === void 0) { ownedRooms = []; }
-        if (friends === void 0) { friends = []; }
-        if (created_at === void 0) { created_at = new Date(); }
-        if (updated_at === void 0) { updated_at = new Date(); }
-        this.userId = userId;
-        this.username = username;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-        this.favoriteSongs = favoriteSongs;
-        this.joinedRooms = joinedRooms;
-        this.ownedRooms = ownedRooms;
-        this.friends = friends;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-    }
-    return User;
-}());
-
-//# sourceMappingURL=user.js.map
+//# sourceMappingURL=other-user-profile.component.js.map
 
 /***/ }),
 
@@ -719,7 +879,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/profile/profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"currentUser\">\n  <h1>Current User's Profile</h1>\n  <h2>Username: {{currentUser.username}}</h2>\n  <p>Email: {{currentUser.email}}</p>\n  <p>First Name: {{currentUser.firstName}}</p>\n  <p>Last Name: {{currentUser.lastName}}</p>\n  <p>Description: {{currentUser.description}}</p>\n  <h3>Friends</h3>\n  <ul>\n    <li></li>\n  </ul>\n</div>\n\n"
+module.exports = "<div *ngIf=\"currentUser\">\n  <h1>Current User's Profile</h1>\n  <h2>Username: {{currentUser.username}}</h2>\n  <p>Email: {{currentUser.email}}</p>\n  <p>First Name: {{currentUser.firstName}}</p>\n  <p>Last Name: {{currentUser.lastName}}</p>\n  <p>Description: {{currentUser.description}}</p>\n  <h3>Invites</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr>\n      <td>usernames goes here</td>\n      <td>\n        <a href=\"#\">Accept Invite</a>\n        <a href=\"#\">Reject Invite</a>\n      </td>\n    </tr>\n  </table>\n  <h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr>\n      <td>usernames goes here</td>\n      <td>\n        <a href=\"#\">Show Profile</a>\n        <a href=\"#\">Remove Friend</a>\n      </td>\n    </tr>\n  </table>\n</div>\n\n"
 
 /***/ }),
 
@@ -759,6 +919,7 @@ var ProfileComponent = (function () {
             if (data) {
                 console.log('success getting current user');
                 _this.currentUser = data;
+                console.log(_this.currentUser);
             }
             else {
                 console.log('user not in session');
@@ -779,7 +940,7 @@ ProfileComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/profile/profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/profile/profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], ProfileComponent);
 
 var _a, _b;
@@ -878,7 +1039,7 @@ RegistrationComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/registration/registration.component.html"),
         styles: [__webpack_require__("../../../../../src/app/registration/registration.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], RegistrationComponent);
 
 var _a, _b;
@@ -907,7 +1068,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/search-manager/search-manager.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Search User Results</h1>\n\n\n  <li *ngFor=\"let user of showSearchResultUsers\">{{user.username}}</li>\n\n\n"
+module.exports = "\n<h1>Search User Results</h1>\n<table>\n  <tr>\n    <th>Username</th>\n    <th>Actions</th>\n  </tr>\n  <tr *ngFor=\"let user of showSearchResultUsers\">\n      <td *ngIf=\"user && user._id != currentUser._id\">{{user.username}}</td>\n      <td *ngIf=\"user && user._id != currentUser._id\">\n        <a [routerLink]=\"['/home/users', user.userId]\">Show Profile</a>\n        <button *ngIf=\"!user.received_invites.includes(currentUser._id)\" (click)=\"sendInvite(user.userId)\">Send Invite</button>\n        <span *ngIf=\"user.received_invites.includes(currentUser._id)\">Invite Sent</span>\n      </td>\n  </tr>\n</table>\n\n\n\n"
 
 /***/ }),
 
@@ -916,7 +1077,12 @@ module.exports = "<h1>Search User Results</h1>\n\n\n  <li *ngFor=\"let user of s
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchManagerComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_switchMap__ = __webpack_require__("../../../../rxjs/add/operator/switchMap.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_switchMap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_switchMap__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -927,22 +1093,112 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
+
+
 var SearchManagerComponent = (function () {
-    function SearchManagerComponent() {
+    function SearchManagerComponent(_router, _route, _apicallService, _searchService) {
+        this._router = _router;
+        this._route = _route;
+        this._apicallService = _apicallService;
+        this._searchService = _searchService;
+        this.searchResults = [];
+        this.showSearchResultUsers = [];
+        this.searchVal = '';
+        this.getCurrentUserInSession();
+        this.subscribeToSearchVal();
     }
     SearchManagerComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.subscription2 = this._route.paramMap.subscribe(function (params) {
+            _this.searchVal = params.get('q');
+            console.log(_this.searchVal);
+        });
+        this.getAllUsers(this.searchVal);
+    };
+    SearchManagerComponent.prototype.subscribeToSearchVal = function () {
+        var _this = this;
+        this.subscription = this._searchService.searchValue$.subscribe(function (search) {
+            console.log('hiiiii');
+            console.log(search);
+            _this.showSearchResultUsers = _this.filterUsers(_this.searchResults, search);
+        });
+    };
+    SearchManagerComponent.prototype.getAllUsers = function (search) {
+        var _this = this;
+        if (!search) {
+            search = '';
+        }
+        this._apicallService.getAllUsers()
+            .then(function (data) {
+            console.log('success then response getting all users');
+            _this.searchResults = data;
+            _this.showSearchResultUsers = _this.filterUsers(data, search);
+            console.log(_this.showSearchResultUsers);
+        })
+            .catch(function (error) {
+            console.log('error catch response getting all users');
+            console.log(error);
+        });
+    };
+    SearchManagerComponent.prototype.getCurrentUserInSession = function () {
+        var _this = this;
+        this._apicallService.getCurrentUserInSession()
+            .then(function (data) {
+            console.log(data);
+            if (data) {
+                console.log('success getting current user');
+                _this.currentUser = data;
+            }
+            else {
+                console.log('user not in session');
+                _this._router.navigate(['']);
+            }
+        })
+            .catch(function (error) {
+            console.log('error getting current user');
+            console.log(error);
+            _this._router.navigate(['']);
+        });
+    };
+    SearchManagerComponent.prototype.filterUsers = function (data, val) {
+        console.log('filtering....');
+        return data.filter(function (index) {
+            return index.username.toLowerCase().includes(val.toLowerCase()) || index.firstName.toLowerCase().includes(val.toLowerCase()) || index.lastName.toLowerCase().includes(val.toLowerCase());
+        });
+    };
+    SearchManagerComponent.prototype.sendInvite = function (userId) {
+        var _this = this;
+        var user_Id = { userId: userId };
+        this._apicallService.sendInviteToUserById(user_Id)
+            .then(function (data) {
+            console.log('sucess then response sendInvite');
+            console.log(data);
+            _this.getAllUsers(_this.searchVal);
+        })
+            .catch(function (error) {
+            console.log('error catch response sendInvite');
+        });
+    };
+    SearchManagerComponent.prototype.ngAfterViewInit = function () {
+    };
+    SearchManagerComponent.prototype.ngOnDestroy = function () {
+        this.subscription.unsubscribe();
+        this.subscription2.unsubscribe();
     };
     return SearchManagerComponent;
 }());
 SearchManagerComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["o" /* Component */])({
         selector: 'app-search-manager',
         template: __webpack_require__("../../../../../src/app/search-manager/search-manager.component.html"),
         styles: [__webpack_require__("../../../../../src/app/search-manager/search-manager.component.css")]
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
 ], SearchManagerComponent);
 
+var _a, _b, _c, _d;
 //# sourceMappingURL=search-manager.component.js.map
 
 /***/ }),

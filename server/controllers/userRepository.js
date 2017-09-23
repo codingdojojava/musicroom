@@ -112,17 +112,31 @@ module.exports = {
     getAllFriendsOfCurrentUser: (req, res) => {
         console.log('server getting all friends of user');
     },
-    getAllUsersBySearchParams: (req, res) => {
-        console.log('server getAllUsersBySearchParams');
-        User.find({username: req.body.params})
-            .exec((error, foundUsers) => {
-                if (error) {
-                    console.log('Error getAllUsersBySearchParams');
-                    console.log(error);
-                } else {
-                    console.log('success getAllUsersBySearchParams');
-                    res.json(foundUsers);
-                }
-            });
-    }
+    sendInviteToUserById: (req, res) => {
+        console.log('server current user sending invite to user');
+        User.findOneAndUpdate({userId: req.body.userId}, {$push: {received_invites: req.session.currentUser._id}}, {new: true}, 
+                    (error, updatedUser) => {
+                        if(error) {
+                            console.log('server error sending invite');
+                            res.json(error);
+                        } else {
+                            console.log('server success sending invite');
+                            if (updatedUser) {
+                                console.log('before pushing to sent_invites')
+                                console.log(updatedUser);
+                                User.findOneAndUpdate({_id: req.session.currentUser._id}, {$push: {sent_invites: updatedUser._id}}, {new: true}, 
+                                            (error, updatedCurrentUser) => {
+                                                if (error) {
+                                                    console.log('server error updating current user sent invite');
+                                                    res.json(error);
+                                                } else {
+                                                    console.log('server success updating current user sent invite');
+                                                    console.log(updatedCurrentUser);
+                                                    res.json(updatedCurrentUser);
+                                                }
+                                            });
+                            }
+                        }
+                    });
+    },
 }

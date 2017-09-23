@@ -10,7 +10,7 @@ module.exports = function(app) {
   app.get('/api/users/current', userRepo.getCurrentUser);
   app.get('/api/users/logout', userRepo.logoutUser);
   app.get('/api/users', userRepo.getAllUsers);
-  app.get('/api/users/search/:q', userRepo.getAllUsersBySearchParams);
+  app.post('/api/users/invite', userRepo.sendInviteToUserById);
   app.get('/api/users/:id', userRepo.getUserByUserId);
 
   app.all("*", (req,res,next) => {

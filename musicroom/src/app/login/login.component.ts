@@ -1,3 +1,4 @@
+import { AppComponent } from './../app.component';
 import { Router } from '@angular/router';
 import { ApiCallService } from './../api-call.service';
 import { User } from './../models/user';
@@ -10,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
   user = new User();
-  constructor(private _apicallService: ApiCallService, private _router: Router) { }
+  constructor(private _apicallService: ApiCallService, private _router: Router, private _appComponent: AppComponent) { }
 
   ngOnInit() {
   }
@@ -22,6 +23,7 @@ export class LoginComponent implements OnInit {
       .then((data) => {
         console.log('success logging in user');
         console.log(data);
+        this._appComponent.getCurrentUserInSession();
         this._router.navigate(['/home']);
       })
       .catch((error) => {

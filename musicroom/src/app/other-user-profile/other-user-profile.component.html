@@ -1,0 +1,21 @@
+<div *ngIf="user">
+  <h1>Current User's Profile</h1>
+  <h2>Username: {{user.username}}</h2>
+  <p>Email: {{user.email}}</p>
+  <p>First Name: {{user.firstName}}</p>
+  <p>Last Name: {{user.lastName}}</p>
+  <p>Description: {{user.description}}</p>
+<h3>Friends</h3>
+  <table>
+    <tr>
+      <th>Username</th>
+      <th>Actions</th>
+    </tr>
+    <tr>
+      <td>usernames goes here</td>
+      <td>
+        <a href="#">Show Profile</a>
+      </td>
+    </tr>
+  </table>
+</div>

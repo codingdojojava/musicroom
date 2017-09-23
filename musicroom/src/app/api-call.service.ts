@@ -41,9 +41,16 @@ export class ApiCallService {
       .toPromise();
   }
 
-  getAllUsersBySearchParams(qParams) {
-    console.log('service getting users by search params');
-    return this._http.get('/api/users/search/' + qParams)
+  getUserByUserId(userParams) {
+    console.log('service getting users by id');
+    return this._http.get('/api/users/' + userParams)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  sendInviteToUserById(userIdData) {
+    console.log('service sending invite to user by id');
+    return this._http.post('/api/users/invite', userIdData)
       .map(response => response.json())
       .toPromise();
   }
