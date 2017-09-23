@@ -34,4 +34,18 @@ export class ApiCallService {
       .toPromise();
   }
 
+  getAllUsers() {
+    console.log('service getting all users');
+    return this._http.get('/api/users')
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  getAllUsersBySearchParams(qParams) {
+    console.log('service getting users by search params');
+    return this._http.get('/api/users/search/' + qParams)
+      .map(response => response.json())
+      .toPromise();
+  }
+
 }

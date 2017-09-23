@@ -1,3 +1,4 @@
+import { SearchManagerComponent } from './search-manager/search-manager.component';
 import { LogoutComponent } from './logout/logout.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'register', pathMatch: 'full', component: RegistrationComponent },
   { path: 'home', pathMatch: 'full', component: DashboardComponent },
   { path: 'home/profile', pathMatch: 'full', component: ProfileComponent },
-  { path: 'logout', pathMatch: 'full', component: LogoutComponent }
+  { path: 'logout', pathMatch: 'full', component: LogoutComponent },
+  { path: 'search/results', component: SearchManagerComponent }
 ];
 
 @NgModule({

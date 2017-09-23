@@ -92,10 +92,37 @@ module.exports = {
                 }
             });
     },
+    getAllUsers: (req, res) => {
+        console.log('server getting all users');
+        User.find({})
+            .populate('friends favoriteSongs joinedRooms ownedRooms')
+            .exec((error, foundUsers) => {
+                if(error){
+                    console.log('server error getting user');
+                    console.log(error);
+                } else {
+                    console.log('server success getting user');
+                    res.json(foundUsers);
+                }
+            });
+    },
     addAFriendToCurrentUser: (req, res) => {
         console.log('server adding a friend to user');
     },
     getAllFriendsOfCurrentUser: (req, res) => {
         console.log('server getting all friends of user');
     },
+    getAllUsersBySearchParams: (req, res) => {
+        console.log('server getAllUsersBySearchParams');
+        User.find({username: req.body.params})
+            .exec((error, foundUsers) => {
+                if (error) {
+                    console.log('Error getAllUsersBySearchParams');
+                    console.log(error);
+                } else {
+                    console.log('success getAllUsersBySearchParams');
+                    res.json(foundUsers);
+                }
+            });
+    }
 }
