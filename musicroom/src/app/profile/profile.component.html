@@ -15,7 +15,7 @@
       <td>{{invite.username}}</td>
       <td>
         <button (click)="acceptInvite(invite._id)">Accept Invite</button>
-        <a href="#">Reject Invite</a>
+        <button (click)="rejectInvite(invite._id)">Reject Invite</button>
       </td>
     </tr>
   </table>
@@ -30,7 +30,7 @@
         <a [routerLink]="['/home/users', friend.userId]">{{friend.username}}</a>
       </td>
       <td>
-        <a href="#">Remove Friend</a>
+        <button (click)="removeFriend(friend._id)">Remove Friend</button>
       </td>
     </tr>
   </table>

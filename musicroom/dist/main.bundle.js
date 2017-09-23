@@ -86,7 +86,19 @@ var ApiCallService = (function () {
     };
     ApiCallService.prototype.addFriendAndUpdateReceivedInvite = function (inviteData) {
         // console.log('service adding friend to user and updating received invites list');
-        return this._http.post('/api/users/friend/accept', inviteData)
+        return this._http.post('/api/users/invite/accept', inviteData)
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    ApiCallService.prototype.rejectInvite = function (inviteData) {
+        // console.log('service rejeting invite and updating received and sent invites lists');
+        return this._http.post('/api/users/invite/reject', inviteData)
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    ApiCallService.prototype.removeFriend = function (friendData) {
+        console.log('service removing friend from current User');
+        return this._http.post('/api/users/friends/remove', friendData)
             .map(function (response) { return response.json(); })
             .toPromise();
     };
@@ -895,7 +907,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/profile/profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"currentUser\">\n  <h1>Current User's Profile</h1>\n  <h2>Username: {{currentUser.username}}</h2>\n  <p>Email: {{currentUser.email}}</p>\n  <p>First Name: {{currentUser.firstName}}</p>\n  <p>Last Name: {{currentUser.lastName}}</p>\n  <p>Description: {{currentUser.description}}</p>\n  <h3>Invites</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let invite of currentUser.received_invites\">\n      <td>{{invite.username}}</td>\n      <td>\n        <button (click)=\"acceptInvite(invite._id)\">Accept Invite</button>\n        <a href=\"#\">Reject Invite</a>\n      </td>\n    </tr>\n  </table>\n  <h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let friend of currentUser.friends\">\n      <td>\n        <a [routerLink]=\"['/home/users', friend.userId]\">{{friend.username}}</a>\n      </td>\n      <td>\n        <a href=\"#\">Remove Friend</a>\n      </td>\n    </tr>\n  </table>\n</div>\n\n"
+module.exports = "<div *ngIf=\"currentUser\">\n  <h1>Current User's Profile</h1>\n  <h2>Username: {{currentUser.username}}</h2>\n  <p>Email: {{currentUser.email}}</p>\n  <p>First Name: {{currentUser.firstName}}</p>\n  <p>Last Name: {{currentUser.lastName}}</p>\n  <p>Description: {{currentUser.description}}</p>\n  <h3>Invites</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let invite of currentUser.received_invites\">\n      <td>{{invite.username}}</td>\n      <td>\n        <button (click)=\"acceptInvite(invite._id)\">Accept Invite</button>\n        <button (click)=\"rejectInvite(invite._id)\">Reject Invite</button>\n      </td>\n    </tr>\n  </table>\n  <h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let friend of currentUser.friends\">\n      <td>\n        <a [routerLink]=\"['/home/users', friend.userId]\">{{friend.username}}</a>\n      </td>\n      <td>\n        <button (click)=\"removeFriend(friend._id)\">Remove Friend</button>\n      </td>\n    </tr>\n  </table>\n</div>\n\n"
 
 /***/ }),
 
@@ -931,47 +943,88 @@ var ProfileComponent = (function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            console.log(data);
+            // console.log(data);
             if (data) {
-                console.log('success getting current user');
+                // console.log('success getting current user');
                 _this.currentUser = data;
-                console.log(_this.currentUser);
+                // console.log(this.currentUser);
             }
             else {
-                console.log('user not in session');
+                // console.log('user not in session');
                 _this._router.navigate(['']);
             }
         })
             .catch(function (error) {
-            console.log('error getting current user');
+            // console.log('error getting current user');
             console.log(error);
             _this._router.navigate(['']);
         });
     };
     ProfileComponent.prototype.acceptInvite = function (invite_id) {
         var _this = this;
-        console.log('controller accepting invite');
+        // console.log('controller accepting invite');
         var receivedInvites = this.currentUser.received_invites;
         for (var _i = 0, receivedInvites_1 = receivedInvites; _i < receivedInvites_1.length; _i++) {
             var invite = receivedInvites_1[_i];
             if (invite._id === invite_id) {
-                console.log('found invite');
+                // console.log('found invite');
                 var inviteId = { inviteId: invite_id };
                 this._apicallService.addFriendAndUpdateReceivedInvite(inviteId)
                     .then(function (data) {
-                    console.log('then response addFriendAndUpdateReceivedInvite');
-                    console.log(data);
+                    // console.log('then response addFriendAndUpdateReceivedInvite');
+                    // console.log(data);
                     _this.getCurrentUserInSession();
                 })
                     .catch(function (error) {
-                    console.log('catch response addFriendAndUpdateReceivedInvite');
+                    // console.log('catch response addFriendAndUpdateReceivedInvite');
+                    // console.log(error);
+                });
+            }
+        }
+    };
+    ProfileComponent.prototype.rejectInvite = function (invite_id) {
+        var _this = this;
+        // console.log('controller rejecting invite');
+        var receivedInvites = this.currentUser.received_invites;
+        for (var _i = 0, receivedInvites_2 = receivedInvites; _i < receivedInvites_2.length; _i++) {
+            var invite = receivedInvites_2[_i];
+            if (invite._id === invite_id) {
+                // console.log('found invite');
+                var inviteId = { inviteId: invite_id };
+                this._apicallService.rejectInvite(inviteId)
+                    .then(function (data) {
+                    // console.log('then response rejectInvite');
+                    // console.log(data);
+                    _this.getCurrentUserInSession();
+                })
+                    .catch(function (error) {
+                    console.log('catch response rejectInvite');
                     console.log(error);
                 });
             }
         }
     };
-    ProfileComponent.prototype.rejectInvite = function () {
-        console.log('controller rejecting invite');
+    ProfileComponent.prototype.removeFriend = function (friend_id) {
+        var _this = this;
+        // console.log('controller removing friend');
+        var friendList = this.currentUser.friends;
+        for (var _i = 0, friendList_1 = friendList; _i < friendList_1.length; _i++) {
+            var friend = friendList_1[_i];
+            if (friend._id === friend_id) {
+                // console.log('found invite');
+                var friendId = { friendId: friend_id };
+                this._apicallService.removeFriend(friendId)
+                    .then(function (data) {
+                    // console.log('then response removeFriend');
+                    // console.log(data);
+                    _this.getCurrentUserInSession();
+                })
+                    .catch(function (error) {
+                    console.log('catch response removeFriend');
+                    console.log(error);
+                });
+            }
+        }
     };
     return ProfileComponent;
 }());
@@ -1054,7 +1107,7 @@ var RegistrationComponent = (function () {
             .then(function (data) {
             // console.log(data);
             if (data.code) {
-                console.log(data.code);
+                // console.log(data.code);
                 if (data.code === 11000) {
                     // console.log('duplicate data please try again');
                     _this.isDuplicate = true;
@@ -1069,8 +1122,8 @@ var RegistrationComponent = (function () {
             }
         })
             .catch(function (error) {
-            // console.log('error registering user');
-            // console.log(error);
+            console.log('error registering user');
+            console.log(error);
         });
     };
     return RegistrationComponent;
@@ -1177,7 +1230,7 @@ var SearchManagerComponent = (function () {
             // console.log('success then response getting all users');
             _this.searchResults = data;
             _this.showSearchResultUsers = _this.filterUsers(data, search);
-            console.log(_this.showSearchResultUsers);
+            // console.log(this.showSearchResultUsers);
         })
             .catch(function (error) {
             // console.log('error catch response getting all users');

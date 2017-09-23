@@ -57,7 +57,21 @@ export class ApiCallService {
 
   addFriendAndUpdateReceivedInvite(inviteData) {
     // console.log('service adding friend to user and updating received invites list');
-    return this._http.post('/api/users/friend/accept', inviteData)
+    return this._http.post('/api/users/invite/accept', inviteData)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  rejectInvite(inviteData) {
+    // console.log('service rejeting invite and updating received and sent invites lists');
+    return this._http.post('/api/users/invite/reject', inviteData)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  removeFriend(friendData) {
+    console.log('service removing friend from current User');
+    return this._http.post('/api/users/friends/remove', friendData)
       .map(response => response.json())
       .toPromise();
   }

@@ -8,7 +8,7 @@ module.exports = {
         let newUserId = 0;
         User.find({}).sort('-createdAt').exec((error, users) => {
             if (error) {
-                // console.log('something went wrong');
+                console.log('something went wrong');
             } else {
                 if(users && users.length > 0) {
                     // console.log('users true, got all users, now updating newUser id');
@@ -21,7 +21,7 @@ module.exports = {
             // console.log(newUser);
             newUser.save((error, savedUser) => {
                 if (error) {
-                    // console.log('error registering user');
+                    console.log('error registering user');
                     res.json(error);
                 } else {
                     // console.log('success registering user');
@@ -35,8 +35,8 @@ module.exports = {
         // console.log('server logging in user');
         User.findOne({username:req.body.username}, function(err, foundUser){
             if(err) {
-                // console.log('error loggin user in');
-                // console.log(err);
+                console.log('error loggin user in');
+                console.log(err);
             }
             else {
                 if(foundUser == null){
@@ -84,8 +84,8 @@ module.exports = {
             .populate('friends favoriteSongs joinedRooms ownedRooms')
             .exec((error, foundUser) => {
                 if(error){
-                    // console.log('server error getting user');
-                    // console.log(error);
+                    console.log('server error getting user');
+                    console.log(error);
                 } else {
                     // console.log('server success getting user');
                     res.json(foundUser);
@@ -98,8 +98,8 @@ module.exports = {
             .populate('friends favoriteSongs joinedRooms ownedRooms')
             .exec((error, foundUsers) => {
                 if(error){
-                    // console.log('server error getting user');
-                    // console.log(error);
+                    console.log('server error getting user');
+                    console.log(error);
                 } else {
                     // console.log('server success getting user');
                     res.json(foundUsers);
@@ -107,25 +107,25 @@ module.exports = {
             });
     },
     sendInviteToUserById: (req, res) => {
-        console.log('server current user sending invite to user');
+        // console.log('server current user sending invite to user');
         User.findOneAndUpdate({userId: req.body.userId}, {$push: {received_invites: req.session.currentUser._id}}, {new: true}, 
                     (error, updatedUser) => {
                         if(error) {
                             console.log('server error sending invite');
                             res.json(error);
                         } else {
-                            console.log('server success sending invite');
+                            // console.log('server success sending invite');
                             if (updatedUser) {
-                                console.log('before pushing to sent_invites')
-                                console.log(updatedUser);
+                                // console.log('before pushing to sent_invites')
+                                // console.log(updatedUser);
                                 User.findOneAndUpdate({_id: req.session.currentUser._id}, {$push: {sent_invites: updatedUser._id}}, {new: true}, 
                                             (error, updatedCurrentUser) => {
                                                 if (error) {
                                                     console.log('server error updating current user sent invite');
                                                     res.json(error);
                                                 } else {
-                                                    console.log('server success updating current user sent invite');
-                                                    console.log(updatedCurrentUser);
+                                                    // console.log('server success updating current user sent invite');
+                                                    // console.log(updatedCurrentUser);
                                                     res.json(updatedCurrentUser);
                                                 }
                                             });
@@ -142,8 +142,8 @@ module.exports = {
                               {new: true}, 
                               (error, updatedUser) => {
                                     if(error) {
-                                        // console.log('server error adding friend to user');
-                                        // console.log(error);
+                                        console.log('server error adding friend to user');
+                                        console.log(error);
                                         res.json(error);
                                     } else {
                                         // console.log('server success adding friend to user');
@@ -154,13 +154,63 @@ module.exports = {
                                                               {new: true},
                                                               (error, tUpdateduser) => {
                                                                   if (error) {
-                                                                    // console.log('error adding current user to target user friend list');
-                                                                    // console.log(error);
+                                                                    console.log('error adding current user to target user friend list');
+                                                                    console.log(error);
                                                                   } else {
                                                                     // console.log('success adding current user to target user friend list');
                                                                     res.json(tUpdateduser);
                                                                   }
                                                               });
+                                    }
+                                });
+    },
+
+    deleteInviteAndUpdateUsers: (req, res) => {
+        // console.log('server deleting invite on curr and target users');
+        User.findOneAndUpdate({_id: req.session.currentUser._id}, {$pull: {received_invites: req.body.inviteId}}, {new: true}, 
+                                (error, updatedUser) => {
+                                    if(error) {
+                                        console.log('error deleting invite on curr Users received invite list')
+                                        console.log(error);
+                                    } else {
+                                        // console.log('success deleting invite on curr Users received invite list')
+                                        // console.log(updatedUser);
+                                        User.findOneAndUpdate({_id: req.body.inviteId}, {$pull: {sent_invites: updatedUser._id}}, {new: true}, 
+                                                                (error, tUpdatedUser) => {
+                                                                    if(error) {
+                                                                        console.log('error deleting invite on target user sent invite list')
+                                                                        console.log(error);    
+                                                                    } else {
+                                                                        // console.log('success deleting invite on curr Users received invite list')
+                                                                        // console.log(tUpdatedUser);
+                                                                        res.json(tUpdatedUser);
+                                                                    }
+                                                                })
+                                    }
+                                })
+    },
+
+    removeFriendFromCurrentUser : (req, res) => {
+        // console.log('server removing friend from current user');
+        User.findOneAndUpdate({_id: req.session.currentUser._id}, {$pull: {friends: req.body.friendId}}, {new: true}, 
+                                (error, updatedUser) => {
+                                    if (error) {
+                                        console.log('error removing friend from current user');
+                                        console.log(error);
+                                    } else {
+                                        // console.log('success removing friend from current user');
+                                        // console.log(updatedUser);
+                                        User.findOneAndUpdate({_id: req.body.friendId}, {$pull: {friends: updatedUser._id}}, {new: true},
+                                                                (error, tUpdateduser) => {
+                                                                    if(error) {
+                                                                        console.log('error removing current user from friendlist of removed friend');
+                                                                        console.log(error);
+                                                                    } else {
+                                                                        // console.log('error removing current user from friendlist of removed friend');
+                                                                        // console.log(tUpdateduser);
+                                                                        res.json(tUpdateduser); 
+                                                                    }
+                                                                });
                                     }
                                 });
     }

@@ -25,7 +25,7 @@ export class RegistrationComponent implements OnInit {
       .then((data) => {
         // console.log(data);
         if (data.code) {
-          console.log(data.code);
+          // console.log(data.code);
           if (data.code === 11000) {
             // console.log('duplicate data please try again');
             this.isDuplicate = true;
@@ -39,8 +39,8 @@ export class RegistrationComponent implements OnInit {
         }
       })
       .catch((error) => {
-        // console.log('error registering user');
-        // console.log(error);
+        console.log('error registering user');
+        console.log(error);
       });
   }
 

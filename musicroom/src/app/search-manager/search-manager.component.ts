@@ -49,7 +49,7 @@ export class SearchManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         // console.log('success then response getting all users');
         this.searchResults = data;
         this.showSearchResultUsers = this.filterUsers(data, search);
-        console.log(this.showSearchResultUsers);
+        // console.log(this.showSearchResultUsers);
       })
       .catch(error => {
         // console.log('error catch response getting all users');
