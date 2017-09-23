@@ -1,3 +1,4 @@
+import { SearchService } from './search.service';
 import { ChatService } from './chat.service';
 import { NgModule } from '@angular/core';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
@@ -39,7 +40,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
   ],
   providers: [
     ChatService,
-    ApiCallService
+    ApiCallService,
+    SearchService
   ],
   bootstrap: [AppComponent]
 })

@@ -9,6 +9,8 @@ module.exports = function(app) {
   app.post('/api/users/login', userRepo.loginUser);
   app.get('/api/users/current', userRepo.getCurrentUser);
   app.get('/api/users/logout', userRepo.logoutUser);
+  app.get('/api/users', userRepo.getAllUsers);
+  app.get('/api/users/search/:q', userRepo.getAllUsersBySearchParams);
   app.get('/api/users/:id', userRepo.getUserByUserId);
 
   app.all("*", (req,res,next) => {

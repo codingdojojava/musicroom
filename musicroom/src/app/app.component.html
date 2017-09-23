@@ -5,10 +5,10 @@
 <a [routerLink]="['/register']">Register</a>
 <a [routerLink]="['/logout']">Logout</a>
 
-<!--<form (submit) = "redirectToSearchPageWithSearchVal()">
-  <input type="text" name="search" placeholder="Search" [(ngModel)]="searchVal" #searchVal = "ngModel" />
-  <input type="submit" value="Search" />
-</form>-->
+<form (submit) = "redirectToSearchPageWithSearchVal()">
+  <input type="text" name="search" placeholder="Search" [(ngModel)]="searchVal" (keyup) = "searchUsers()" />
+  <input type="submit" value="Search Users" />
+</form>
 
 <router-outlet></router-outlet>
 <div>
@@ -17,3 +17,4 @@
   <br>
   <p>{{msg}}  </p>
 </div>
+asdf
