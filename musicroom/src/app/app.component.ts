@@ -21,8 +21,8 @@ export class AppComponent {
     this.chatService
         .getMessage()
         .subscribe(data => {
-          console.log("GOT IT");
-          // console.log(data);
+          // console.log("GOT IT");
+          console.log(data);
           this.msg = data;
         });
   }
@@ -32,31 +32,31 @@ export class AppComponent {
   }
 
   searchUsers() {
-    console.log('hello');
+    // console.log('hello');
     this._searchService.searchUsers(this.searchVal);
   }
 
   redirectToSearchPageWithSearchVal() {
-    console.log('redirecting to Search page with keyword SearchVal');
-    console.log(this.searchVal);
+    // console.log('redirecting to Search page with keyword SearchVal');
+    // console.log(this.searchVal);
     this._route.navigate(['search', 'results', { q: this.searchVal }]);
   }
 
   getCurrentUserInSession() {
     this._apicallService.getCurrentUserInSession()
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data) {
-          console.log('success getting current user');
+          // console.log('success getting current user');
           this.currentUser = data;
         } else {
-          console.log('user not in session');
+          // console.log('user not in session');
           this.currentUser = false;
         }
       })
       .catch((error) => {
-        console.log('error getting current user');
-        console.log(error);
+        // console.log('error getting current user');
+        // console.log(error);
       });
   }
 }

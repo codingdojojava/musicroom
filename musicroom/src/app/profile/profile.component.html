@@ -11,11 +11,11 @@
       <th>Username</th>
       <th>Actions</th>
     </tr>
-    <tr>
-      <td>usernames goes here</td>
+    <tr *ngFor="let invite of currentUser.received_invites">
+      <td>{{invite.username}}</td>
       <td>
-        <a href="#">Accept Invite</a>
-        <a href="#">Reject Invite</a>
+        <button (click)="acceptInvite(invite._id)">Accept Invite</button>
+        <button (click)="rejectInvite(invite._id)">Reject Invite</button>
       </td>
     </tr>
   </table>
@@ -25,11 +25,12 @@
       <th>Username</th>
       <th>Actions</th>
     </tr>
-    <tr>
-      <td>usernames goes here</td>
+    <tr *ngFor="let friend of currentUser.friends">
       <td>
-        <a href="#">Show Profile</a>
-        <a href="#">Remove Friend</a>
+        <a [routerLink]="['/home/users', friend.userId]">{{friend.username}}</a>
+      </td>
+      <td>
+        <button (click)="removeFriend(friend._id)">Remove Friend</button>
       </td>
     </tr>
   </table>

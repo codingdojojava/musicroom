@@ -11,24 +11,31 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
   user = new User();
+  incorrectLogin = false;
   constructor(private _apicallService: ApiCallService, private _router: Router, private _appComponent: AppComponent) { }
 
   ngOnInit() {
   }
 
   loginUser() {
-    console.log('login User');
-    console.log(this.user);
+    // console.log('login User');
+    // console.log(this.user);
     this._apicallService.loginUser(this.user)
       .then((data) => {
-        console.log('success logging in user');
-        console.log(data);
-        this._appComponent.getCurrentUserInSession();
-        this._router.navigate(['/home']);
+        // console.log('success logging in user');
+        // console.log(data);
+        if (!data) {
+          this.incorrectLogin = true;
+          this.user = new User();
+        } else {
+          this.incorrectLogin = false;
+          this._appComponent.getCurrentUserInSession();
+          this._router.navigate(['/home']);
+        }
       })
       .catch((error) => {
-        console.log('error logging in user');
-        console.log(error);
+        // console.log('error logging in user');
+        // console.log(error);
       });
   }
 

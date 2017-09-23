@@ -1,5 +1,6 @@
 export class User {
     constructor(
+        public _id: number = null,
         public userId: number = null,
         public username: string = '',
         public email: string = '',

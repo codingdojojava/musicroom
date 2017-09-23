@@ -17,7 +17,7 @@ export class SearchManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   subscription: Subscription;
   subscription2: Subscription;
   searchVal = '';
-  currentUser: object;
+  currentUser: User;
   constructor( private _router: Router, private _route: ActivatedRoute, private _apicallService: ApiCallService, private _searchService: SearchService) {
     this.getCurrentUserInSession();
     this.subscribeToSearchVal();
@@ -26,7 +26,7 @@ export class SearchManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   ngOnInit() {
     this.subscription2 = this._route.paramMap.subscribe((params: ParamMap) => {
         this.searchVal = params.get('q');
-        console.log(this.searchVal);
+        // console.log(this.searchVal);
       });
     this.getAllUsers(this.searchVal);
 
@@ -34,8 +34,8 @@ export class SearchManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
   subscribeToSearchVal() {
     this.subscription = this._searchService.searchValue$.subscribe(search => {
-      console.log('hiiiii');
-      console.log(search);
+      // console.log('hiiiii');
+      // console.log(search);
       this.showSearchResultUsers = this.filterUsers(this.searchResults, search);
     });
   }
@@ -46,38 +46,38 @@ export class SearchManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     this._apicallService.getAllUsers()
       .then(data => {
-        console.log('success then response getting all users');
+        // console.log('success then response getting all users');
         this.searchResults = data;
         this.showSearchResultUsers = this.filterUsers(data, search);
-        console.log(this.showSearchResultUsers);
+        // console.log(this.showSearchResultUsers);
       })
       .catch(error => {
-        console.log('error catch response getting all users');
-        console.log(error);
+        // console.log('error catch response getting all users');
+        // console.log(error);
       });
   }
 
   getCurrentUserInSession() {
     this._apicallService.getCurrentUserInSession()
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data) {
-          console.log('success getting current user');
+          // console.log('success getting current user');
           this.currentUser = data;
         } else {
-          console.log('user not in session');
+          // console.log('user not in session');
           this._router.navigate(['']);
         }
       })
       .catch((error) => {
-        console.log('error getting current user');
-        console.log(error);
+        // console.log('error getting current user');
+        // console.log(error);
         this._router.navigate(['']);
       });
   }
 
   filterUsers(data, val) {
-    console.log('filtering....');
+    // console.log('filtering....');
     return data.filter((index) => {
       return index.username.toLowerCase().includes(val.toLowerCase()) || index.firstName.toLowerCase().includes(val.toLowerCase()) || index.lastName.toLowerCase().includes(val.toLowerCase());
     });
@@ -88,13 +88,22 @@ export class SearchManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     const user_Id = {userId: userId};
     this._apicallService.sendInviteToUserById(user_Id)
       .then(data => {
-        console.log('sucess then response sendInvite');
-        console.log(data);
+        // console.log('sucess then response sendInvite');
+        // console.log(data);
         this.getAllUsers(this.searchVal);
       })
       .catch(error => {
-        console.log('error catch response sendInvite');
+        // console.log('error catch response sendInvite');
       });
+  }
+
+  isFriendOfCurrentUser(userFriends) {
+    const friend = userFriends.find(index => {
+      return index._id === this.currentUser._id;
+    });
+    // console.log(friend);
+    if (friend) { return true; }
+    return false;
   }
 
   ngAfterViewInit() {
