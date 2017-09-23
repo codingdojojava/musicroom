@@ -11,6 +11,8 @@ export class User {
         public joinedRooms = [],
         public ownedRooms = [],
         public friends = [],
+        public received_invites = [],
+        public sent_invites = [],
         public created_at: Date = new Date(),
         public updated_at: Date = new Date()
     ) {}
