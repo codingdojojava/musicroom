@@ -97,8 +97,14 @@ var ApiCallService = (function () {
             .toPromise();
     };
     ApiCallService.prototype.removeFriend = function (friendData) {
-        console.log('service removing friend from current User');
+        // console.log('service removing friend from current User');
         return this._http.post('/api/users/friends/remove', friendData)
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    ApiCallService.prototype.editCurrentUser = function (currentUserData) {
+        // console.log('service removing friend from current User');
+        return this._http.post('/api/users/profile/edit', currentUserData)
             .map(function (response) { return response.json(); })
             .toPromise();
     };
@@ -119,16 +125,18 @@ var _a;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -145,15 +153,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
+
 var routes = [
-    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_7__index_index_component__["a" /* IndexComponent */] },
-    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_4__login_login_component__["a" /* LoginComponent */] },
-    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_3__registration_registration_component__["a" /* RegistrationComponent */] },
-    { path: 'home', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_6__dashboard_dashboard_component__["a" /* DashboardComponent */] },
-    { path: 'home/profile', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_5__profile_profile_component__["a" /* ProfileComponent */] },
-    { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_2__logout_logout_component__["a" /* LogoutComponent */] },
-    { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_1__search_manager_search_manager_component__["a" /* SearchManagerComponent */] },
-    { path: 'home/users/:id', component: __WEBPACK_IMPORTED_MODULE_0__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] }
+    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_9__index_index_component__["a" /* IndexComponent */] },
+    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_6__login_login_component__["a" /* LoginComponent */] },
+    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_5__registration_registration_component__["a" /* RegistrationComponent */] },
+    { path: 'home', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_8__dashboard_dashboard_component__["a" /* DashboardComponent */] },
+    { path: 'home/profile', component: __WEBPACK_IMPORTED_MODULE_7__profile_profile_component__["a" /* ProfileComponent */], children: [
+            { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_1__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
+            { path: 'current', component: __WEBPACK_IMPORTED_MODULE_0__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
+        ] },
+    { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_4__logout_logout_component__["a" /* LogoutComponent */] },
+    { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_3__search_manager_search_manager_component__["a" /* SearchManagerComponent */] },
+    { path: 'home/users/:id', component: __WEBPACK_IMPORTED_MODULE_2__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -161,9 +174,9 @@ var AppRoutingModule = (function () {
     return AppRoutingModule;
 }());
 AppRoutingModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_8__angular_core__["M" /* NgModule */])({
-        imports: [__WEBPACK_IMPORTED_MODULE_9__angular_router__["c" /* RouterModule */].forRoot(routes)],
-        exports: [__WEBPACK_IMPORTED_MODULE_9__angular_router__["c" /* RouterModule */]]
+    Object(__WEBPACK_IMPORTED_MODULE_10__angular_core__["M" /* NgModule */])({
+        imports: [__WEBPACK_IMPORTED_MODULE_11__angular_router__["c" /* RouterModule */].forRoot(routes)],
+        exports: [__WEBPACK_IMPORTED_MODULE_11__angular_router__["c" /* RouterModule */]]
     })
 ], AppRoutingModule);
 
@@ -174,7 +187,7 @@ AppRoutingModule = __decorate([
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Nav Bar</h1>\n\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/login']\">Login</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/register']\">Register</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home']\">Home</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home/profile']\">Profile</a>\n  <div style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchPageWithSearchVal()\">\n      <input type=\"text\" name=\"search\" placeholder=\"Search\" [(ngModel)]=\"searchVal\" (keyup) = \"searchUsers()\" />\n      <input type=\"submit\" value=\"Search Users\" />\n    </form>\n  </div>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/search/results']\">Browse Users</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/logout']\">Logout</a>\n\n\n<router-outlet></router-outlet>\n<div>\n  <input type=\"text\" #msgInput name=\"\" value=\"\">\n  <button (click)=\"sendMsg(msgInput.value)\">Send</button>\n  <br>\n  <p>{{msg}}  </p>\n</div>\nasdf"
+module.exports = "<h1>Nav Bar</h1>\n\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/']\">Home</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home']\">Home</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/login']\">Login</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/register']\">Register</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home/profile/current']\">My Profile</a>\n  <div style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchPageWithSearchVal()\">\n      <input type=\"text\" name=\"search\" placeholder=\"Search\" [(ngModel)]=\"searchVal\" (keyup) = \"searchUsers()\" />\n      <input type=\"submit\" value=\"Search Users\" />\n    </form>\n  </div>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/search/results']\">Browse Users</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/logout']\">Logout</a>\n\n\n<router-outlet></router-outlet>\n<div>\n  <input type=\"text\" #msgInput name=\"\" value=\"\">\n  <button (click)=\"sendMsg(msgInput.value)\">Send</button>\n  <br>\n  <p>{{msg}}  </p>\n</div>\nasdf"
 
 /***/ }),
 
@@ -311,6 +324,8 @@ var _a, _b, _c, _d;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -327,6 +342,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
  // <-- Import FormsModule
  // <-- Import HttpModule
+
+
 
 
 
@@ -353,6 +370,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_15__logout_logout_component__["a" /* LogoutComponent */],
             __WEBPACK_IMPORTED_MODULE_16__search_manager_search_manager_component__["a" /* SearchManagerComponent */],
             __WEBPACK_IMPORTED_MODULE_17__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_18__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */],
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_7__angular_platform_browser__["a" /* BrowserModule */],
@@ -827,7 +846,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/other-user-profile/other-user-profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"user\">\n  <h1>Current User's Profile</h1>\n  <h2>Username: {{user.username}}</h2>\n  <p>Email: {{user.email}}</p>\n  <p>First Name: {{user.firstName}}</p>\n  <p>Last Name: {{user.lastName}}</p>\n  <p>Description: {{user.description}}</p>\n<h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr>\n      <td>usernames goes here</td>\n      <td>\n        <a href=\"#\">Show Profile</a>\n      </td>\n    </tr>\n  </table>\n</div>\n"
+module.exports = "<div *ngIf=\"user\">\n  <h1>Other User's Profile</h1>\n  <h2>Username: {{user.username}}</h2>\n  <p>Email: {{user.email}}</p>\n  <p>First Name: {{user.firstName}}</p>\n  <p>Last Name: {{user.lastName}}</p>\n  <p>Description: {{user.description}}</p>\n<h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let friend of user.friends\">\n      <td *ngIf=\"friend && friend._id != currentUser._id\"><a [routerLink]=\"['/home/users', friend.userId]\">{{friend.username}}</a></td>\n      <td *ngIf=\"friend && friend._id != currentUser._id\">\n        <button *ngIf=\"!friend.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(friend.friends, currentUser._id)\" (click)=\"sendInvite(friend.userId)\">Send Invite</button>\n        <span *ngIf=\"friend.received_invites.includes(currentUser._id)\">Invite Sent</span>\n        <span *ngIf=\"isFriendOfCurrentUser(friend.friends, currentUser._id)\">Friend</span>\n      </td>\n    </tr>\n  </table>\n</div>\n"
 
 /***/ }),
 
@@ -852,12 +871,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var OtherUserProfileComponent = (function () {
-    function OtherUserProfileComponent(_apicallService, _route) {
+    function OtherUserProfileComponent(_apicallService, _route, _router) {
         this._apicallService = _apicallService;
         this._route = _route;
+        this._router = _router;
+        this.getCurrentUserInSession();
         this.subscribeToUserIdParams();
     }
     OtherUserProfileComponent.prototype.ngOnInit = function () {
+        this.getCurrentUserInSession();
     };
     OtherUserProfileComponent.prototype.subscribeToUserIdParams = function () {
         var _this = this;
@@ -870,6 +892,55 @@ var OtherUserProfileComponent = (function () {
             // console.log(this.user);
         });
     };
+    OtherUserProfileComponent.prototype.getCurrentUserInSession = function () {
+        var _this = this;
+        this._apicallService.getCurrentUserInSession()
+            .then(function (data) {
+            // console.log(data);
+            if (data) {
+                // console.log('success getting current user');
+                _this.currentUser = data;
+            }
+            else {
+                // console.log('user not in session');
+                _this._router.navigate(['']);
+            }
+        })
+            .catch(function (error) {
+            // console.log('error getting current user');
+            // console.log(error);
+            _this._router.navigate(['']);
+        });
+    };
+    OtherUserProfileComponent.prototype.sendInvite = function (userId) {
+        var _this = this;
+        var user_Id = { userId: userId };
+        this._apicallService.sendInviteToUserById(user_Id)
+            .then(function (data) {
+            // console.log('sucess then response sendInvite');
+            // console.log(data);
+            _this.subscribeToUserIdParams();
+        })
+            .catch(function (error) {
+            // console.log('error catch response sendInvite');
+        });
+    };
+    OtherUserProfileComponent.prototype.isFriendOfCurrentUser = function (userFriends) {
+        var _this = this;
+        // console.log(this.currentUser._id);
+        // console.log(userFriends);
+        var friend = userFriends.find(function (index) {
+            return index === _this.currentUser._id;
+        });
+        // console.log(friend);
+        if (friend) {
+            return true;
+        }
+        return false;
+    };
+    OtherUserProfileComponent.prototype.ngOnDestroy = function () {
+        this.subscription.unsubscribe();
+    };
     return OtherUserProfileComponent;
 }());
 OtherUserProfileComponent = __decorate([
@@ -878,11 +949,205 @@ OtherUserProfileComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */]) === "function" && _c || Object])
 ], OtherUserProfileComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=other-user-profile.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/profile/current-profile/current-profile.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/profile/current-profile/current-profile.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div *ngIf=\"currentUser\">\n  <a [routerLink]=\"['/home/profile/edit']\">Edit Profile</a>\n  <p>Username: {{currentUser.username}}</p>\n  <p>Email: {{currentUser.email}}</p>\n  <p>First Name: {{currentUser.firstName}}</p>\n  <p>Last Name: {{currentUser.lastName}}</p>\n  <p>Description: {{currentUser.description}}</p>\n</div>\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/profile/current-profile/current-profile.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CurrentProfileComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var CurrentProfileComponent = (function () {
+    function CurrentProfileComponent(_apicallService, _router) {
+        this._apicallService = _apicallService;
+        this._router = _router;
+        this.getCurrentUserInSession();
+    }
+    CurrentProfileComponent.prototype.getCurrentUserInSession = function () {
+        var _this = this;
+        this._apicallService.getCurrentUserInSession()
+            .then(function (data) {
+            // console.log(data);
+            if (data) {
+                // console.log('success getting current user');
+                _this.currentUser = data;
+                // console.log(this.currentUser);
+            }
+            else {
+                // console.log('user not in session');
+                _this._router.navigate(['']);
+            }
+        })
+            .catch(function (error) {
+            // console.log('error getting current user');
+            console.log(error);
+            _this._router.navigate(['']);
+        });
+    };
+    CurrentProfileComponent.prototype.ngOnInit = function () {
+    };
+    return CurrentProfileComponent;
+}());
+CurrentProfileComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["o" /* Component */])({
+        selector: 'app-current-profile',
+        template: __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */]) === "function" && _b || Object])
+], CurrentProfileComponent);
+
+var _a, _b;
+//# sourceMappingURL=current-profile.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/profile/edit-profile/edit-profile.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/profile/edit-profile/edit-profile.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div *ngIf=\"currentUser\">\n  <form (submit)=\"editCurrentUser()\">\n  <input type=\"submit\" value=\"Save\" [disabled] = \"lastName.invalid || firstName.invalid || email.invalid\">\n  <p>Username: {{currentUser.username}}</p>\n  <p>\n    <label>Email: \n        <input \n          type=\"text\" \n          name=\"email\" \n          required \n          pattern='(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))'\n          [(ngModel)]=\"currentUser.email\"\n          #email='ngModel'\n        />\n    </label>\n  </p>\n  <div style=\"color: red;\" *ngIf=\"!email.valid && (email.dirty || email.touched)\">\n    <p *ngIf=\"email.errors.required\">Email is Required</p> \n    <p *ngIf=\"email.errors.pattern\">Please enter a valid email</p> \n  </div>\n    <p>\n      <label>First Name: \n        <input \n          type=\"text\" \n          name=\"firstName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"currentUser.firstName\"\n          #firstName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!firstName.valid && (firstName.dirty || firstName.touched)\">\n    <p *ngIf=\"firstName.errors.required\">First Name is Required</p> \n    <p *ngIf=\"firstName.errors.minlength\">First Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Last Name: \n        <input \n          type=\"text\" \n          name=\"lastName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"currentUser.lastName\"\n          #lastName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!lastName.valid && (lastName.dirty || lastName.touched)\">\n    <p *ngIf=\"lastName.errors.required\">Last Name is Required</p> \n    <p *ngIf=\"lastName.errors.minlength\">Last Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Description (optional): \n        <textarea \n          type=\"text\" \n          name=\"description\" \n          [(ngModel)]=\"currentUser.description\"\n          #description='ngModel'\n        ></textarea>\n      </label>\n    </p>\n  </form>\n</div>\n\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/profile/edit-profile/edit-profile.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EditProfileComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var EditProfileComponent = (function () {
+    function EditProfileComponent(_apicallService, _router) {
+        this._apicallService = _apicallService;
+        this._router = _router;
+        this.getCurrentUserInSession();
+    }
+    EditProfileComponent.prototype.getCurrentUserInSession = function () {
+        var _this = this;
+        this._apicallService.getCurrentUserInSession()
+            .then(function (data) {
+            // console.log(data);
+            if (data) {
+                // console.log('success getting current user');
+                _this.currentUser = data;
+                // console.log(this.currentUser);
+            }
+            else {
+                // console.log('user not in session');
+                _this._router.navigate(['']);
+            }
+        })
+            .catch(function (error) {
+            // console.log('error getting current user');
+            console.log(error);
+            _this._router.navigate(['']);
+        });
+    };
+    EditProfileComponent.prototype.editCurrentUser = function () {
+        var _this = this;
+        // console.log('controller updating current user information');
+        this._apicallService.editCurrentUser(this.currentUser)
+            .then(function (data) {
+            // console.log('then response to update current user');
+            // console.log(data);
+            _this._router.navigate(['/home/profile/current']);
+        })
+            .catch(function (error) {
+            console.log('then response to update current user');
+            console.log(error);
+        });
+    };
+    EditProfileComponent.prototype.ngOnInit = function () {
+    };
+    return EditProfileComponent;
+}());
+EditProfileComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["o" /* Component */])({
+        selector: 'app-edit-profile',
+        template: __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */]) === "function" && _b || Object])
+], EditProfileComponent);
+
+var _a, _b;
+//# sourceMappingURL=edit-profile.component.js.map
 
 /***/ }),
 
@@ -907,7 +1172,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/profile/profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"currentUser\">\n  <h1>Current User's Profile</h1>\n  <h2>Username: {{currentUser.username}}</h2>\n  <p>Email: {{currentUser.email}}</p>\n  <p>First Name: {{currentUser.firstName}}</p>\n  <p>Last Name: {{currentUser.lastName}}</p>\n  <p>Description: {{currentUser.description}}</p>\n  <h3>Invites</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let invite of currentUser.received_invites\">\n      <td>{{invite.username}}</td>\n      <td>\n        <button (click)=\"acceptInvite(invite._id)\">Accept Invite</button>\n        <button (click)=\"rejectInvite(invite._id)\">Reject Invite</button>\n      </td>\n    </tr>\n  </table>\n  <h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let friend of currentUser.friends\">\n      <td>\n        <a [routerLink]=\"['/home/users', friend.userId]\">{{friend.username}}</a>\n      </td>\n      <td>\n        <button (click)=\"removeFriend(friend._id)\">Remove Friend</button>\n      </td>\n    </tr>\n  </table>\n</div>\n\n"
+module.exports = "<div *ngIf=\"currentUser\">\n  <h1>My Profile</h1>\n  <router-outlet></router-outlet>\n  <h3>Invites</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let invite of currentUser.received_invites\">\n      <td>{{invite.username}}</td>\n      <td>\n        <button (click)=\"acceptInvite(invite._id)\">Accept Invite</button>\n        <button (click)=\"rejectInvite(invite._id)\">Reject Invite</button>\n      </td>\n    </tr>\n  </table>\n  <h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let friend of currentUser.friends\">\n      <td>\n        <a [routerLink]=\"['/home/users', friend.userId]\">{{friend.username}}</a>\n      </td>\n      <td>\n        <button (click)=\"removeFriend(friend._id)\">Remove Friend</button>\n      </td>\n    </tr>\n  </table>\n</div>\n\n"
 
 /***/ }),
 

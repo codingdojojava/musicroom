@@ -81,7 +81,7 @@ module.exports = {
     getUserByUserId: (req, res) => {
         // console.log('server getting user by id');
         User.findOne({userId: req.params.id})
-            .populate('friends favoriteSongs joinedRooms ownedRooms')
+            .populate('friends favoriteSongs joinedRooms ownedRooms received_invites sent_invites')
             .exec((error, foundUser) => {
                 if(error){
                     console.log('server error getting user');
@@ -213,5 +213,25 @@ module.exports = {
                                                                 });
                                     }
                                 });
+    },
+
+    editCurrentUser: (req, res) => {
+        User.findOneAndUpdate({_id: req.session.currentUser._id}, 
+                              { email: req.body.email,
+                                firstName: req.body.firstName,
+                                lastName: req.body.lastName,
+                                description: req.body.description }, 
+                              { new: true},
+                              (error, updatedUser) => {
+                                  if (error) {
+                                      console.log('error updating current user');
+                                      console.log(error);
+                                  } else {
+                                    //   console.log('success updating current user');
+                                    //   console.log(updatedUser);
+                                      req.session.currentUser = updatedUser;
+                                      res.json(req.session.currentUser);
+                                  }
+                              });
     }
 }
