@@ -17,6 +17,8 @@ import { RegistrationComponent } from './registration/registration.component';
 import { LogoutComponent } from './logout/logout.component';
 import { SearchManagerComponent } from './search-manager/search-manager.component';
 import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
+import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
+import { CurrentProfileComponent } from './profile/current-profile/current-profile.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
 
@@ -31,6 +33,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
     LogoutComponent,
     SearchManagerComponent,
     OtherUserProfileComponent,
+    EditProfileComponent,
+    CurrentProfileComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,3 +1,5 @@
+import { CurrentProfileComponent } from './profile/current-profile/current-profile.component';
+import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
 import { SearchManagerComponent } from './search-manager/search-manager.component';
 import { LogoutComponent } from './logout/logout.component';
@@ -14,7 +16,10 @@ const routes: Routes = [
   { path: 'login', pathMatch: 'full', component: LoginComponent },
   { path: 'register', pathMatch: 'full', component: RegistrationComponent },
   { path: 'home', pathMatch: 'full', component: DashboardComponent },
-  { path: 'home/profile', pathMatch: 'full', component: ProfileComponent },
+  { path: 'home/profile', component: ProfileComponent, children: [
+      {path: 'edit', component: EditProfileComponent},
+      {path: 'current', component: CurrentProfileComponent}
+  ] },
   { path: 'logout', pathMatch: 'full', component: LogoutComponent },
   { path: 'search/results', component: SearchManagerComponent },
   { path: 'home/users/:id', component: OtherUserProfileComponent }
