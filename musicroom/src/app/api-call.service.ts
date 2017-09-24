@@ -70,8 +70,15 @@ export class ApiCallService {
   }
 
   removeFriend(friendData) {
-    console.log('service removing friend from current User');
+    // console.log('service removing friend from current User');
     return this._http.post('/api/users/friends/remove', friendData)
+      .map(response => response.json())
+      .toPromise();
+  }
+  
+  editCurrentUser(currentUserData) {
+    // console.log('service removing friend from current User');
+    return this._http.post('/api/users/profile/edit', currentUserData)
       .map(response => response.json())
       .toPromise();
   }

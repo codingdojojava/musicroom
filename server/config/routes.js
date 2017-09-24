@@ -14,6 +14,7 @@ module.exports = function(app) {
   app.post('/api/users/invite/accept', userRepo.addFriendAndUpdateReceivedInvite);
   app.post('/api/users/invite/reject', userRepo.deleteInviteAndUpdateUsers);
   app.post('/api/users/friends/remove', userRepo.removeFriendFromCurrentUser);
+  app.post('/api/users/profile/edit', userRepo.editCurrentUser);
   app.get('/api/users/:id', userRepo.getUserByUserId);
 
   app.all("*", (req,res,next) => {
