@@ -8,16 +8,36 @@
 }
 
 .joined {
-    height: 93vh;
+    height:95%;
     width: 10%;
 }
 
 .main {
-    height: 93vh;
+    height: 95%;
     width: 73%;
 }
 
 .secondary {
-    height: 93vh;
+    height: 95%;
     width: 10%;
+}
+
+.subcomponents {
+    height: 45%;
+}
+
+.online {
+
+}
+
+.favorites {
+
+}
+
+.router {
+    height: 85%;
+}
+
+.active-music {
+    height: 8%;
 }

@@ -49,7 +49,7 @@ export class AppComponent {
     // console.log('hello');
     if (!this.isInMusicBrowser) {
       console.log('not in music browser so redirecting');
-      this._route.navigate(['search', 'results', 'music', { q: this.searchVal2 }]);
+      this._route.navigate(['home', 'search', 'results', 'music', { q: this.searchVal2 }]);
       this.searchVal2 = '';
     } else {
       console.log('in music browser so just updating search results');
@@ -61,7 +61,7 @@ export class AppComponent {
   redirectToSearchPageWithSearchVal() {
     // console.log('redirecting to Search page with keyword SearchVal');
     // console.log(this.searchVal);
-    this._route.navigate(['search', 'results', 'users', { q: this.searchVal }]);
+    this._route.navigate(['home', 'search', 'results', 'users', { q: this.searchVal }]);
   }
 
   getCurrentUserInSession() {

@@ -1,19 +1,15 @@
-<h1>Search Music Results</h1>
+<p>Search Music Results</p>
 <fieldset *ngIf="trackSearchResults">
   <legend>Tracks</legend>
-  <table>
+  <table class="music-results" >
     <tr>
       <th>Title</th>
       <th>Artist</th>
-      <th>Url</th>
-      <th>ImageUrl</th>
       <th>Actions</th>
     </tr>
     <tr *ngFor="let track of trackSearchResults">
       <td>{{track.name}}</td>
       <td>{{track.artist}}</td>
-      <td>{{track.url}}</td>
-      <td>{{track.image[1]['#text']}}</td>
       <td>
         <a href="#">Add to Favorites</a>
       </td>
@@ -22,42 +18,34 @@
 </fieldset>
 <fieldset *ngIf="albumSearchResults">
   <legend>Album</legend>
-  <table>
+  <table class="music-results" >
     <tr>
       <th>Title</th>
       <th>Artist</th>
-      <th>Url</th>
-      <th>ImageUrl</th>
       <th>Actions</th>
     </tr>
     <tr *ngFor="let album of albumSearchResults">
       <td>{{album.name}}</td>
       <td>{{album.artist}}</td>
-      <td>{{album.url}}</td>
-      <td>{{album.image[1]['#text']}}</td>
       <td>
         <a href="#">Browse Album's Songs</a>
       </td>
     </tr>
   </table>
 </fieldset>
-<fieldset *ngIf="artistSearchResults">
+<!--<fieldset *ngIf="artistSearchResults">
   <legend>Artist</legend>
-  <table>
+  <table class="music-results" >
     <tr>
       <th>Name</th>
-      <th>url</th>
-      <th>ImageUrl</th>
       <th>Actions</th>
     </tr>
     <tr *ngFor="let artist of artistSearchResults">
       <td>{{artist.name}}</td>
-      <td>{{artist.url}}</td>
-      <td>{{artist.image[1]['#text']}}</td>
       <td>
         <a href="#">Browse Artist's Albums</a>
         <a href="#">Browse Artist's Songs</a>
       </td>
     </tr>
   </table>
-</fieldset>
+</fieldset>-->

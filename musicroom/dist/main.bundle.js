@@ -163,17 +163,18 @@ var routes = [
     { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_11__index_index_component__["a" /* IndexComponent */] },
     { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_8__login_login_component__["a" /* LoginComponent */] },
     { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_7__registration_registration_component__["a" /* RegistrationComponent */] },
-    { path: 'home', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_10__dashboard_dashboard_component__["a" /* DashboardComponent */] },
-    { path: 'home/profile', component: __WEBPACK_IMPORTED_MODULE_9__profile_profile_component__["a" /* ProfileComponent */], children: [
-            { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_3__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
-            { path: 'current', component: __WEBPACK_IMPORTED_MODULE_2__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
-        ] },
     { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_6__logout_logout_component__["a" /* LogoutComponent */] },
-    { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_5__search_manager_search_manager_component__["a" /* SearchManagerComponent */], children: [
-            { path: 'music', component: __WEBPACK_IMPORTED_MODULE_1__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */] },
-            { path: 'users', component: __WEBPACK_IMPORTED_MODULE_0__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */] }
+    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_10__dashboard_dashboard_component__["a" /* DashboardComponent */], children: [
+            { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_9__profile_profile_component__["a" /* ProfileComponent */], children: [
+                    { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_3__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
+                    { path: 'current', component: __WEBPACK_IMPORTED_MODULE_2__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
+                ] },
+            { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_5__search_manager_search_manager_component__["a" /* SearchManagerComponent */], children: [
+                    { path: 'music', component: __WEBPACK_IMPORTED_MODULE_1__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */] },
+                    { path: 'users', component: __WEBPACK_IMPORTED_MODULE_0__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */] }
+                ] },
+            { path: 'users/:id', component: __WEBPACK_IMPORTED_MODULE_4__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] }
         ] },
-    { path: 'home/users/:id', component: __WEBPACK_IMPORTED_MODULE_4__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -277,7 +278,7 @@ var AppComponent = (function () {
         // console.log('hello');
         if (!this.isInMusicBrowser) {
             console.log('not in music browser so redirecting');
-            this._route.navigate(['search', 'results', 'music', { q: this.searchVal2 }]);
+            this._route.navigate(['home', 'search', 'results', 'music', { q: this.searchVal2 }]);
             this.searchVal2 = '';
         }
         else {
@@ -289,7 +290,7 @@ var AppComponent = (function () {
     AppComponent.prototype.redirectToSearchPageWithSearchVal = function () {
         // console.log('redirecting to Search page with keyword SearchVal');
         // console.log(this.searchVal);
-        this._route.navigate(['search', 'results', 'users', { q: this.searchVal }]);
+        this._route.navigate(['home', 'search', 'results', 'users', { q: this.searchVal }]);
     };
     AppComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
@@ -496,7 +497,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".wrapper {\n    height: 100vh;\n}\n\n.inblock {\n    display: inline-block;\n    vertical-align: top;\n}\n\n.joined {\n    height: 93vh;\n    width: 10%;\n}\n\n.main {\n    height: 93vh;\n    width: 73%;\n}\n\n.secondary {\n    height: 93vh;\n    width: 10%;\n}", ""]);
+exports.push([module.i, ".wrapper {\n    height: 100vh;\n}\n\n.inblock {\n    display: inline-block;\n    vertical-align: top;\n}\n\n.joined {\n    height:95%;\n    width: 10%;\n}\n\n.main {\n    height: 95%;\n    width: 73%;\n}\n\n.secondary {\n    height: 95%;\n    width: 10%;\n}\n\n.subcomponents {\n    height: 45%;\n}\n\n.online {\n\n}\n\n.favorites {\n\n}\n\n.router {\n    height: 85%;\n}\n\n.active-music {\n    height: 8%;\n}", ""]);
 
 // exports
 
@@ -509,7 +510,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<fieldset class=\"wrapper\">\n    <legend>Dashboard Page</legend>\n    <fieldset class=\"joined inblock\">\n        <legend>Joined Rooms</legend>\n    </fieldset>\n    <fieldset class=\"main inblock\">\n        <legend>Main View</legend>\n        <router-outlet></router-outlet>\n    </fieldset>\n    <fieldset class=\"secondary inblock\">\n        <legend>Secondary View</legend>\n    </fieldset>\n\n\n</fieldset>\n"
+module.exports = "<fieldset class=\"wrapper\">\n    <legend>Dashboard Page</legend>\n    <fieldset class=\"joined inblock\">\n        <legend>Joined Rooms</legend>\n    </fieldset>\n    <fieldset class=\"main inblock\">\n        <legend>Main View</legend>\n        <fieldset class=\"router\">\n            <legend>Router-Outlet</legend>\n            <router-outlet></router-outlet>\n        </fieldset>\n    <fieldset class=\"active-music\">\n        <legend>Active MusicRoom/Player present if active room is minimized</legend>\n    </fieldset>\n    </fieldset>\n    <fieldset class=\"secondary inblock\">\n        <legend>Secondary View</legend>\n        <fieldset class=\"online subcomponents\">\n            <legend>See who's online</legend>\n        </fieldset>\n        <fieldset class=\"favorites subcomponents\">\n            <legend>Current User's Favorite Songs</legend>\n        </fieldset>\n    </fieldset>\n\n\n</fieldset>\n"
 
 /***/ }),
 
@@ -1613,7 +1614,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".music-results {\n    width: 90%;\n}\n\nfieldset {\n    width:70%;\n}", ""]);
 
 // exports
 
@@ -1626,7 +1627,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/search-manager/search-music/search-music.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Search Music Results</h1>\n<fieldset *ngIf=\"trackSearchResults\">\n  <legend>Tracks</legend>\n  <table>\n    <tr>\n      <th>Title</th>\n      <th>Artist</th>\n      <th>Url</th>\n      <th>ImageUrl</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let track of trackSearchResults\">\n      <td>{{track.name}}</td>\n      <td>{{track.artist}}</td>\n      <td>{{track.url}}</td>\n      <td>{{track.image[1]['#text']}}</td>\n      <td>\n        <a href=\"#\">Add to Favorites</a>\n      </td>\n    </tr>\n  </table>\n</fieldset>\n<fieldset *ngIf=\"albumSearchResults\">\n  <legend>Album</legend>\n  <table>\n    <tr>\n      <th>Title</th>\n      <th>Artist</th>\n      <th>Url</th>\n      <th>ImageUrl</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let album of albumSearchResults\">\n      <td>{{album.name}}</td>\n      <td>{{album.artist}}</td>\n      <td>{{album.url}}</td>\n      <td>{{album.image[1]['#text']}}</td>\n      <td>\n        <a href=\"#\">Browse Album's Songs</a>\n      </td>\n    </tr>\n  </table>\n</fieldset>\n<fieldset *ngIf=\"artistSearchResults\">\n  <legend>Artist</legend>\n  <table>\n    <tr>\n      <th>Name</th>\n      <th>url</th>\n      <th>ImageUrl</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let artist of artistSearchResults\">\n      <td>{{artist.name}}</td>\n      <td>{{artist.url}}</td>\n      <td>{{artist.image[1]['#text']}}</td>\n      <td>\n        <a href=\"#\">Browse Artist's Albums</a>\n        <a href=\"#\">Browse Artist's Songs</a>\n      </td>\n    </tr>\n  </table>\n</fieldset>"
+module.exports = "<p>Search Music Results</p>\n<fieldset *ngIf=\"trackSearchResults\">\n  <legend>Tracks</legend>\n  <table class=\"music-results\" >\n    <tr>\n      <th>Title</th>\n      <th>Artist</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let track of trackSearchResults\">\n      <td>{{track.name}}</td>\n      <td>{{track.artist}}</td>\n      <td>\n        <a href=\"#\">Add to Favorites</a>\n      </td>\n    </tr>\n  </table>\n</fieldset>\n<fieldset *ngIf=\"albumSearchResults\">\n  <legend>Album</legend>\n  <table class=\"music-results\" >\n    <tr>\n      <th>Title</th>\n      <th>Artist</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let album of albumSearchResults\">\n      <td>{{album.name}}</td>\n      <td>{{album.artist}}</td>\n      <td>\n        <a href=\"#\">Browse Album's Songs</a>\n      </td>\n    </tr>\n  </table>\n</fieldset>\n<!--<fieldset *ngIf=\"artistSearchResults\">\n  <legend>Artist</legend>\n  <table class=\"music-results\" >\n    <tr>\n      <th>Name</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let artist of artistSearchResults\">\n      <td>{{artist.name}}</td>\n      <td>\n        <a href=\"#\">Browse Artist's Albums</a>\n        <a href=\"#\">Browse Artist's Songs</a>\n      </td>\n    </tr>\n  </table>\n</fieldset>-->"
 
 /***/ }),
 
