@@ -8,19 +8,19 @@ export class ChatService {
   constructor(private socket: Socket) { }
 
   
-  getMessage() {
+  getMessage(id) {
     return this.socket
-        .fromEvent<any>("msg")
+        .fromEvent<any>("msg"+id)
         .map(data => {
-          console.log(data);
-          return data.msg;
+          console.log("GOT EVENT");
+          return true;
         })
   }
 
-  sendMessage(msg: string) {
+  sendMessage(id) {
     console.log("SENDING EVENT");
       this.socket
-          .emit("msg", msg);
+          .emit("msg", id);
   }
      
 }

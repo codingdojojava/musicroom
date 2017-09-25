@@ -34,4 +34,28 @@ export class ApiCallService {
       .toPromise();
   }
 
+  createRoom(roomInfo){
+    return this._http.post('/api/rooms/create', roomInfo).map(data=>data.json()).toPromise();
+  }
+
+  getRooms(){
+    return this._http.get('/api/rooms').map(data=>data.json()).toPromise();
+  }
+
+  getRoomById(id){
+    return this._http.get('/api/rooms/'+id).map(data=>data.json()).toPromise();
+  }
+
+  sendMessage(id, message){
+    console.log("MESSAGE");
+    console.log(message);
+    var msg = {message: message};
+    return this._http.post('/api/rooms/'+id+'/messages/new', msg).map(data=>data.json()).toPromise();
+  }
+
+  joinRoom(id, pw){
+    return this._http.post('/api/rooms/'+id+'/join', pw).map(data=>data.json()).toPromise();
+  }
+
+
 }

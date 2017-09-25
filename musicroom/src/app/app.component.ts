@@ -10,19 +10,19 @@ export class AppComponent {
   searchVal='';
   constructor(private chatService:ChatService) { }
 
-  ngOnInit() {
-    this.chatService
-        .getMessage()
-        .subscribe(data => {
-          console.log("GOT IT");
-          // console.log(data);
-          this.msg = data;
-        });
-  }
+  // ngOnInit() {
+  //   this.chatService
+  //       .getMessage()
+  //       .subscribe(data => {
+  //         console.log("GOT IT");
+  //         // console.log(data);
+  //         this.msg = data;
+  //       });
+  // }
 
-  sendMsg(msg){
-     this.chatService.sendMessage(msg);
-  }
+  // sendMsg(msg){
+  //    this.chatService.sendMessage(msg);
+  // }
 
   redirectToSearchPageWithSearchVal() {
     console.log('redirecting to Search page with keyword SearchVal');

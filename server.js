@@ -27,8 +27,7 @@ io.on('connection', (client)=>{
   console.log("CLIENT CONNECTED!");
   client.on("msg", (data)=>{
     console.log("QQQQQQQQQQ");
-    console.log(data);
-    io.emit("msg", {msg:data});
+    io.emit("msg"+data);
   })
 })
 

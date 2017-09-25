@@ -1,3 +1,4 @@
+import { RoomComponent } from './dashboard/room/room.component';
 import { LogoutComponent } from './logout/logout.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
@@ -11,7 +12,9 @@ const routes: Routes = [
   { path: '', pathMatch: 'full', component: IndexComponent },
   { path: 'login', pathMatch: 'full', component: LoginComponent },
   { path: 'register', pathMatch: 'full', component: RegistrationComponent },
-  { path: 'home', pathMatch: 'full', component: DashboardComponent },
+  { path: 'home', component: DashboardComponent, children:[
+    {path: 'room/:id', component: RoomComponent}
+  ] },
   { path: 'home/profile', pathMatch: 'full', component: ProfileComponent },
   { path: 'logout', pathMatch: 'full', component: LogoutComponent }
 ];
