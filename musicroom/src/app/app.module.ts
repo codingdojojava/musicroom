@@ -22,6 +22,7 @@ import { EditProfileComponent } from './profile/edit-profile/edit-profile.compon
 import { CurrentProfileComponent } from './profile/current-profile/current-profile.component';
 import { SearchMusicComponent } from './search-manager/search-music/search-music.component';
 import { SearchUsersComponent } from './search-manager/search-users/search-users.component';
+import { NewRoomComponent } from './new-room/new-room.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
 
@@ -41,6 +42,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
     CurrentProfileComponent,
     SearchMusicComponent,
     SearchUsersComponent,
+    NewRoomComponent,
   ],
   imports: [
     BrowserModule,

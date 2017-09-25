@@ -143,21 +143,22 @@ var _a;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_room_room_component__ = __webpack_require__("../../../../../src/app/dashboard/room/room.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__new_room_new_room_component__ = __webpack_require__("../../../../../src/app/new-room/new-room.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__dashboard_room_room_component__ = __webpack_require__("../../../../../src/app/dashboard/room/room.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -179,22 +180,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
 var routes = [
-    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_12__index_index_component__["a" /* IndexComponent */] },
-    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_9__login_login_component__["a" /* LoginComponent */] },
-    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_8__registration_registration_component__["a" /* RegistrationComponent */] },
-    { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_7__logout_logout_component__["a" /* LogoutComponent */] },
-    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_11__dashboard_dashboard_component__["a" /* DashboardComponent */], children: [
-            { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_10__profile_profile_component__["a" /* ProfileComponent */], children: [
-                    { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_4__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
-                    { path: 'current', component: __WEBPACK_IMPORTED_MODULE_3__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
+    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_13__index_index_component__["a" /* IndexComponent */] },
+    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_10__login_login_component__["a" /* LoginComponent */] },
+    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_9__registration_registration_component__["a" /* RegistrationComponent */] },
+    { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_8__logout_logout_component__["a" /* LogoutComponent */] },
+    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_12__dashboard_dashboard_component__["a" /* DashboardComponent */], children: [
+            { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_11__profile_profile_component__["a" /* ProfileComponent */], children: [
+                    { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_5__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
+                    { path: 'current', component: __WEBPACK_IMPORTED_MODULE_4__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
                 ] },
-            { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_6__search_manager_search_manager_component__["a" /* SearchManagerComponent */], children: [
-                    { path: 'music', component: __WEBPACK_IMPORTED_MODULE_2__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */] },
-                    { path: 'users', component: __WEBPACK_IMPORTED_MODULE_1__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */] }
+            { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_7__search_manager_search_manager_component__["a" /* SearchManagerComponent */], children: [
+                    { path: 'music', component: __WEBPACK_IMPORTED_MODULE_3__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */] },
+                    { path: 'users', component: __WEBPACK_IMPORTED_MODULE_2__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */] }
                 ] },
-            { path: 'users/:id', component: __WEBPACK_IMPORTED_MODULE_5__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] },
-            { path: 'room/:id', component: __WEBPACK_IMPORTED_MODULE_0__dashboard_room_room_component__["a" /* RoomComponent */] }
+            { path: 'users/:id', component: __WEBPACK_IMPORTED_MODULE_6__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] },
+            { path: 'room/new', component: __WEBPACK_IMPORTED_MODULE_0__new_room_new_room_component__["a" /* NewRoomComponent */] },
+            { path: 'room/:id', component: __WEBPACK_IMPORTED_MODULE_1__dashboard_room_room_component__["a" /* RoomComponent */] },
         ] },
 ];
 var AppRoutingModule = (function () {
@@ -203,9 +206,9 @@ var AppRoutingModule = (function () {
     return AppRoutingModule;
 }());
 AppRoutingModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_13__angular_core__["M" /* NgModule */])({
-        imports: [__WEBPACK_IMPORTED_MODULE_14__angular_router__["c" /* RouterModule */].forRoot(routes)],
-        exports: [__WEBPACK_IMPORTED_MODULE_14__angular_router__["c" /* RouterModule */]]
+    Object(__WEBPACK_IMPORTED_MODULE_14__angular_core__["M" /* NgModule */])({
+        imports: [__WEBPACK_IMPORTED_MODULE_15__angular_router__["c" /* RouterModule */].forRoot(routes)],
+        exports: [__WEBPACK_IMPORTED_MODULE_15__angular_router__["c" /* RouterModule */]]
     })
 ], AppRoutingModule);
 
@@ -376,6 +379,7 @@ var _a, _b, _c, _d, _e;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__new_room_new_room_component__ = __webpack_require__("../../../../../src/app/new-room/new-room.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -393,6 +397,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
  // <-- Import FormsModule
  // <-- Import HttpModule
+
 
 
 
@@ -429,6 +434,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_21__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */],
             __WEBPACK_IMPORTED_MODULE_22__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */],
             __WEBPACK_IMPORTED_MODULE_23__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */],
+            __WEBPACK_IMPORTED_MODULE_24__new_room_new_room_component__["a" /* NewRoomComponent */],
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser__["a" /* BrowserModule */],
@@ -524,7 +530,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>You now in dashboard</p>\n\n\n<!-- <router-outlet></router-outlet> -->\n<fieldset class=\"wrapper\">\n    <legend>Dashboard Page</legend>\n    <fieldset class=\"joined inblock\">\n        <legend>Joined Rooms</legend>\n    </fieldset>\n    <fieldset class=\"main inblock\">\n        <legend>Main View</legend>\n        <fieldset class=\"router\">\n            <legend>Router-Outlet</legend>\n            <router-outlet></router-outlet>\n        </fieldset>\n    <fieldset class=\"active-music\">\n        <legend>Active MusicRoom/Player present if active room is minimized</legend>\n    </fieldset>\n    </fieldset>\n    <fieldset class=\"secondary inblock\">\n        <legend>Secondary View</legend>\n        <fieldset class=\"online subcomponents\">\n            <legend>See who's online</legend>\n        </fieldset>\n        <fieldset class=\"favorites subcomponents\">\n            <legend>Current User's Favorite Songs</legend>\n        </fieldset>\n    </fieldset>\n\n\n</fieldset>\n"
+module.exports = "<p>You now in dashboard</p>\n\n<!-- <router-outlet></router-outlet> -->\n<!-- <a [routerLink]=\"['room']\">qqqq</a> -->\n<fieldset class=\"wrapper\">\n    <legend>Dashboard Page</legend>\n    <fieldset class=\"joined inblock\">\n        <legend>Joined Rooms</legend>\n        <a [routerLink]='[\"room\",\"new\"]' >Create Room</a>\n        <div *ngFor=\"let room of currentUser.joinedRooms\">\n            <a [routerLink]=\"['room', room.roomId]\">{{room.title}}</a>\n        </div>\n    </fieldset>\n    <fieldset class=\"main inblock\">\n        <legend>Main View</legend>\n        <fieldset class=\"router\">\n            <legend>Router-Outlet</legend>\n            <router-outlet></router-outlet>\n        </fieldset>\n    <fieldset class=\"active-music\">\n        <legend>Active MusicRoom/Player present if active room is minimized</legend>\n    </fieldset>\n    </fieldset>\n    <fieldset class=\"secondary inblock\">\n        <legend>Secondary View</legend>\n        <fieldset class=\"online subcomponents\">\n            <legend>See who's online</legend>\n        </fieldset>\n        <fieldset class=\"favorites subcomponents\">\n            <legend>Current User's Favorite Songs</legend>\n        </fieldset>\n    </fieldset>\n\n\n</fieldset>\n"
 
 /***/ }),
 
@@ -533,11 +539,10 @@ module.exports = "<p>You now in dashboard</p>\n\n\n<!-- <router-outlet></router-
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DashboardComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__models_room__ = __webpack_require__("../../../../../src/app/models/room.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_user__ = __webpack_require__("../../../../../src/app/models/user.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_user__ = __webpack_require__("../../../../../src/app/models/user.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -551,17 +556,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var DashboardComponent = (function () {
-    // subscription: Subscription;
-    // lastFmToken;
-    function DashboardComponent(_apicallService, _router, _route) {
+    function DashboardComponent(_apicallService, _router, activatedRoute) {
         this._apicallService = _apicallService;
         this._router = _router;
-        this._route = _route;
-        this.room = new __WEBPACK_IMPORTED_MODULE_0__models_room__["a" /* Room */]();
-        this.currentUser = new __WEBPACK_IMPORTED_MODULE_2__models_user__["a" /* User */]();
+        this.activatedRoute = activatedRoute;
+        this.currentUser = new __WEBPACK_IMPORTED_MODULE_1__models_user__["a" /* User */]();
         this.allRooms = [];
+        this.userRooms = [];
+        this.room = {};
         this.getCurrentUserInSession();
     }
     DashboardComponent.prototype.ngOnInit = function () {
@@ -596,15 +599,6 @@ var DashboardComponent = (function () {
             _this._router.navigate(['']);
         });
     };
-    DashboardComponent.prototype.createRoom = function () {
-        var self = this;
-        this._apicallService.createRoom(this.room).then(function (data) {
-            console.log("ROOM CREATION");
-            console.log(data);
-            self.getAllRooms();
-        });
-        this.room = new __WEBPACK_IMPORTED_MODULE_0__models_room__["a" /* Room */]();
-    };
     DashboardComponent.prototype.getAllRooms = function () {
         var _this = this;
         this._apicallService.getRooms().then(function (rooms) {
@@ -614,12 +608,12 @@ var DashboardComponent = (function () {
     return DashboardComponent;
 }());
 DashboardComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["o" /* Component */])({
         selector: 'app-dashboard',
         template: __webpack_require__("../../../../../src/app/dashboard/dashboard.component.html"),
         styles: [__webpack_require__("../../../../../src/app/dashboard/dashboard.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* ActivatedRoute */]) === "function" && _c || Object])
 ], DashboardComponent);
 
 var _a, _b, _c;
@@ -648,7 +642,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/room/room.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"border: 1px solid black;\">\n  {{room.title}}\n  <div *ngIf=\"userInRoom\">\n    <div id=\"allMessages\">\n      <p *ngFor=\"let msg of room.chatlog\">{{msg.user}}: {{msg.message}}</p>\n    </div>\n    <form (submit)=\"sendMessage()\">\n      <input type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <input type=\"submit\" value=\"Send\">\n    </form>\n  </div>\n  <div *ngIf=\"!userInRoom\">\n    <div *ngIf=\"room.public\">\n      <button (click)=\"joinRoom()\">Join Room</button>\n    </div>\n    <div *ngIf=\"!room.public\">\n      <input type=\"text\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n      <button (click)=\"joinRoom()\" [disabled]=\"roomPW != room.password\">Join Room</button>\n    </div>\n  </div>\n</div>"
+module.exports = "<div style=\"border: 1px solid black;\">\n  {{room.title}}\n  <div *ngIf=\"userInRoom\">\n    <div id=\"allMessages\">\n      <p *ngFor=\"let msg of room.chatlog\">{{msg.user}}: {{msg.message}}</p>\n    </div>\n    <form (submit)=\"sendMessage()\">\n      <input type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <input type=\"submit\" value=\"Send\">\n    </form>\n  </div>\n  <div *ngIf=\"!userInRoom\">\n    <div *ngIf=\"room.isPublic\">\n      <button (click)=\"joinRoom()\">Join Room</button>\n    </div>\n    <div *ngIf=\"!room.isPublic\">\n      <input type=\"text\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n      <button (click)=\"joinRoom()\" [disabled]=\"roomPW != room.password\">Join Room</button>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -685,12 +679,14 @@ var RoomComponent = (function () {
     }
     RoomComponent.prototype.ngOnInit = function () {
         var _this = this;
+        // console.log("FFFFF");
         this._route.paramMap.subscribe(function (params) {
             var self = _this;
             _this.apiService.getRoomById(params.get('id')).then(function (data) {
                 console.log("GOT ROOM");
                 console.log(data);
                 _this.room = data;
+                console.log(_this.room);
                 _this.checkUserInRoom();
                 _this.chatService
                     .getMessage(_this.room.roomId)
@@ -705,6 +701,7 @@ var RoomComponent = (function () {
         var _this = this;
         this.apiService.getRoomById(this.room.roomId).then(function (data) {
             _this.room = data;
+            _this.checkUserInRoom();
         });
     };
     RoomComponent.prototype.sendMessage = function () {
@@ -730,12 +727,13 @@ var RoomComponent = (function () {
                 _this.userInRoom = true;
             else
                 _this.userInRoom = false;
+            console.log(_this.userInRoom);
         });
     };
     RoomComponent.prototype.joinRoom = function () {
         var self = this;
         this.apiService.joinRoom(this.room.roomId, this.roomPW).then(function (result) {
-            self.checkUserInRoom();
+            self.refreshRoom();
         });
     };
     return RoomComponent;
@@ -1066,7 +1064,15 @@ var _a, _b, _c;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Room; });
 var Room = (function () {
-    function Room() {
+    function Room(title, description, isPublic, password) {
+        if (title === void 0) { title = ''; }
+        if (description === void 0) { description = ''; }
+        if (isPublic === void 0) { isPublic = ''; }
+        if (password === void 0) { password = ''; }
+        this.title = title;
+        this.description = description;
+        this.isPublic = isPublic;
+        this.password = password;
     }
     return Room;
 }());
@@ -1119,6 +1125,88 @@ var User = (function () {
 }());
 
 //# sourceMappingURL=user.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/new-room/new-room.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/new-room/new-room.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<form (submit)=\"createRoom()\">\n  <div><label>Title: </label><input [(ngModel)] = \"room.title\" type=\"text\" name='roomtitle'></div>\n  <div>\n      <label>Privacy:</label>\n      <select name=\"public\" id=\"\" [(ngModel)]=\"room.isPublic\">\n          <option value=\"true\">Public</option>\n          <option value=\"false\">Private</option>\n      </select>\n  </div>\n  <div><label>Password: </label><input type=\"text\" [disabled]=\"room.isPublic == 'true'\" name=\"pw\" [(ngModel)]=\"room.password\"></div>\n  <div><label>Description: </label><input [(ngModel)]=\"room.description\" type=\"text\" name='description'></div>\n  <div><input type=\"submit\" value=\"Create Room\"></div>\n</form>"
+
+/***/ }),
+
+/***/ "../../../../../src/app/new-room/new-room.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NewRoomComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_room__ = __webpack_require__("../../../../../src/app/models/room.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var NewRoomComponent = (function () {
+    function NewRoomComponent(_apicallService, dashComp) {
+        this._apicallService = _apicallService;
+        this.dashComp = dashComp;
+        this.room = new __WEBPACK_IMPORTED_MODULE_2__models_room__["a" /* Room */]();
+    }
+    NewRoomComponent.prototype.ngOnInit = function () {
+    };
+    NewRoomComponent.prototype.createRoom = function () {
+        var self = this;
+        console.log("ROOM");
+        console.log(this.room);
+        this._apicallService.createRoom(this.room).then(function (data) {
+            console.log("ROOM CREATION");
+            console.log(data);
+            self.dashComp.getCurrentUserInSession();
+        });
+        this.room = new __WEBPACK_IMPORTED_MODULE_2__models_room__["a" /* Room */]();
+    };
+    return NewRoomComponent;
+}());
+NewRoomComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["o" /* Component */])({
+        selector: 'app-new-room',
+        template: __webpack_require__("../../../../../src/app/new-room/new-room.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/new-room/new-room.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__["a" /* DashboardComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__["a" /* DashboardComponent */]) === "function" && _b || Object])
+], NewRoomComponent);
+
+var _a, _b;
+//# sourceMappingURL=new-room.component.js.map
 
 /***/ }),
 

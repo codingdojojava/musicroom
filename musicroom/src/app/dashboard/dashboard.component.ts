@@ -10,14 +10,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  room = new Room();
   currentUser: User = new User();
   allRooms = [];
-  // subscription: Subscription;
-  // lastFmToken;
-  constructor(private _apicallService: ApiCallService, 
-              private _router: Router, 
-              private _route: ActivatedRoute) {
+  userRooms = [];
+  room:object={};
+  constructor(private _apicallService: ApiCallService, private _router: Router, private activatedRoute: ActivatedRoute) {
     this.getCurrentUserInSession();
    }
   ngOnInit() {
@@ -52,20 +49,12 @@ export class DashboardComponent implements OnInit {
       });
   }
 
-  createRoom(){
-    var self = this;
-    this._apicallService.createRoom(this.room).then(function(data){
-      console.log("ROOM CREATION");
-      console.log(data);
-      self.getAllRooms();
-    });
-    this.room = new Room();
-  }
 
   getAllRooms(){
     this._apicallService.getRooms().then(rooms=>{
       this.allRooms = rooms;
     })
   }
+
 
 }

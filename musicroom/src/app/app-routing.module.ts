@@ -1,3 +1,4 @@
+import { NewRoomComponent } from './new-room/new-room.component';
 import { RoomComponent } from './dashboard/room/room.component';
 import { SearchUsersComponent } from './search-manager/search-users/search-users.component';
 import { SearchMusicComponent } from './search-manager/search-music/search-music.component';
@@ -30,7 +31,8 @@ const routes: Routes = [
       { path: 'users', component: SearchUsersComponent }
     ] },
     { path: 'users/:id', component: OtherUserProfileComponent },
-    {path: 'room/:id', component: RoomComponent}
+    {path: 'room/new', component: NewRoomComponent},
+    {path: 'room/:id', component: RoomComponent},
   ] },
   
 
