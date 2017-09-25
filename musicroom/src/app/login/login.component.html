@@ -1,6 +1,9 @@
 <fieldset>
   <legend>Login</legend>
-<form (submit)="loginUser()">
+<div style="color: red;" *ngIf="incorrectLogin">
+  <p>Invalid Login Credentials. Please try again.</p> 
+</div>
+<form (submit)="loginUser(); form.reset()" #form="ngForm">
   <p>
     <label>Username: 
       <input type="text" name="username" required [(ngModel)] = "user.username" #username="ngModel"/>

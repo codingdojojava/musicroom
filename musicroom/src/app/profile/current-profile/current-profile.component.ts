@@ -1,20 +1,18 @@
 import { Router } from '@angular/router';
-import { User } from './../models/user';
-import { ApiCallService } from './../api-call.service';
+import { ApiCallService } from './../../api-call.service';
+import { User } from './../../models/user';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'app-current-profile',
+  templateUrl: './current-profile.component.html',
+  styleUrls: ['./current-profile.component.css']
 })
-export class DashboardComponent implements OnInit {
-  currentUser: User = new User();
+export class CurrentProfileComponent implements OnInit {
+  currentUser: User;
   constructor(private _apicallService: ApiCallService, private _router: Router) {
     this.getCurrentUserInSession();
    }
-  ngOnInit() {
-  }
 
   getCurrentUserInSession() {
     this._apicallService.getCurrentUserInSession()
@@ -23,6 +21,7 @@ export class DashboardComponent implements OnInit {
         if (data) {
           // console.log('success getting current user');
           this.currentUser = data;
+          // console.log(this.currentUser);
         } else {
           // console.log('user not in session');
           this._router.navigate(['']);
@@ -30,9 +29,12 @@ export class DashboardComponent implements OnInit {
       })
       .catch((error) => {
         // console.log('error getting current user');
-        // console.log(error);
+        console.log(error);
         this._router.navigate(['']);
       });
+  }
+
+  ngOnInit() {
   }
 
 }

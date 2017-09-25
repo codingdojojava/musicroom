@@ -41,10 +41,18 @@ var UserSchema = new mongoose.Schema({
     description: {
         type: String,
     },
+    profileImageUrl: {
+        type: String,
+    },
+    lastfmSessionToken: {
+        type: String,
+    },
     favoriteSongs: [{type: Schema.Types.ObjectId, ref: 'Song'}],
     joinedRooms: [{type: Schema.Types.ObjectId, ref: 'MusicRoom'}],
     ownedRooms: [{type: Schema.Types.ObjectId, ref: 'MusicRoom'}],
     friends: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    received_invites: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    sent_invites: [{type: Schema.Types.ObjectId, ref: 'User'}],
 }, {timestamps: true});
 
 UserSchema.pre('save', function(done){
