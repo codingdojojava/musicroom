@@ -1,5 +1,6 @@
+import { Subscription } from 'rxjs/Subscription';
 import { Room } from './../models/room';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { User } from './../models/user';
 import { ApiCallService } from './../api-call.service';
 import { Component, OnInit } from '@angular/core';
@@ -12,11 +13,24 @@ export class DashboardComponent implements OnInit {
   room = new Room();
   currentUser: User = new User();
   allRooms = [];
-  constructor(private _apicallService: ApiCallService, private _router: Router) {
+  // subscription: Subscription;
+  // lastFmToken;
+  constructor(private _apicallService: ApiCallService, 
+              private _router: Router, 
+              private _route: ActivatedRoute) {
     this.getCurrentUserInSession();
    }
   ngOnInit() {
     this.getAllRooms();
+    // this.subscription = this._route.paramMap
+    //   .switchMap(params => {
+    //     console.log(params.get('?token'));
+    //     return params.get('?token');
+    //   })
+    //   .subscribe(token => {
+    //     console.log(token);
+    //     this.lastFmToken = token;
+    //   });
   }
 
   getCurrentUserInSession() {
