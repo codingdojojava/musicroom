@@ -26,8 +26,6 @@ export class AppComponent {
     this.getCurrentUserInSession();
    }
 
-
-
   // sendMsg(msg){
   //    this.chatService.sendMessage(msg);
   // }

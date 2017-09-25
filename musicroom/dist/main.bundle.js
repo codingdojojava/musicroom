@@ -530,7 +530,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>You now in dashboard</p>\n<h2>Create a new room</h2>\n<div *ngIf=\"room.title\">\n<form (submit)=\"createRoom()\">\n    <div><label>Title: </label><input [(ngModel)] = \"room.title\" type=\"text\" name='roomtitle'></div>\n    <div>\n        <label>Privacy:</label>\n        <select name=\"public\" id=\"\" [(ngModel)]=\"room.isPublic\">\n            <option value=\"true\">Public</option>\n            <option value=\"false\">Private</option>\n        </select>\n    </div>\n    <div><label>Password: </label><input type=\"text\" [disabled]=\"room.isPublic == 'true'\" name=\"pw\" [(ngModel)]=\"room.password\"></div>\n    <div><label>Description: </label><input [(ngModel)]=\"room.description\" type=\"text\" name='description'></div>\n    <div><input type=\"submit\" value=\"Create Room\"></div>\n</form>\n</div>\n<!-- <div id=\"allRooms\">\n    <div *ngFor=\"let room of allRooms\">\n        <a [routerLink]=\"['room', room.roomId]\">{{room.title}}</a>\n    </div>\n</div> -->\n\n<!-- <router-outlet></router-outlet> -->\n<!-- <a [routerLink]=\"['room']\">qqqq</a> -->\n<fieldset class=\"wrapper\">\n    <legend>Dashboard Page</legend>\n    <fieldset class=\"joined inblock\">\n        <legend>Joined Rooms</legend>\n        <a [routerLink]='[\"room\",\"new\"]' >Create Room</a>\n        <div *ngFor=\"let room of currentUser.joinedRooms\">\n            <a [routerLink]=\"['room', room.roomId]\">{{room.title}}</a>\n        </div>\n    </fieldset>\n    <fieldset class=\"main inblock\">\n        <legend>Main View</legend>\n        <fieldset class=\"router\">\n            <legend>Router-Outlet</legend>\n            <router-outlet></router-outlet>\n        </fieldset>\n    <fieldset class=\"active-music\">\n        <legend>Active MusicRoom/Player present if active room is minimized</legend>\n    </fieldset>\n    </fieldset>\n    <fieldset class=\"secondary inblock\">\n        <legend>Secondary View</legend>\n        <fieldset class=\"online subcomponents\">\n            <legend>See who's online</legend>\n        </fieldset>\n        <fieldset class=\"favorites subcomponents\">\n            <legend>Current User's Favorite Songs</legend>\n        </fieldset>\n    </fieldset>\n\n\n</fieldset>\n"
+module.exports = "<p>You now in dashboard</p>\n\n<!-- <router-outlet></router-outlet> -->\n<!-- <a [routerLink]=\"['room']\">qqqq</a> -->\n<fieldset class=\"wrapper\">\n    <legend>Dashboard Page</legend>\n    <fieldset class=\"joined inblock\">\n        <legend>Joined Rooms</legend>\n        <a [routerLink]='[\"room\",\"new\"]' >Create Room</a>\n        <div *ngFor=\"let room of currentUser.joinedRooms\">\n            <a [routerLink]=\"['room', room.roomId]\">{{room.title}}</a>\n        </div>\n    </fieldset>\n    <fieldset class=\"main inblock\">\n        <legend>Main View</legend>\n        <fieldset class=\"router\">\n            <legend>Router-Outlet</legend>\n            <router-outlet></router-outlet>\n        </fieldset>\n    <fieldset class=\"active-music\">\n        <legend>Active MusicRoom/Player present if active room is minimized</legend>\n    </fieldset>\n    </fieldset>\n    <fieldset class=\"secondary inblock\">\n        <legend>Secondary View</legend>\n        <fieldset class=\"online subcomponents\">\n            <legend>See who's online</legend>\n        </fieldset>\n        <fieldset class=\"favorites subcomponents\">\n            <legend>Current User's Favorite Songs</legend>\n        </fieldset>\n    </fieldset>\n\n\n</fieldset>\n"
 
 /***/ }),
 
@@ -569,6 +569,15 @@ var DashboardComponent = (function () {
     }
     DashboardComponent.prototype.ngOnInit = function () {
         this.getAllRooms();
+        // this.subscription = this._route.paramMap
+        //   .switchMap(params => {
+        //     console.log(params.get('?token'));
+        //     return params.get('?token');
+        //   })
+        //   .subscribe(token => {
+        //     console.log(token);
+        //     this.lastFmToken = token;
+        //   });
     };
     DashboardComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
@@ -942,6 +951,7 @@ var LoginComponent = (function () {
             else {
                 _this.incorrectLogin = false;
                 _this._appComponent.getCurrentUserInSession();
+                // this._router.navigate(['http://www.last.fm/api/auth/?api_key=c595e718d23c51ef68c0d547f1511fe7&cb=http://127.0.0.1/home']);
                 _this._router.navigate(['/home']);
             }
         })

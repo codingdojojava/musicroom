@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs/Subscription';
 import { Room } from './../models/room';
 import { Router, ActivatedRoute } from '@angular/router';
 import { User } from './../models/user';
@@ -18,6 +19,15 @@ export class DashboardComponent implements OnInit {
    }
   ngOnInit() {
     this.getAllRooms();
+    // this.subscription = this._route.paramMap
+    //   .switchMap(params => {
+    //     console.log(params.get('?token'));
+    //     return params.get('?token');
+    //   })
+    //   .subscribe(token => {
+    //     console.log(token);
+    //     this.lastFmToken = token;
+    //   });
   }
 
   getCurrentUserInSession() {
