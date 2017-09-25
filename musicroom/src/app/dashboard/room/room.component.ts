@@ -16,12 +16,14 @@ export class RoomComponent implements OnInit {
    }
 
   ngOnInit() {
+    // console.log("FFFFF");
     this._route.paramMap.subscribe(params=>{
       var self = this;
       this.apiService.getRoomById(params.get('id')).then(data=>{
         console.log("GOT ROOM");
         console.log(data);
         this.room = data;
+        console.log(this.room);
         this.checkUserInRoom();
         this.chatService
         .getMessage(this.room.roomId)
@@ -36,6 +38,7 @@ export class RoomComponent implements OnInit {
   refreshRoom(){
     this.apiService.getRoomById(this.room.roomId).then(data=>{
       this.room = data;
+      this.checkUserInRoom();
     })
   }
 
@@ -62,13 +65,14 @@ export class RoomComponent implements OnInit {
         this.userInRoom = true;
       else
         this.userInRoom = false;
+      console.log(this.userInRoom);
     })
   }
 
   joinRoom(){
     var self = this;
     this.apiService.joinRoom(this.room.roomId, this.roomPW).then(function(result){
-      self.checkUserInRoom()
+      self.refreshRoom();
     });
   }
 }

@@ -34,7 +34,6 @@ export class ApiCallService {
       .toPromise();
   }
 
-<<<<<<< HEAD
   createRoom(roomInfo){
     return this._http.post('/api/rooms/create', roomInfo).map(data=>data.json()).toPromise();
   }
@@ -58,7 +57,6 @@ export class ApiCallService {
     return this._http.post('/api/rooms/'+id+'/join', pw).map(data=>data.json()).toPromise();
   }
 
-=======
   getAllUsers() {
     // console.log('service getting all users');
     return this._http.get('/api/users')
@@ -107,6 +105,5 @@ export class ApiCallService {
       .map(response => response.json())
       .toPromise();
   }
->>>>>>> master
 
 }

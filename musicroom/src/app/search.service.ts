@@ -11,7 +11,7 @@ export class SearchService {
   // Observable string streams
   searchValue$ = this.searchValueSource.asObservable();
   searchValueMusic$ = this.searchValueMusicSource.asObservable();
- 
+  
   // Service message commands
   searchUsers(searchVal: string) {
     this.searchValueSource.next(searchVal);
@@ -19,5 +19,6 @@ export class SearchService {
   searchMusic(searchVal: string) {
     this.searchValueMusicSource.next(searchVal);
   }
+
  
 }

@@ -12,12 +12,11 @@ var MusicRoomSchema = new mongoose.Schema({
     description: {
         type: String
     },
-    public: {
+    isPublic: {
         type: Boolean
     },
     password: {
         type: String,
-        minlength: [8, 'Password must have at least 8 characters']
     },
     chatlog: [
         {user: {type: String}, message: {type: String}, id: {type: Number}}

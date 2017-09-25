@@ -26,27 +26,7 @@ export class AppComponent {
     this.getCurrentUserInSession();
    }
 
-<<<<<<< HEAD
-  // ngOnInit() {
-  //   this.chatService
-  //       .getMessage()
-  //       .subscribe(data => {
-  //         console.log("GOT IT");
-  //         // console.log(data);
-  //         this.msg = data;
-  //       });
-  // }
-=======
-  ngOnInit() {
-    this.chatService
-        .getMessage()
-        .subscribe(data => {
-          // console.log("GOT IT");
-          console.log(data);
-          this.msg = data;
-        });
-  }
->>>>>>> master
+
 
   // sendMsg(msg){
   //    this.chatService.sendMessage(msg);
