@@ -1,3 +1,4 @@
+import { RoomComponent } from './dashboard/room/room.component';
 import { SearchUsersComponent } from './search-manager/search-users/search-users.component';
 import { SearchMusicComponent } from './search-manager/search-music/search-music.component';
 import { CurrentProfileComponent } from './profile/current-profile/current-profile.component';
@@ -23,11 +24,13 @@ const routes: Routes = [
           {path: 'edit', component: EditProfileComponent},
           {path: 'current', component: CurrentProfileComponent}
       ] },
+      
     { path: 'search/results', component: SearchManagerComponent, children: [
       { path: 'music', component: SearchMusicComponent },
       { path: 'users', component: SearchUsersComponent }
     ] },
-    { path: 'users/:id', component: OtherUserProfileComponent }
+    { path: 'users/:id', component: OtherUserProfileComponent },
+    {path: 'room/:id', component: RoomComponent}
   ] },
   
 

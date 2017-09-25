@@ -5,7 +5,6 @@ import { NgModule } from '@angular/core';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TestComponent } from './test/test.component';
 import { ApiCallService } from './api-call.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // <-- Import FormsModule
@@ -17,11 +16,15 @@ import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LogoutComponent } from './logout/logout.component';
 import { SearchManagerComponent } from './search-manager/search-manager.component';
+<<<<<<< HEAD
+import { RoomComponent } from './dashboard/room/room.component';
+=======
 import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { CurrentProfileComponent } from './profile/current-profile/current-profile.component';
 import { SearchMusicComponent } from './search-manager/search-music/search-music.component';
 import { SearchUsersComponent } from './search-manager/search-users/search-users.component';
+>>>>>>> master
 
 const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
 
@@ -35,11 +38,15 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
     RegistrationComponent,
     LogoutComponent,
     SearchManagerComponent,
+<<<<<<< HEAD
+    RoomComponent,
+=======
     OtherUserProfileComponent,
     EditProfileComponent,
     CurrentProfileComponent,
     SearchMusicComponent,
     SearchUsersComponent,
+>>>>>>> master
   ],
   imports: [
     BrowserModule,
