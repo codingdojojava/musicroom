@@ -1,3 +1,4 @@
+import { LastFmApiService } from './last-fm-api.service';
 import { ApiCallService } from './api-call.service';
 import { SearchManagerComponent } from './search-manager/search-manager.component';
 import { SearchService } from './search.service';
@@ -11,9 +12,17 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   currentUser;
+  stuff;
   msg = "";
   searchVal='';
-  constructor(private chatService:ChatService, private _route: Router, private _searchService: SearchService, private _apicallService: ApiCallService) {
+  searchVal2='';
+  isInMusicBrowser = false;
+  searchMode = 'users';
+  constructor(private chatService:ChatService, 
+              private _route: Router, 
+              private _searchService: SearchService, 
+              private _apicallService: ApiCallService,
+              private _lastFmApiService: LastFmApiService) {
     this.getCurrentUserInSession();
    }
 
@@ -36,10 +45,23 @@ export class AppComponent {
     this._searchService.searchUsers(this.searchVal);
   }
 
+  searchMusic() {
+    // console.log('hello');
+    if (!this.isInMusicBrowser) {
+      console.log('not in music browser so redirecting');
+      this._route.navigate(['home', 'search', 'results', 'music', { q: this.searchVal2 }]);
+      this.searchVal2 = '';
+    } else {
+      console.log('in music browser so just updating search results');
+      this._searchService.searchMusic(this.searchVal2);
+      this.searchVal2 = '';
+    }
+  }
+
   redirectToSearchPageWithSearchVal() {
     // console.log('redirecting to Search page with keyword SearchVal');
     // console.log(this.searchVal);
-    this._route.navigate(['search', 'results', { q: this.searchVal }]);
+    this._route.navigate(['home', 'search', 'results', 'users', { q: this.searchVal }]);
   }
 
   getCurrentUserInSession() {
@@ -59,4 +81,13 @@ export class AppComponent {
         // console.log(error);
       });
   }
+
+  setIsInMusicBrowser() {
+    if (this.isInMusicBrowser) {
+      this.isInMusicBrowser = false;
+    } else {
+      this.isInMusicBrowser = true;
+    }
+  }
+
 }

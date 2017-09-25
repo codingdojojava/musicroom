@@ -5,7 +5,7 @@ let User = mongoose.model('User');
 module.exports = {
     registerAUser: (req, res) => {
         // console.log('server registering user');
-        let newUserId = 0;
+        let newUserId = 1;
         User.find({}).sort('-createdAt').exec((error, users) => {
             if (error) {
                 console.log('something went wrong');
