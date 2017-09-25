@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
         } else {
           this.incorrectLogin = false;
           this._appComponent.getCurrentUserInSession();
+          // this._router.navigate(['http://www.last.fm/api/auth/?api_key=c595e718d23c51ef68c0d547f1511fe7&cb=http://127.0.0.1/home']);
           this._router.navigate(['/home']);
         }
       })
