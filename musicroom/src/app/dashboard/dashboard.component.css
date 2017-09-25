@@ -1,0 +1,23 @@
+.wrapper {
+    height: 100vh;
+}
+
+.inblock {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.joined {
+    height: 93vh;
+    width: 10%;
+}
+
+.main {
+    height: 93vh;
+    width: 73%;
+}
+
+.secondary {
+    height: 93vh;
+    width: 10%;
+}

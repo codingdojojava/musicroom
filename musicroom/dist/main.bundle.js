@@ -125,18 +125,20 @@ var _a;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -155,18 +157,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
+
 var routes = [
-    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_9__index_index_component__["a" /* IndexComponent */] },
-    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_6__login_login_component__["a" /* LoginComponent */] },
-    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_5__registration_registration_component__["a" /* RegistrationComponent */] },
-    { path: 'home', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_8__dashboard_dashboard_component__["a" /* DashboardComponent */] },
-    { path: 'home/profile', component: __WEBPACK_IMPORTED_MODULE_7__profile_profile_component__["a" /* ProfileComponent */], children: [
-            { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_1__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
-            { path: 'current', component: __WEBPACK_IMPORTED_MODULE_0__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
+    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_11__index_index_component__["a" /* IndexComponent */] },
+    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_8__login_login_component__["a" /* LoginComponent */] },
+    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_7__registration_registration_component__["a" /* RegistrationComponent */] },
+    { path: 'home', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_10__dashboard_dashboard_component__["a" /* DashboardComponent */] },
+    { path: 'home/profile', component: __WEBPACK_IMPORTED_MODULE_9__profile_profile_component__["a" /* ProfileComponent */], children: [
+            { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_3__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
+            { path: 'current', component: __WEBPACK_IMPORTED_MODULE_2__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
         ] },
-    { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_4__logout_logout_component__["a" /* LogoutComponent */] },
-    { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_3__search_manager_search_manager_component__["a" /* SearchManagerComponent */] },
-    { path: 'home/users/:id', component: __WEBPACK_IMPORTED_MODULE_2__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] }
+    { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_6__logout_logout_component__["a" /* LogoutComponent */] },
+    { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_5__search_manager_search_manager_component__["a" /* SearchManagerComponent */], children: [
+            { path: 'music', component: __WEBPACK_IMPORTED_MODULE_1__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */] },
+            { path: 'users', component: __WEBPACK_IMPORTED_MODULE_0__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */] }
+        ] },
+    { path: 'home/users/:id', component: __WEBPACK_IMPORTED_MODULE_4__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -174,9 +181,9 @@ var AppRoutingModule = (function () {
     return AppRoutingModule;
 }());
 AppRoutingModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_10__angular_core__["M" /* NgModule */])({
-        imports: [__WEBPACK_IMPORTED_MODULE_11__angular_router__["c" /* RouterModule */].forRoot(routes)],
-        exports: [__WEBPACK_IMPORTED_MODULE_11__angular_router__["c" /* RouterModule */]]
+    Object(__WEBPACK_IMPORTED_MODULE_12__angular_core__["M" /* NgModule */])({
+        imports: [__WEBPACK_IMPORTED_MODULE_13__angular_router__["c" /* RouterModule */].forRoot(routes)],
+        exports: [__WEBPACK_IMPORTED_MODULE_13__angular_router__["c" /* RouterModule */]]
     })
 ], AppRoutingModule);
 
@@ -187,7 +194,7 @@ AppRoutingModule = __decorate([
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Nav Bar</h1>\n\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/']\">Home</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home']\">Home</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/login']\">Login</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/register']\">Register</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home/profile/current']\">My Profile</a>\n  <div style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchPageWithSearchVal()\">\n      <input type=\"text\" name=\"search\" placeholder=\"Search\" [(ngModel)]=\"searchVal\" (keyup) = \"searchUsers()\" />\n      <input type=\"submit\" value=\"Search Users\" />\n    </form>\n  </div>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/search/results']\">Browse Users</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/logout']\">Logout</a>\n\n\n<router-outlet></router-outlet>\n<div>\n  <input type=\"text\" #msgInput name=\"\" value=\"\">\n  <button (click)=\"sendMsg(msgInput.value)\">Send</button>\n  <br>\n  <p>{{msg}}  </p>\n</div>\nasdf"
+module.exports = "<fieldset>\n  <legend>Nav Bar</legend>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/']\">Home</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home']\">Home</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/login']\">Login</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/register']\">Register</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home/profile/current']\">My Profile</a>\n\n  <div *ngIf=\"searchMode==='users'\" style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchPageWithSearchVal()\">\n      <input type=\"text\" name=\"searchU\" placeholder=\"Search User\" [(ngModel)]=\"searchVal\" (keyup) = \"searchUsers()\" />\n      <input type=\"submit\" value=\"Search Users\" />\n    </form>\n  </div>\n\n  <div *ngIf=\"searchMode==='music'\"style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"searchMusic()\">\n      <input type=\"text\" name=\"searchM\" placeholder=\"Search Music\" [(ngModel)]=\"searchVal2\" />\n      <input type=\"submit\" value=\"Search Music\" />\n    </form>\n  </div>\n\n  <select *ngIf=\"currentUser\" name=\"searchMode\" [(ngModel)]=\"searchMode\">\n    <option value=\"users\">Users</option>\n    <option value=\"music\">Music</option>\n    <option value=\"users\">Chatrooms</option>\n  </select>\n\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/logout']\">Logout</a>\n</fieldset>\n\n<router-outlet></router-outlet>\n<!--<div>\n  <input type=\"text\" #msgInput name=\"\" value=\"\">\n  <button (click)=\"sendMsg(msgInput.value)\">Send</button>\n  <br>\n  <p>{{msg}}  </p>\n</div>\nasdf-->"
 
 /***/ }),
 
@@ -214,11 +221,12 @@ module.exports = module.exports.toString();
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -233,14 +241,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var AppComponent = (function () {
-    function AppComponent(chatService, _route, _searchService, _apicallService) {
+    function AppComponent(chatService, _route, _searchService, _apicallService, _lastFmApiService) {
         this.chatService = chatService;
         this._route = _route;
         this._searchService = _searchService;
         this._apicallService = _apicallService;
+        this._lastFmApiService = _lastFmApiService;
         this.msg = "";
         this.searchVal = '';
+        this.searchVal2 = '';
+        this.isInMusicBrowser = false;
+        this.searchMode = 'users';
         this.getCurrentUserInSession();
     }
     AppComponent.prototype.ngOnInit = function () {
@@ -260,10 +273,23 @@ var AppComponent = (function () {
         // console.log('hello');
         this._searchService.searchUsers(this.searchVal);
     };
+    AppComponent.prototype.searchMusic = function () {
+        // console.log('hello');
+        if (!this.isInMusicBrowser) {
+            console.log('not in music browser so redirecting');
+            this._route.navigate(['search', 'results', 'music', { q: this.searchVal2 }]);
+            this.searchVal2 = '';
+        }
+        else {
+            console.log('in music browser so just updating search results');
+            this._searchService.searchMusic(this.searchVal2);
+            this.searchVal2 = '';
+        }
+    };
     AppComponent.prototype.redirectToSearchPageWithSearchVal = function () {
         // console.log('redirecting to Search page with keyword SearchVal');
         // console.log(this.searchVal);
-        this._route.navigate(['search', 'results', { q: this.searchVal }]);
+        this._route.navigate(['search', 'results', 'users', { q: this.searchVal }]);
     };
     AppComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
@@ -284,18 +310,26 @@ var AppComponent = (function () {
             // console.log(error);
         });
     };
+    AppComponent.prototype.setIsInMusicBrowser = function () {
+        if (this.isInMusicBrowser) {
+            this.isInMusicBrowser = false;
+        }
+        else {
+            this.isInMusicBrowser = true;
+        }
+    };
     return AppComponent;
 }());
 AppComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_5__angular_core__["o" /* Component */])({
         selector: 'app-root',
         template: __webpack_require__("../../../../../src/app/app.component.html"),
         styles: [__webpack_require__("../../../../../src/app/app.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__chat_service__["a" /* ChatService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__search_service__["a" /* SearchService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__chat_service__["a" /* ChatService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _e || Object])
 ], AppComponent);
 
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e;
 //# sourceMappingURL=app.component.js.map
 
 /***/ }),
@@ -305,33 +339,37 @@ var _a, _b, _c, _d;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ng_socket_io__ = __webpack_require__("../../../../ng-socket-io/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ng_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_ng_socket_io__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_routing_module__ = __webpack_require__("../../../../../src/app/app-routing.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ng_socket_io__ = __webpack_require__("../../../../ng-socket-io/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ng_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_ng_socket_io__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_routing_module__ = __webpack_require__("../../../../../src/app/app-routing.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -352,6 +390,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
+
 var config = { url: 'http://localhost:8000', options: {} };
 var AppModule = (function () {
     function AppModule() {
@@ -359,34 +399,37 @@ var AppModule = (function () {
     return AppModule;
 }());
 AppModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["M" /* NgModule */])({
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["M" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */],
-            __WEBPACK_IMPORTED_MODULE_10__index_index_component__["a" /* IndexComponent */],
-            __WEBPACK_IMPORTED_MODULE_11__dashboard_dashboard_component__["a" /* DashboardComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__profile_profile_component__["a" /* ProfileComponent */],
-            __WEBPACK_IMPORTED_MODULE_13__login_login_component__["a" /* LoginComponent */],
-            __WEBPACK_IMPORTED_MODULE_14__registration_registration_component__["a" /* RegistrationComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__logout_logout_component__["a" /* LogoutComponent */],
-            __WEBPACK_IMPORTED_MODULE_16__search_manager_search_manager_component__["a" /* SearchManagerComponent */],
-            __WEBPACK_IMPORTED_MODULE_17__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */],
-            __WEBPACK_IMPORTED_MODULE_18__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */],
-            __WEBPACK_IMPORTED_MODULE_19__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */],
+            __WEBPACK_IMPORTED_MODULE_11__index_index_component__["a" /* IndexComponent */],
+            __WEBPACK_IMPORTED_MODULE_12__dashboard_dashboard_component__["a" /* DashboardComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__profile_profile_component__["a" /* ProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_14__login_login_component__["a" /* LoginComponent */],
+            __WEBPACK_IMPORTED_MODULE_15__registration_registration_component__["a" /* RegistrationComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__logout_logout_component__["a" /* LogoutComponent */],
+            __WEBPACK_IMPORTED_MODULE_17__search_manager_search_manager_component__["a" /* SearchManagerComponent */],
+            __WEBPACK_IMPORTED_MODULE_18__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_20__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_21__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */],
+            __WEBPACK_IMPORTED_MODULE_22__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */],
         ],
         imports: [
-            __WEBPACK_IMPORTED_MODULE_7__angular_platform_browser__["a" /* BrowserModule */],
-            __WEBPACK_IMPORTED_MODULE_4__app_routing_module__["a" /* AppRoutingModule */],
-            __WEBPACK_IMPORTED_MODULE_3_ng_socket_io__["SocketIoModule"].forRoot(config),
-            __WEBPACK_IMPORTED_MODULE_8__angular_forms__["a" /* FormsModule */],
-            __WEBPACK_IMPORTED_MODULE_9__angular_http__["b" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_8__angular_forms__["b" /* ReactiveFormsModule */]
+            __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser__["a" /* BrowserModule */],
+            __WEBPACK_IMPORTED_MODULE_5__app_routing_module__["a" /* AppRoutingModule */],
+            __WEBPACK_IMPORTED_MODULE_4_ng_socket_io__["SocketIoModule"].forRoot(config),
+            __WEBPACK_IMPORTED_MODULE_9__angular_forms__["a" /* FormsModule */],
+            __WEBPACK_IMPORTED_MODULE_10__angular_http__["b" /* HttpModule */],
+            __WEBPACK_IMPORTED_MODULE_9__angular_forms__["b" /* ReactiveFormsModule */]
         ],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */],
-            __WEBPACK_IMPORTED_MODULE_6__api_call_service__["a" /* ApiCallService */],
-            __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]
+            __WEBPACK_IMPORTED_MODULE_2__chat_service__["a" /* ChatService */],
+            __WEBPACK_IMPORTED_MODULE_7__api_call_service__["a" /* ApiCallService */],
+            __WEBPACK_IMPORTED_MODULE_1__search_service__["a" /* SearchService */],
+            __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */]
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
 
@@ -453,7 +496,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".wrapper {\n    height: 100vh;\n}\n\n.inblock {\n    display: inline-block;\n    vertical-align: top;\n}\n\n.joined {\n    height: 93vh;\n    width: 10%;\n}\n\n.main {\n    height: 93vh;\n    width: 73%;\n}\n\n.secondary {\n    height: 93vh;\n    width: 10%;\n}", ""]);
 
 // exports
 
@@ -466,7 +509,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n    <p>You are now in Home Page</p>\n</div>\n"
+module.exports = "<fieldset class=\"wrapper\">\n    <legend>Dashboard Page</legend>\n    <fieldset class=\"joined inblock\">\n        <legend>Joined Rooms</legend>\n    </fieldset>\n    <fieldset class=\"main inblock\">\n        <legend>Main View</legend>\n        <router-outlet></router-outlet>\n    </fieldset>\n    <fieldset class=\"secondary inblock\">\n        <legend>Secondary View</legend>\n    </fieldset>\n\n\n</fieldset>\n"
 
 /***/ }),
 
@@ -545,7 +588,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".cover {\n    height: 100vh;\n}", ""]);
 
 // exports
 
@@ -558,7 +601,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/index/index.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  index works!\n</p>\n<h1>Design Cover Page here</h1>\n"
+module.exports = "<fieldset class=\"cover\">\n  <legend>Cover Page</legend>\n</fieldset>"
 
 /***/ }),
 
@@ -595,6 +638,70 @@ IndexComponent = __decorate([
 ], IndexComponent);
 
 //# sourceMappingURL=index.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/last-fm-api.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LastFmApiService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var LastFmApiService = (function () {
+    function LastFmApiService(_http) {
+        this._http = _http;
+    }
+    LastFmApiService.prototype.searchTrack = function (searchVal) {
+        console.log('calling last fm api to search tracks by search value');
+        return this._http.get('http://ws.audioscrobbler.com/2.0/?method=track.search&track=' + searchVal + '&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    LastFmApiService.prototype.searchAlbum = function (searchVal) {
+        console.log('calling last fm api to search albus by search value');
+        return this._http.get('http://ws.audioscrobbler.com/2.0/?method=album.search&album=' + searchVal + '&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    LastFmApiService.prototype.searchArtist = function (searchVal) {
+        console.log('calling last fm api to search artist by search value');
+        return this._http.get('http://ws.audioscrobbler.com/2.0/?method=artist.search&artist=' + searchVal + '&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    LastFmApiService.prototype.getTopArtist = function () {
+        console.log('calling last fm api to get current top artisst');
+        return this._http.get('http://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country=spain&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    LastFmApiService.prototype.getTopTracks = function () {
+        console.log('calling last fm api to get current top tracks');
+        return this._http.get('http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country=spain&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    return LastFmApiService;
+}());
+LastFmApiService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_http__["a" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_http__["a" /* Http */]) === "function" && _a || Object])
+], LastFmApiService);
+
+var _a;
+//# sourceMappingURL=last-fm-api.service.js.map
 
 /***/ }),
 
@@ -1428,7 +1535,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/search-manager/search-manager.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<h1>Search User Results</h1>\n<table>\n  <tr>\n    <th>Username</th>\n    <th>Actions</th>\n  </tr>\n  <tr *ngFor=\"let user of showSearchResultUsers\">\n      <td *ngIf=\"user && user._id != currentUser._id\">{{user.username}}</td>\n      <td *ngIf=\"user && user._id != currentUser._id\">\n        <a [routerLink]=\"['/home/users', user.userId]\">Show Profile</a>\n        <button *ngIf=\"!user.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(user.friends)\" (click)=\"sendInvite(user.userId)\">Send Invite</button>\n        <span *ngIf=\"user.received_invites.includes(currentUser._id)\">Invite Sent</span>\n        <span *ngIf=\"isFriendOfCurrentUser(user.friends)\">Friend</span>\n      </td>\n  </tr>\n</table>\n\n\n\n"
+module.exports = "\n<h1>Search Results</h1>\n<router-outlet></router-outlet>\n\n\n\n\n"
 
 /***/ }),
 
@@ -1437,12 +1544,11 @@ module.exports = "\n<h1>Search User Results</h1>\n<table>\n  <tr>\n    <th>Usern
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchManagerComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_switchMap__ = __webpack_require__("../../../../rxjs/add/operator/switchMap.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_switchMap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_switchMap__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_switchMap__ = __webpack_require__("../../../../rxjs/add/operator/switchMap.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_switchMap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_switchMap__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1456,52 +1562,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var SearchManagerComponent = (function () {
-    function SearchManagerComponent(_router, _route, _apicallService, _searchService) {
-        this._router = _router;
-        this._route = _route;
+    function SearchManagerComponent(_apicallService, _router) {
         this._apicallService = _apicallService;
-        this._searchService = _searchService;
-        this.searchResults = [];
-        this.showSearchResultUsers = [];
-        this.searchVal = '';
-        this.getCurrentUserInSession();
-        this.subscribeToSearchVal();
+        this._router = _router;
     }
-    SearchManagerComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.subscription2 = this._route.paramMap.subscribe(function (params) {
-            _this.searchVal = params.get('q');
-            // console.log(this.searchVal);
-        });
-        this.getAllUsers(this.searchVal);
-    };
-    SearchManagerComponent.prototype.subscribeToSearchVal = function () {
-        var _this = this;
-        this.subscription = this._searchService.searchValue$.subscribe(function (search) {
-            // console.log('hiiiii');
-            // console.log(search);
-            _this.showSearchResultUsers = _this.filterUsers(_this.searchResults, search);
-        });
-    };
-    SearchManagerComponent.prototype.getAllUsers = function (search) {
-        var _this = this;
-        if (!search) {
-            search = '';
-        }
-        this._apicallService.getAllUsers()
-            .then(function (data) {
-            // console.log('success then response getting all users');
-            _this.searchResults = data;
-            _this.showSearchResultUsers = _this.filterUsers(data, search);
-            // console.log(this.showSearchResultUsers);
-        })
-            .catch(function (error) {
-            // console.log('error catch response getting all users');
-            // console.log(error);
-        });
-    };
     SearchManagerComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
@@ -1522,13 +1587,295 @@ var SearchManagerComponent = (function () {
             _this._router.navigate(['']);
         });
     };
-    SearchManagerComponent.prototype.filterUsers = function (data, val) {
+    SearchManagerComponent.prototype.ngOnInit = function () {
+    };
+    return SearchManagerComponent;
+}());
+SearchManagerComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* Component */])({
+        selector: 'app-search-manager',
+        template: __webpack_require__("../../../../../src/app/search-manager/search-manager.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/search-manager/search-manager.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object])
+], SearchManagerComponent);
+
+var _a, _b;
+//# sourceMappingURL=search-manager.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/search-manager/search-music/search-music.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/search-manager/search-music/search-music.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h1>Search Music Results</h1>\n<fieldset *ngIf=\"trackSearchResults\">\n  <legend>Tracks</legend>\n  <table>\n    <tr>\n      <th>Title</th>\n      <th>Artist</th>\n      <th>Url</th>\n      <th>ImageUrl</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let track of trackSearchResults\">\n      <td>{{track.name}}</td>\n      <td>{{track.artist}}</td>\n      <td>{{track.url}}</td>\n      <td>{{track.image[1]['#text']}}</td>\n      <td>\n        <a href=\"#\">Add to Favorites</a>\n      </td>\n    </tr>\n  </table>\n</fieldset>\n<fieldset *ngIf=\"albumSearchResults\">\n  <legend>Album</legend>\n  <table>\n    <tr>\n      <th>Title</th>\n      <th>Artist</th>\n      <th>Url</th>\n      <th>ImageUrl</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let album of albumSearchResults\">\n      <td>{{album.name}}</td>\n      <td>{{album.artist}}</td>\n      <td>{{album.url}}</td>\n      <td>{{album.image[1]['#text']}}</td>\n      <td>\n        <a href=\"#\">Browse Album's Songs</a>\n      </td>\n    </tr>\n  </table>\n</fieldset>\n<fieldset *ngIf=\"artistSearchResults\">\n  <legend>Artist</legend>\n  <table>\n    <tr>\n      <th>Name</th>\n      <th>url</th>\n      <th>ImageUrl</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let artist of artistSearchResults\">\n      <td>{{artist.name}}</td>\n      <td>{{artist.url}}</td>\n      <td>{{artist.image[1]['#text']}}</td>\n      <td>\n        <a href=\"#\">Browse Artist's Albums</a>\n        <a href=\"#\">Browse Artist's Songs</a>\n      </td>\n    </tr>\n  </table>\n</fieldset>"
+
+/***/ }),
+
+/***/ "../../../../../src/app/search-manager/search-music/search-music.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchMusicComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var SearchMusicComponent = (function () {
+    function SearchMusicComponent(_route, _lastFmApiService, _searchService, _appComponent) {
+        this._route = _route;
+        this._lastFmApiService = _lastFmApiService;
+        this._searchService = _searchService;
+        this._appComponent = _appComponent;
+        this.searchVal = '';
+    }
+    SearchMusicComponent.prototype.ngOnInit = function () {
+        this._appComponent.setIsInMusicBrowser();
+        this.subscribeToParams();
+        this.subscribeToSearchVal();
+    };
+    SearchMusicComponent.prototype.subscribeToParams = function () {
+        var _this = this;
+        this.subscription = this._route.paramMap.subscribe(function (params) {
+            _this.searchVal = params.get('q');
+        });
+        if (this.searchVal && this.searchVal.length > 0) {
+            this.searchMusic(this.searchVal);
+        }
+        else {
+            this.getTopMusic();
+        }
+    };
+    SearchMusicComponent.prototype.subscribeToSearchVal = function () {
+        var _this = this;
+        this.subscription2 = this._searchService.searchValueMusic$.subscribe(function (music) {
+            console.log('hiiiii');
+            // console.log(search);
+            _this.searchMusic(music);
+        });
+    };
+    SearchMusicComponent.prototype.searchMusic = function (search) {
+        var _this = this;
+        if (search) {
+            this._lastFmApiService.searchTrack(search)
+                .then(function (data) {
+                _this.trackSearchResults = data.results.trackmatches.track;
+                console.log(_this.trackSearchResults);
+            })
+                .catch(function (error) {
+                console.log(error);
+            });
+            this._lastFmApiService.searchAlbum(search)
+                .then(function (data) {
+                _this.albumSearchResults = data.results.albummatches.album;
+                console.log(_this.albumSearchResults);
+            })
+                .catch(function (error) {
+                console.log(error);
+            });
+            this._lastFmApiService.searchArtist(search)
+                .then(function (data) {
+                _this.artistSearchResults = data.results.artistmatches.artist;
+                console.log(_this.artistSearchResults);
+            })
+                .catch(function (error) {
+                console.log(error);
+            });
+        }
+    };
+    SearchMusicComponent.prototype.getTopMusic = function () {
+        var _this = this;
+        this._lastFmApiService.getTopArtist()
+            .then(function (data) {
+            _this.artistSearchResults = data;
+            console.log(_this.artistSearchResults);
+        })
+            .catch(function (error) {
+            console.log(error);
+        });
+        this._lastFmApiService.getTopTracks()
+            .then(function (data) {
+            _this.trackSearchResults = data;
+            console.log(_this.trackSearchResults);
+        })
+            .catch(function (error) {
+            console.log(error);
+        });
+    };
+    SearchMusicComponent.prototype.ngOnDestroy = function () {
+        console.log('search music component destroy');
+        this._appComponent.setIsInMusicBrowser();
+        this.subscription.unsubscribe();
+        this.subscription2.unsubscribe();
+    };
+    return SearchMusicComponent;
+}());
+SearchMusicComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
+        selector: 'app-search-music',
+        template: __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__search_service__["a" /* SearchService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__app_component__["a" /* AppComponent */]) === "function" && _d || Object])
+], SearchMusicComponent);
+
+var _a, _b, _c, _d;
+//# sourceMappingURL=search-music.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/search-manager/search-users/search-users.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/search-manager/search-users/search-users.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h1>Search User Results</h1>\n<table>\n  <tr>\n    <th>Username</th>\n    <th>Actions</th>\n  </tr>\n  <tr *ngFor=\"let user of showSearchResultUsers\">\n      <td *ngIf=\"user && user._id != currentUser._id\">{{user.username}}</td>\n      <td *ngIf=\"user && user._id != currentUser._id\">\n        <a [routerLink]=\"['/home/users', user.userId]\">Show Profile</a>\n        <button *ngIf=\"!user.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(user.friends)\" (click)=\"sendInvite(user.userId)\">Send Invite</button>\n        <span *ngIf=\"user.received_invites.includes(currentUser._id)\">Invite Sent</span>\n        <span *ngIf=\"isFriendOfCurrentUser(user.friends)\">Friend</span>\n      </td>\n  </tr>\n</table>"
+
+/***/ }),
+
+/***/ "../../../../../src/app/search-manager/search-users/search-users.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchUsersComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var SearchUsersComponent = (function () {
+    function SearchUsersComponent(_router, _route, _apicallService, _searchService) {
+        this._router = _router;
+        this._route = _route;
+        this._apicallService = _apicallService;
+        this._searchService = _searchService;
+        this.searchResults = [];
+        this.showSearchResultUsers = [];
+        this.searchVal = '';
+        this.getCurrentUserInSession();
+        this.subscribeToSearchVal();
+    }
+    SearchUsersComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.subscription2 = this._route.paramMap.subscribe(function (params) {
+            _this.searchVal = params.get('q');
+            // console.log(this.searchVal);
+        });
+        this.getAllUsers(this.searchVal);
+    };
+    SearchUsersComponent.prototype.subscribeToSearchVal = function () {
+        var _this = this;
+        this.subscription = this._searchService.searchValue$.subscribe(function (search) {
+            // console.log('hiiiii');
+            // console.log(search);
+            _this.showSearchResultUsers = _this.filterUsers(_this.searchResults, search);
+        });
+    };
+    SearchUsersComponent.prototype.getAllUsers = function (search) {
+        var _this = this;
+        if (!search) {
+            search = '';
+        }
+        this._apicallService.getAllUsers()
+            .then(function (data) {
+            // console.log('success then response getting all users');
+            _this.searchResults = data;
+            _this.showSearchResultUsers = _this.filterUsers(data, search);
+            // console.log(this.showSearchResultUsers);
+        })
+            .catch(function (error) {
+            // console.log('error catch response getting all users');
+            // console.log(error);
+        });
+    };
+    SearchUsersComponent.prototype.getCurrentUserInSession = function () {
+        var _this = this;
+        this._apicallService.getCurrentUserInSession()
+            .then(function (data) {
+            // console.log(data);
+            if (data) {
+                // console.log('success getting current user');
+                _this.currentUser = data;
+            }
+            else {
+                // console.log('user not in session');
+                _this._router.navigate(['']);
+            }
+        })
+            .catch(function (error) {
+            // console.log('error getting current user');
+            // console.log(error);
+            _this._router.navigate(['']);
+        });
+    };
+    SearchUsersComponent.prototype.filterUsers = function (data, val) {
         // console.log('filtering....');
         return data.filter(function (index) {
             return index.username.toLowerCase().includes(val.toLowerCase()) || index.firstName.toLowerCase().includes(val.toLowerCase()) || index.lastName.toLowerCase().includes(val.toLowerCase());
         });
     };
-    SearchManagerComponent.prototype.sendInvite = function (userId) {
+    SearchUsersComponent.prototype.sendInvite = function (userId) {
         var _this = this;
         var user_Id = { userId: userId };
         this._apicallService.sendInviteToUserById(user_Id)
@@ -1541,7 +1888,7 @@ var SearchManagerComponent = (function () {
             // console.log('error catch response sendInvite');
         });
     };
-    SearchManagerComponent.prototype.isFriendOfCurrentUser = function (userFriends) {
+    SearchUsersComponent.prototype.isFriendOfCurrentUser = function (userFriends) {
         var _this = this;
         var friend = userFriends.find(function (index) {
             return index._id === _this.currentUser._id;
@@ -1552,25 +1899,25 @@ var SearchManagerComponent = (function () {
         }
         return false;
     };
-    SearchManagerComponent.prototype.ngAfterViewInit = function () {
+    SearchUsersComponent.prototype.ngAfterViewInit = function () {
     };
-    SearchManagerComponent.prototype.ngOnDestroy = function () {
+    SearchUsersComponent.prototype.ngOnDestroy = function () {
         this.subscription.unsubscribe();
         this.subscription2.unsubscribe();
     };
-    return SearchManagerComponent;
+    return SearchUsersComponent;
 }());
-SearchManagerComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["o" /* Component */])({
-        selector: 'app-search-manager',
-        template: __webpack_require__("../../../../../src/app/search-manager/search-manager.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/search-manager/search-manager.component.css")]
+SearchUsersComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["o" /* Component */])({
+        selector: 'app-search-users',
+        template: __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
-], SearchManagerComponent);
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
+], SearchUsersComponent);
 
 var _a, _b, _c, _d;
-//# sourceMappingURL=search-manager.component.js.map
+//# sourceMappingURL=search-users.component.js.map
 
 /***/ }),
 
@@ -1597,12 +1944,17 @@ var SearchService = (function () {
     function SearchService() {
         // Observable string sources
         this.searchValueSource = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["BehaviorSubject"]('');
+        this.searchValueMusicSource = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["BehaviorSubject"]('');
         // Observable string streams
         this.searchValue$ = this.searchValueSource.asObservable();
+        this.searchValueMusic$ = this.searchValueMusicSource.asObservable();
     }
     // Service message commands
     SearchService.prototype.searchUsers = function (searchVal) {
         this.searchValueSource.next(searchVal);
+    };
+    SearchService.prototype.searchMusic = function (searchVal) {
+        this.searchValueMusicSource.next(searchVal);
     };
     return SearchService;
 }());

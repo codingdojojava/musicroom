@@ -11,53 +11,13 @@ import 'rxjs/add/operator/switchMap';
   templateUrl: './search-manager.component.html',
   styleUrls: ['./search-manager.component.css']
 })
-export class SearchManagerComponent implements OnInit, OnDestroy, AfterViewInit {
-  searchResults: User[] = [];
-  showSearchResultUsers: User[] = [];
-  subscription: Subscription;
-  subscription2: Subscription;
-  searchVal = '';
+export class SearchManagerComponent implements OnInit {
   currentUser: User;
-  constructor( private _router: Router, private _route: ActivatedRoute, private _apicallService: ApiCallService, private _searchService: SearchService) {
-    this.getCurrentUserInSession();
-    this.subscribeToSearchVal();
+  constructor(private _apicallService: ApiCallService, private _router: Router) {
+
    }
 
-  ngOnInit() {
-    this.subscription2 = this._route.paramMap.subscribe((params: ParamMap) => {
-        this.searchVal = params.get('q');
-        // console.log(this.searchVal);
-      });
-    this.getAllUsers(this.searchVal);
-
-  }
-
-  subscribeToSearchVal() {
-    this.subscription = this._searchService.searchValue$.subscribe(search => {
-      // console.log('hiiiii');
-      // console.log(search);
-      this.showSearchResultUsers = this.filterUsers(this.searchResults, search);
-    });
-  }
-
-  getAllUsers(search) {
-    if (!search) {
-      search = '';
-    }
-    this._apicallService.getAllUsers()
-      .then(data => {
-        // console.log('success then response getting all users');
-        this.searchResults = data;
-        this.showSearchResultUsers = this.filterUsers(data, search);
-        // console.log(this.showSearchResultUsers);
-      })
-      .catch(error => {
-        // console.log('error catch response getting all users');
-        // console.log(error);
-      });
-  }
-
-  getCurrentUserInSession() {
+   getCurrentUserInSession() {
     this._apicallService.getCurrentUserInSession()
       .then((data) => {
         // console.log(data);
@@ -76,42 +36,8 @@ export class SearchManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       });
   }
 
-  filterUsers(data, val) {
-    // console.log('filtering....');
-    return data.filter((index) => {
-      return index.username.toLowerCase().includes(val.toLowerCase()) || index.firstName.toLowerCase().includes(val.toLowerCase()) || index.lastName.toLowerCase().includes(val.toLowerCase());
-    });
-  }
+  ngOnInit() {
 
-
-  sendInvite(userId) {
-    const user_Id = {userId: userId};
-    this._apicallService.sendInviteToUserById(user_Id)
-      .then(data => {
-        // console.log('sucess then response sendInvite');
-        // console.log(data);
-        this.getAllUsers(this.searchVal);
-      })
-      .catch(error => {
-        // console.log('error catch response sendInvite');
-      });
-  }
-
-  isFriendOfCurrentUser(userFriends) {
-    const friend = userFriends.find(index => {
-      return index._id === this.currentUser._id;
-    });
-    // console.log(friend);
-    if (friend) { return true; }
-    return false;
-  }
-
-  ngAfterViewInit() {
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-    this.subscription2.unsubscribe();
   }
 
 }

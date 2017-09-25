@@ -1,3 +1,4 @@
+import { LastFmApiService } from './last-fm-api.service';
 import { SearchService } from './search.service';
 import { ChatService } from './chat.service';
 import { NgModule } from '@angular/core';
@@ -19,6 +20,8 @@ import { SearchManagerComponent } from './search-manager/search-manager.componen
 import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { CurrentProfileComponent } from './profile/current-profile/current-profile.component';
+import { SearchMusicComponent } from './search-manager/search-music/search-music.component';
+import { SearchUsersComponent } from './search-manager/search-users/search-users.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
 
@@ -35,6 +38,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
     OtherUserProfileComponent,
     EditProfileComponent,
     CurrentProfileComponent,
+    SearchMusicComponent,
+    SearchUsersComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +52,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
   providers: [
     ChatService,
     ApiCallService,
-    SearchService
+    SearchService,
+    LastFmApiService
   ],
   bootstrap: [AppComponent]
 })

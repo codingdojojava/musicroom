@@ -1,3 +1,5 @@
+import { SearchUsersComponent } from './search-manager/search-users/search-users.component';
+import { SearchMusicComponent } from './search-manager/search-music/search-music.component';
 import { CurrentProfileComponent } from './profile/current-profile/current-profile.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
@@ -21,7 +23,10 @@ const routes: Routes = [
       {path: 'current', component: CurrentProfileComponent}
   ] },
   { path: 'logout', pathMatch: 'full', component: LogoutComponent },
-  { path: 'search/results', component: SearchManagerComponent },
+  { path: 'search/results', component: SearchManagerComponent, children: [
+    { path: 'music', component: SearchMusicComponent },
+    { path: 'users', component: SearchUsersComponent }
+  ] },
   { path: 'home/users/:id', component: OtherUserProfileComponent }
 ];
 
