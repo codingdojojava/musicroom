@@ -9,6 +9,12 @@ module.exports = function(app) {
   app.post('/api/users/login', userRepo.loginUser);
   app.get('/api/users/current', userRepo.getCurrentUser);
   app.get('/api/users/logout', userRepo.logoutUser);
+  app.get('/api/users', userRepo.getAllUsers);
+  app.post('/api/users/invite', userRepo.sendInviteToUserById);
+  app.post('/api/users/invite/accept', userRepo.addFriendAndUpdateReceivedInvite);
+  app.post('/api/users/invite/reject', userRepo.deleteInviteAndUpdateUsers);
+  app.post('/api/users/friends/remove', userRepo.removeFriendFromCurrentUser);
+  app.post('/api/users/profile/edit', userRepo.editCurrentUser);
   app.get('/api/users/:id', userRepo.getUserByUserId);
   app.post('/api/rooms/create', musicroom.create);
   app.get('/api/rooms', musicroom.allRooms);

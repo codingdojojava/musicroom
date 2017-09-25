@@ -19,4 +19,31 @@
     </div>
 </div>
 
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet> -->
+<fieldset class="wrapper">
+    <legend>Dashboard Page</legend>
+    <fieldset class="joined inblock">
+        <legend>Joined Rooms</legend>
+    </fieldset>
+    <fieldset class="main inblock">
+        <legend>Main View</legend>
+        <fieldset class="router">
+            <legend>Router-Outlet</legend>
+            <router-outlet></router-outlet>
+        </fieldset>
+    <fieldset class="active-music">
+        <legend>Active MusicRoom/Player present if active room is minimized</legend>
+    </fieldset>
+    </fieldset>
+    <fieldset class="secondary inblock">
+        <legend>Secondary View</legend>
+        <fieldset class="online subcomponents">
+            <legend>See who's online</legend>
+        </fieldset>
+        <fieldset class="favorites subcomponents">
+            <legend>Current User's Favorite Songs</legend>
+        </fieldset>
+    </fieldset>
+
+
+</fieldset>
