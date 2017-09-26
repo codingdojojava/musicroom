@@ -106,4 +106,10 @@ export class ApiCallService {
       .toPromise();
   }
 
+  saveLastFmSessionTokenAndSigToUserInSession(lastFmSessionData) {
+    return this._http.post('/api/users/current/lastfm', lastFmSessionData)
+      .map(response => response.json())
+      .toPromise();
+  }
+
 }

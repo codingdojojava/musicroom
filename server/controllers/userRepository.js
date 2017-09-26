@@ -45,7 +45,7 @@ module.exports = {
                 else if(bcrypt.compareSync(req.body.password, foundUser.password)){
                     // console.log('login success, adding user to session')
                     req.session.currentUser = foundUser;
-                    res.json(true);
+                    res.json(foundUser);
                 }
                 else{
                 // console.log('LOGIN FAILED!');
@@ -231,6 +231,23 @@ module.exports = {
                                     //   console.log(updatedUser);
                                       req.session.currentUser = updatedUser;
                                       res.json(req.session.currentUser);
+                                  }
+                              });
+    },
+
+    saveLastFmSessionTokenAndSigToUserInSession: (req, res) => {
+        User.findOneAndUpdate({_id: req.session.currentUser._id},
+                              { lastfmSessionToken: req.body.lastFmSession, lastfmSessionSig: req.body.lastFmSessionSig},
+                              { new: true},
+                              (error, updatedUser) => {
+                                  if (error) {
+                                      console.log('error saving session token');
+                                      console.log(error);
+                                      res.json(false);
+                                  } else {
+
+                                      req.session.currentUser = updatedUser;
+                                      res.json(updatedUser);
                                   }
                               });
     }

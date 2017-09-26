@@ -1,3 +1,4 @@
+import { SessionHandlerComponent } from './session-handler/session-handler.component';
 import { RoomComponent } from './dashboard/room/room.component';
 import { SearchUsersComponent } from './search-manager/search-users/search-users.component';
 import { SearchMusicComponent } from './search-manager/search-music/search-music.component';
@@ -23,8 +24,7 @@ const routes: Routes = [
     { path: 'profile', component: ProfileComponent, children: [
           {path: 'edit', component: EditProfileComponent},
           {path: 'current', component: CurrentProfileComponent}
-      ] },
-      
+      ] },   
     { path: 'search/results', component: SearchManagerComponent, children: [
       { path: 'music', component: SearchMusicComponent },
       { path: 'users', component: SearchUsersComponent }
@@ -32,7 +32,7 @@ const routes: Routes = [
     { path: 'users/:id', component: OtherUserProfileComponent },
     {path: 'room/:id', component: RoomComponent}
   ] },
-  
+  { path: 'session', pathMatch: 'full', component: SessionHandlerComponent }
 
 ];
 
