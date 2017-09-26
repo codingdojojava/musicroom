@@ -44,8 +44,11 @@ module.exports = {
                 }
                 else if(bcrypt.compareSync(req.body.password, foundUser.password)){
                     // console.log('login success, adding user to session')
-                    req.session.currentUser = foundUser;
-                    res.json(foundUser);
+                    User.findOneAndUpdate({_id: foundUser._id}, {isLoggedIn: true}, {new: true}, (err, updatedUser) => {
+                        req.session.currentUser = updatedUser;
+                        console.log(updatedUser);
+                        res.json(updatedUser);
+                    });
                 }
                 else{
                 // console.log('LOGIN FAILED!');
@@ -75,6 +78,10 @@ module.exports = {
     },
     logoutUser: (req, res) => {
         // console.log('server logging out user');
+        User.findOneAndUpdate({_id:req.session.currentUser._id}, {isLoggedIn: false}, {new: true}, (err, updatedUser) => {
+            console.log('updated user');
+            console.log(updatedUser);
+        })
         delete req.session.currentUser;
         res.json(true);
     },

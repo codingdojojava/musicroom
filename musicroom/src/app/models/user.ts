@@ -8,6 +8,8 @@ export class User {
         public lastName: string = '',
         public password: string = '',
         public description: string = '',
+        public profileImageUrl: string = '',
+        public isLoggedIn: boolean = false,
         public favoriteSongs = [],
         public joinedRooms = [],
         public ownedRooms = [],

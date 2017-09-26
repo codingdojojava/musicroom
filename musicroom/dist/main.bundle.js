@@ -1136,7 +1136,7 @@ var Room = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return User; });
 var User = (function () {
-    function User(_id, userId, username, email, firstName, lastName, password, description, favoriteSongs, joinedRooms, ownedRooms, friends, received_invites, sent_invites, created_at, updated_at) {
+    function User(_id, userId, username, email, firstName, lastName, password, description, profileImageUrl, isLoggedIn, favoriteSongs, joinedRooms, ownedRooms, friends, received_invites, sent_invites, created_at, updated_at) {
         if (_id === void 0) { _id = null; }
         if (userId === void 0) { userId = null; }
         if (username === void 0) { username = ''; }
@@ -1145,6 +1145,8 @@ var User = (function () {
         if (lastName === void 0) { lastName = ''; }
         if (password === void 0) { password = ''; }
         if (description === void 0) { description = ''; }
+        if (profileImageUrl === void 0) { profileImageUrl = ''; }
+        if (isLoggedIn === void 0) { isLoggedIn = false; }
         if (favoriteSongs === void 0) { favoriteSongs = []; }
         if (joinedRooms === void 0) { joinedRooms = []; }
         if (ownedRooms === void 0) { ownedRooms = []; }
@@ -1161,6 +1163,8 @@ var User = (function () {
         this.lastName = lastName;
         this.password = password;
         this.description = description;
+        this.profileImageUrl = profileImageUrl;
+        this.isLoggedIn = isLoggedIn;
         this.favoriteSongs = favoriteSongs;
         this.joinedRooms = joinedRooms;
         this.ownedRooms = ownedRooms;
