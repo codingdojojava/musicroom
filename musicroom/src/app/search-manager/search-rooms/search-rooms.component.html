@@ -5,7 +5,9 @@
     <th>Owner</th>
   </tr>
   <tr *ngFor="let room of showSearchResultRooms">
-      <td>{{room.title}}</td>
-      <td>{{room._owner}}</td>
+      <td><a [routerLink]="['/home/room', room.roomId]">{{room.title}}</a>
+      </td>
+      <td><a [routerLink]="['/home/users', room._owner.userId]">{{room._owner.username}}</a>
+      </td>
   </tr>
 </table>

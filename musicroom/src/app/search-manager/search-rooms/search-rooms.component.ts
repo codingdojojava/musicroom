@@ -1,15 +1,15 @@
 import { Subscription } from 'rxjs/Subscription';
 import { SearchService } from './../../search.service';
 import { ApiCallService } from './../../api-call.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Room } from './../../models/room';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 @Component({
   selector: 'app-search-rooms',
   templateUrl: './search-rooms.component.html',
   styleUrls: ['./search-rooms.component.css']
 })
-export class SearchRoomsComponent implements OnInit {
+export class SearchRoomsComponent implements OnInit, OnDestroy {
   searchResults: Room[] = [];
   showSearchResultRooms: Room[] = [];
   subscription: Subscription;
@@ -18,7 +18,9 @@ export class SearchRoomsComponent implements OnInit {
   constructor(private _router: Router, 
     private _route: ActivatedRoute, 
     private _apicallService: ApiCallService, 
-    private _searchService: SearchService) { }
+    private _searchService: SearchService) {
+      this.subscribeToSearchVal();
+     }
 
   ngOnInit() {
     this.subscription2 = this._route.paramMap.subscribe((params: ParamMap) => {
@@ -30,7 +32,7 @@ export class SearchRoomsComponent implements OnInit {
 
 
   subscribeToSearchVal() {
-    this.subscription = this._searchService.searchValue$.subscribe(search => {
+    this.subscription = this._searchService.searchRoom$.subscribe(search => {
       // console.log('hiiiii');
       // console.log(search);
       this.showSearchResultRooms = this.filterRooms(this.searchResults, search);
@@ -51,5 +53,10 @@ export class SearchRoomsComponent implements OnInit {
       this.showSearchResultRooms = this.filterRooms(data, val);
       // console.log(this.showSearchResultUsers);
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+    this.subscription2.unsubscribe();
   }
 }

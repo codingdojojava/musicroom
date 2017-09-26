@@ -40,4 +40,12 @@ export class LastFmApiService {
       .map(response => response.json())
       .toPromise();
   }
+
+  getAuthSession(token, sig) {
+    console.log('calling last fm api to get current top tracks');
+    return this._http.get('http://ws.audioscrobbler.com/2.0/?method=auth.getSession&token='+token+'&api_key=c595e718d23c51ef68c0d547f1511fe7&api_sig='+ sig +'&format=json')
+      .map(response => response.json())
+      .toPromise();
+  }
+
 }

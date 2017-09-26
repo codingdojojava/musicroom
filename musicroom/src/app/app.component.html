@@ -21,8 +21,8 @@
   </div>
 
   <div *ngIf="searchMode==='rooms'"style="display: inline-block;">
-    <form *ngIf="currentUser" (submit) = "searchRooms()">
-      <input type="text" name="searchM" placeholder="Search Chatrooms" [(ngModel)]="searchVal2" />
+    <form *ngIf="currentUser" (submit) = "redirectToSearchRoomPageWithSearchVal3()">
+      <input type="text" name="searchM" placeholder="Search Chatrooms" [(ngModel)]="searchVal3" (keyup) = "searchRooms()"/>
       <input type="submit" value="Search Rooms" />
     </form>
   </div>

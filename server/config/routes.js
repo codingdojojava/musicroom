@@ -8,6 +8,7 @@ module.exports = function(app) {
   app.post('/api/users/register', userRepo.registerAUser);
   app.post('/api/users/login', userRepo.loginUser);
   app.get('/api/users/current', userRepo.getCurrentUser);
+  app.post('/api/users/current/lastfm', userRepo.saveLastFmSessionTokenAndSigToUserInSession);
   app.get('/api/users/logout', userRepo.logoutUser);
   app.get('/api/users', userRepo.getAllUsers);
   app.post('/api/users/invite', userRepo.sendInviteToUserById);

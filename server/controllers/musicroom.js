@@ -41,7 +41,7 @@ module.exports = {
   },
 
   allRooms: function(req, res){
-    Room.find(function(err, rooms){
+    Room.find({}).populate('_owner').exec(function(err, rooms){
       res.json(rooms);
     });
   },

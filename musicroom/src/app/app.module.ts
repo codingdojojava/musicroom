@@ -1,3 +1,4 @@
+import { Md5 } from 'ts-md5/dist/md5';
 import { LastFmApiService } from './last-fm-api.service';
 import { SearchService } from './search.service';
 import { ChatService } from './chat.service';
@@ -22,6 +23,7 @@ import { EditProfileComponent } from './profile/edit-profile/edit-profile.compon
 import { CurrentProfileComponent } from './profile/current-profile/current-profile.component';
 import { SearchMusicComponent } from './search-manager/search-music/search-music.component';
 import { SearchUsersComponent } from './search-manager/search-users/search-users.component';
+import { SessionHandlerComponent } from './session-handler/session-handler.component';
 import { NewRoomComponent } from './new-room/new-room.component';
 import { SearchRoomsComponent } from './search-manager/search-rooms/search-rooms.component';
 
@@ -43,6 +45,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
     CurrentProfileComponent,
     SearchMusicComponent,
     SearchUsersComponent,
+    SessionHandlerComponent,
     NewRoomComponent,
     SearchRoomsComponent,
   ],
@@ -58,7 +61,8 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
     ChatService,
     ApiCallService,
     SearchService,
-    LastFmApiService
+    LastFmApiService,
+    Md5
   ],
   bootstrap: [AppComponent]
 })
