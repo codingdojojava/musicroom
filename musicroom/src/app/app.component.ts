@@ -35,6 +35,11 @@ export class AppComponent {
     this._searchService.searchUsers(this.searchVal);
   }
 
+  searchRooms() {
+    // console.log('hello');
+    this._searchService.searchRooms(this.searchVal);
+  }
+
   searchMusic() {
     // console.log('hello');
     if (!this.isInMusicBrowser) {

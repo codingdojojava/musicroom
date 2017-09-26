@@ -1,9 +1,9 @@
+import { ChatService } from './../chat.service';
 import { User } from './../models/user';
 import { Subscription } from 'rxjs/Subscription';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiCallService } from './../api-call.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
 @Component({
   selector: 'app-other-user-profile',
   templateUrl: './other-user-profile.component.html',
@@ -13,7 +13,7 @@ export class OtherUserProfileComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   user: User;
   currentUser: User;
-  constructor(private _apicallService: ApiCallService, private _route: ActivatedRoute, private _router: Router) {
+  constructor(private _apicallService: ApiCallService, private _route: ActivatedRoute, private _router: Router, private chatService: ChatService) {
     this.getCurrentUserInSession();
     this.subscribeToUserIdParams();
    }
@@ -59,6 +59,7 @@ export class OtherUserProfileComponent implements OnInit, OnDestroy {
         // console.log('sucess then response sendInvite');
         // console.log(data);
         this.subscribeToUserIdParams();
+
       })
       .catch(error => {
         // console.log('error catch response sendInvite');

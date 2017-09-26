@@ -1,0 +1,11 @@
+<h1>Search User Results</h1>
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Owner</th>
+  </tr>
+  <tr *ngFor="let room of showSearchResultRooms">
+      <td>{{room.title}}</td>
+      <td>{{room._owner}}</td>
+  </tr>
+</table>

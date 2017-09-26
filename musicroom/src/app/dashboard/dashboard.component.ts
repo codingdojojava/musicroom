@@ -1,3 +1,4 @@
+import { ChatService } from './../chat.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Room } from './../models/room';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -14,20 +15,18 @@ export class DashboardComponent implements OnInit {
   allRooms = [];
   userRooms = [];
   room:object={};
-  constructor(private _apicallService: ApiCallService, private _router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private _apicallService: ApiCallService, private _router: Router, private chatService: ChatService) {
     this.getCurrentUserInSession();
    }
   ngOnInit() {
+    var self = this;
     this.getAllRooms();
-    // this.subscription = this._route.paramMap
-    //   .switchMap(params => {
-    //     console.log(params.get('?token'));
-    //     return params.get('?token');
-    //   })
-    //   .subscribe(token => {
-    //     console.log(token);
-    //     this.lastFmToken = token;
-    //   });
+    // this.chatService
+    // .getMessage(this.room.roomId)
+    // .subscribe(data => {
+    //   console.log("GOT IT");
+    //   self.getCurrentUserInSession();
+    // });
   }
 
   getCurrentUserInSession() {
