@@ -1,11 +1,15 @@
 <p>You now in dashboard</p>
 
-
 <!-- <router-outlet></router-outlet> -->
+<!-- <a [routerLink]="['room']">qqqq</a> -->
 <fieldset class="wrapper">
     <legend>Dashboard Page</legend>
     <fieldset class="joined inblock">
         <legend>Joined Rooms</legend>
+        <a [routerLink]='["room","new"]' >Create Room</a>
+        <div *ngFor="let room of currentUser.joinedRooms">
+            <a [routerLink]="['room', room.roomId]">{{room.title}}</a>
+        </div>
     </fieldset>
     <fieldset class="main inblock">
         <legend>Main View</legend>

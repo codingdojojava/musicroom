@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt'); 
 let Room = mongoose.model('MusicRoom')
+let User = mongoose.model('User');
 module.exports = {
   create: function(req, res){
     Room.find({}).sort('-createdAt').exec(function(err, rooms){
@@ -11,12 +12,15 @@ module.exports = {
         id = rooms[0].roomId + 1;
       }
       req.body._owner = req.session.currentUser;
-      if(req.body.public == "false"){
-        req.body.public = false;
+      console.log("PUBLIC?");
+      console.log(req.body.isPublic);
+      if(req.body.isPublic == "false"){
+        req.body.isPublic = false;
+      }
+      else{
+        req.body.isPublic = true;
         req.body.password = null;
       }
-      else
-        req.body.public = true;
       req.body.chatlog = [];
       req.body.playlist = [];
       req.body._roomMembers = [];
@@ -25,16 +29,19 @@ module.exports = {
       newRoom.save(function(err){
         console.log("SAVE ERR");
         console.log(err);
-        if(err)
-          res.json(err);
-        else
-          res.json(true);
+
+        User.findOneAndUpdate({userId: req.session.currentUser.userId}, {$push: {joinedRooms: newRoom}}, {$push: {ownedRooms: newRoom}}, function(err2){
+          if(err2)
+            res.json(err2)
+          else
+            res.json(true);
+        })
       })
     })
   },
 
   allRooms: function(req, res){
-    Room.find(function(err, rooms){
+    Room.find({}).populate('_owner').exec(function(err, rooms){
       res.json(rooms);
     });
   },
@@ -64,10 +71,12 @@ module.exports = {
     Room.findOne({roomId: req.params.id}, function(err, room){
       room._roomMembers.push(req.session.currentUser);
       room.save(function(err){
-        if(err)
-          res.json(err);
-        else
-          res.json(true);
+        User.findOneAndUpdate({userId: req.session.userId}, {$push:{joinedRooms: room}}, {new: true}, function(err2){
+          if(err2)
+            res.json(err2);
+          else
+            res.json(true);
+        } )
       })
     })
   }

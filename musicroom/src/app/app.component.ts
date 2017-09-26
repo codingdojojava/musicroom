@@ -16,6 +16,7 @@ export class AppComponent {
   msg = "";
   searchVal='';
   searchVal2='';
+  searchVal3='';
   isInMusicBrowser = false;
   searchMode = 'users';
   constructor(private chatService:ChatService, 
@@ -35,6 +36,11 @@ export class AppComponent {
     this._searchService.searchUsers(this.searchVal);
   }
 
+  searchRooms() {
+    // console.log('hello');
+    this._searchService.searchRooms(this.searchVal3);
+  }
+
   searchMusic() {
     // console.log('hello');
     if (!this.isInMusicBrowser) {
@@ -52,6 +58,12 @@ export class AppComponent {
     // console.log('redirecting to Search page with keyword SearchVal');
     // console.log(this.searchVal);
     this._route.navigate(['home', 'search', 'results', 'users', { q: this.searchVal }]);
+  }
+
+  redirectToSearchRoomPageWithSearchVal3() {
+    // console.log('redirecting to Search page with keyword SearchVal');
+    // console.log(this.searchVal);
+    this._route.navigate(['home', 'search', 'results', 'rooms', { q: this.searchVal3 }]);
   }
 
   getCurrentUserInSession() {
