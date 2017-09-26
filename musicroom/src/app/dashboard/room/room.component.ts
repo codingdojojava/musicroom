@@ -1,3 +1,4 @@
+import { DashboardComponent } from './../dashboard.component';
 import { ChatService } from './../../chat.service';
 import { ApiCallService } from './../../api-call.service';
 import { Component, OnInit } from '@angular/core';
@@ -12,7 +13,7 @@ export class RoomComponent implements OnInit {
   message = "";
   userInRoom = false;
   roomPW="";
-  constructor(private _route: ActivatedRoute, private apiService: ApiCallService, private chatService: ChatService) {
+  constructor(private _route: ActivatedRoute, private apiService: ApiCallService, private chatService: ChatService, private _dashboardComp: DashboardComponent) {
    }
 
   ngOnInit() {
@@ -73,6 +74,7 @@ export class RoomComponent implements OnInit {
     var self = this;
     this.apiService.joinRoom(this.room.roomId, this.roomPW).then(function(result){
       self.refreshRoom();
+      self._dashboardComp.getCurrentUserInSession();
     });
   }
 }
