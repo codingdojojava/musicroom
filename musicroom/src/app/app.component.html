@@ -20,10 +20,17 @@
     </form>
   </div>
 
+  <div *ngIf="searchMode==='rooms'"style="display: inline-block;">
+    <form *ngIf="currentUser" (submit) = "searchRooms()">
+      <input type="text" name="searchM" placeholder="Search Chatrooms" [(ngModel)]="searchVal2" />
+      <input type="submit" value="Search Rooms" />
+    </form>
+  </div>
+
   <select *ngIf="currentUser" name="searchMode" [(ngModel)]="searchMode">
     <option value="users">Users</option>
     <option value="music">Music</option>
-    <option value="users">Chatrooms</option>
+    <option value="rooms">Chatrooms</option>
   </select>
 
   <a *ngIf="currentUser" [routerLink]="['/logout']">Logout</a>
