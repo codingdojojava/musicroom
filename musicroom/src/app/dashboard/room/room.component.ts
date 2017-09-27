@@ -60,12 +60,15 @@ export class RoomComponent implements OnInit {
     this.apiService.getCurrentUserInSession().then(result=>{
       console.log("RESULT");
       console.log(result);
-      console.log(this.room._roomMembers[0]);
+      console.log(this.room._roomMembers);
       console.log(this.room._owner);
-      if(this.room._roomMembers.includes(result._id) || this.room._owner == result._id)
+      this.userInRoom = false;
+      for(var i = 0; i < this.room._roomMembers.length; i++){
+        if(this.room._roomMembers[i]._id == result._id)
+          this.userInRoom = true;
+      }
+      if(this.room._owner == result._id)
         this.userInRoom = true;
-      else
-        this.userInRoom = false;
       console.log(this.userInRoom);
     })
   }
@@ -73,6 +76,8 @@ export class RoomComponent implements OnInit {
   joinRoom(){
     var self = this;
     this.apiService.joinRoom(this.room.roomId, this.roomPW).then(function(result){
+      self.message = "joined the room.";
+      self.sendMessage();
       self.refreshRoom();
       self._dashboardComp.getCurrentUserInSession();
     });

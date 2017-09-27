@@ -47,7 +47,7 @@ module.exports = {
   },
 
   getRoomById: function(req, res){
-    Room.findOne({roomId: req.params.id}, function(err, room){
+    Room.findOne({roomId: req.params.id}).populate('_roomMembers').exec(function(err, room){
       res.json(room);
     })
   },
