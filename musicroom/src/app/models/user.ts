@@ -10,6 +10,7 @@ export class User {
         public description: string = '',
         public profileImageUrl: string = '',
         public isLoggedIn: boolean = false,
+        public onlineFriends = [],
         public favoriteSongs = [],
         public joinedRooms = [],
         public ownedRooms = [],

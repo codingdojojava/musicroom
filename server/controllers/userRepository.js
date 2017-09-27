@@ -45,6 +45,7 @@ module.exports = {
                 else if(bcrypt.compareSync(req.body.password, foundUser.password)){
                     // console.log('login success, adding user to session')
                     User.findOneAndUpdate({_id: foundUser._id}, {isLoggedIn: true}, {new: true}, (err, updatedUser) => {
+                        User.update({friends: updatedUser._id}, {$push: {onlineFriends: updatedUser._id}}, (err, friendUser)=> console.log(friendUser));
                         req.session.currentUser = updatedUser;
                         console.log(updatedUser);
                         res.json(updatedUser);
@@ -61,7 +62,7 @@ module.exports = {
         // console.log('server getting current user');
         if(req.session.currentUser) {
             User.findOne({_id: req.session.currentUser._id})
-                .populate('friends favoriteSongs joinedRooms ownedRooms received_invites sent_invites')
+                .populate('friends favoriteSongs joinedRooms ownedRooms received_invites sent_invites onlineFriends')
                 .exec((error, foundUser) => {
                     if (foundUser) {
                         // console.log('found current User');
@@ -79,11 +80,9 @@ module.exports = {
     logoutUser: (req, res) => {
         // console.log('server logging out user');
         User.findOneAndUpdate({_id:req.session.currentUser._id}, {isLoggedIn: false}, {new: true}, (err, updatedUser) => {
-            console.log('updated user');
-            console.log(updatedUser);
+            res.json(updatedUser)
         })
         delete req.session.currentUser;
-        res.json(true);
     },
     getUserByUserId: (req, res) => {
         // console.log('server getting user by id');
@@ -257,5 +256,36 @@ module.exports = {
                                       res.json(updatedUser);
                                   }
                               });
+    },
+
+    saveToOnlineFriends: (req, res) => {
+        User.findOneAndUpdate({_id: req.session.currentUser._id}, {$push: {onlineFriends: req.body._id}}, (err, updatedUser) => {
+            req.session.currentUser = updatedUser;
+            res.json(updatedUser);
+        });
+    },
+
+    removeFromOnlineFriends: (req, res) => {
+        console.log('ID TO DELETE!');
+        console.log(req.body.friend);
+        // var newFobject = mongoose.Types.ObjectId(req.body.friend);
+        User.findOneAndUpdate({_id: req.body.currUser}, {$pull: {onlineFriends: req.body.friend}}, {new:true}, (err, updatedUser) => {
+            req.session.currentUser = updatedUser;
+            console.log('after updating ' + updatedUser.username);
+            console.log(updatedUser.onlineFriends);
+            res.json(updatedUser);
+        });
+    },
+    getLoggedInFriends: (req,res)=>{
+        User.find({_id: {$in:[req.session.currentUser.friends]}, isLoggedIn:true}).populate('friends favoriteSongs joinedRooms ownedRooms received_invites sent_invites onlineFriends')
+        .exec((err, onlineFriends)=>{
+            if(err){
+                console.log("you dun goofed");
+                res.json(err);
+            }else{
+                console.log("found online friends");
+                res.json(onlineFriends);
+            }
+        })
     }
 }
