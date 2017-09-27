@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 webpackJsonp(["main"],{
 
 /***/ "../../../../../src/$$_gendir lazy recursive":
@@ -272,13 +271,12 @@ module.exports = module.exports.toString();
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -294,10 +292,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var AppComponent = (function () {
     function AppComponent(chatService, _route, _searchService, _apicallService, _lastFmApiService) {
-        // this.getCurrentUserInSession();
         this.chatService = chatService;
         this._route = _route;
         this._searchService = _searchService;
@@ -309,60 +305,46 @@ var AppComponent = (function () {
         this.searchVal3 = '';
         this.isInMusicBrowser = false;
         this.searchMode = 'users';
+        this.getCurrentUserInSession();
     }
     AppComponent.prototype.ngAfterViewInit = function () {
     };
-    // sendMsg(msg){
-    //    this.chatService.sendMessage(msg);
-    // }
     AppComponent.prototype.searchUsers = function () {
-        // console.log('hello');
         this._searchService.searchUsers(this.searchVal);
     };
     AppComponent.prototype.searchRooms = function () {
-        // console.log('hello');
         this._searchService.searchRooms(this.searchVal3);
     };
     AppComponent.prototype.searchMusic = function () {
         // console.log('hello');
         if (!this.isInMusicBrowser) {
-            console.log('not in music browser so redirecting');
             this._route.navigate(['home', 'search', 'results', 'music', { q: this.searchVal2 }]);
             this.searchVal2 = '';
         }
         else {
-            console.log('in music browser so just updating search results');
             this._searchService.searchMusic(this.searchVal2);
             this.searchVal2 = '';
         }
     };
     AppComponent.prototype.redirectToSearchPageWithSearchVal = function () {
-        // console.log('redirecting to Search page with keyword SearchVal');
-        // console.log(this.searchVal);
         this._route.navigate(['home', 'search', 'results', 'users', { q: this.searchVal }]);
     };
     AppComponent.prototype.redirectToSearchRoomPageWithSearchVal3 = function () {
-        // console.log('redirecting to Search page with keyword SearchVal');
-        // console.log(this.searchVal);
         this._route.navigate(['home', 'search', 'results', 'rooms', { q: this.searchVal3 }]);
     };
     AppComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
             }
             else {
-                // console.log('user not in session');
                 _this.currentUser = false;
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
         });
     };
     AppComponent.prototype.setIsInMusicBrowser = function () {
@@ -377,44 +359,35 @@ var AppComponent = (function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
             }
             else {
-                // console.log('user not in session');
                 _this.currentUser = false;
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
         });
     };
     AppComponent.prototype.ngOnDestroy = function () {
-        // this.emitLogoutEvent(this.currentUser);
-        this._apicallService.logoutUser()
-            .then(function (data) {
-            console.log(data);
-        });
+        // this._apicallService.logoutUser()
+        //   .then(data => {
+        //     console.log(data);
+        //   });
     };
     return AppComponent;
 }());
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_6__angular_core__["_16" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__["a" /* DashboardComponent */]),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__["a" /* DashboardComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__["a" /* DashboardComponent */]) === "function" && _a || Object)
-], AppComponent.prototype, "dashboardComponent", void 0);
 AppComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_6__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_5__angular_core__["o" /* Component */])({
         selector: 'app-root',
         template: __webpack_require__("../../../../../src/app/app.component.html"),
         styles: [__webpack_require__("../../../../../src/app/app.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__chat_service__["a" /* ChatService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__search_service__["a" /* SearchService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_1__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _f || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__chat_service__["a" /* ChatService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _e || Object])
 ], AppComponent);
 
-var _a, _b, _c, _d, _e, _f;
+var _a, _b, _c, _d, _e;
 //# sourceMappingURL=app.component.js.map
 
 /***/ }),
@@ -671,6 +644,7 @@ var DashboardComponent = (function () {
         this._apicallService = _apicallService;
         this._router = _router;
         this.chatService = chatService;
+        this.onlineFriends = [];
         this.allRooms = [];
         this.userRooms = [];
         this.room = {};
@@ -680,15 +654,7 @@ var DashboardComponent = (function () {
         this.refreshUserSession();
         var self = this;
         this.getAllRooms();
-        // this.chatService
-        // .getMessage(this.room.roomId)
-        // .subscribe(data => {
-        //   console.log("GOT IT");
-        //   self.getCurrentUserInSession();
-        // });
         this._apicallService.getOnlineFriends().then(function (data) {
-            console.log('list of online friends');
-            console.log(data);
             _this.onlineFriends = data;
         });
     };
@@ -696,21 +662,15 @@ var DashboardComponent = (function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
-                console.log('2343424');
-                console.log(data);
             }
             else {
-                // console.log('user not in session');
                 _this._router.navigate(['']);
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
             _this._router.navigate(['']);
         });
     };
@@ -718,21 +678,17 @@ var DashboardComponent = (function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
                 _this.watchForFriendLoginEvent(_this.currentUser._id);
                 _this.watchForFriendLogoutEvent(_this.currentUser._id);
             }
             else {
-                // console.log('user not in session');
                 _this._router.navigate(['']);
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
         });
     };
     DashboardComponent.prototype.getAllRooms = function () {
@@ -2658,5 +2614,3 @@ module.exports = __webpack_require__("../../../../../src/main.ts");
 
 },[0]);
 //# sourceMappingURL=main.bundle.js.map
-=======
->>>>>>> master
