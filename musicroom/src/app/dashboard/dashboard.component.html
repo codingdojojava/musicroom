@@ -8,7 +8,7 @@
             <legend>Joined Rooms</legend>
             <a [routerLink]='["room","new"]' >Create Room</a>
             <div *ngFor="let room of currentUser.joinedRooms">
-                <a [routerLink]="['room', room.roomId]">A{{room.title}}</a>
+                <a [routerLink]="['room', room.roomId]">{{room.title}}</a>
             </div>
         </fieldset>
         <fieldset class="main inblock">

@@ -283,7 +283,7 @@ module.exports = {
         .exec((err, onlineFriends)=>{
             if(err){
                 console.log("you dun goofed");
-                res.json(err);
+                res.json([]);
             }else{
                 console.log("found online friends");
                 res.json(onlineFriends);

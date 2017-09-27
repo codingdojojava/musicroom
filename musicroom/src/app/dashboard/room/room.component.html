@@ -1,5 +1,11 @@
 <div style="border: 1px solid black;">
-  {{room.title}}
+  <p>Name: {{room.title}}</p>
+  <p>{{room.description}}</p>
+  <p>Users in room</p>
+  <div id='usersInRoom'>
+    <p *ngFor="let user of room._roomMembers">{{user.username}}</p>
+  </div>
+  <hr>
   <div *ngIf="userInRoom">
     <div id="allMessages">
       <p *ngFor="let msg of room.chatlog">{{msg.user}}: {{msg.message}}</p>

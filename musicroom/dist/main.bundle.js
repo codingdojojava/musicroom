@@ -814,7 +814,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/room/room.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"border: 1px solid black;\">\n  {{room.title}}\n  <div *ngIf=\"userInRoom\">\n    <div id=\"allMessages\">\n      <p *ngFor=\"let msg of room.chatlog\">{{msg.user}}: {{msg.message}}</p>\n    </div>\n    <form (submit)=\"sendMessage()\">\n      <input type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <input type=\"submit\" value=\"Send\">\n    </form>\n  </div>\n  <div *ngIf=\"!userInRoom\">\n    <div *ngIf=\"room.isPublic\">\n      <button (click)=\"joinRoom()\">Join Room</button>\n    </div>\n    <div *ngIf=\"!room.isPublic\">\n      <input type=\"text\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n      <button (click)=\"joinRoom()\" [disabled]=\"roomPW != room.password\">Join Room</button>\n    </div>\n  </div>\n</div>"
+module.exports = "<div style=\"border: 1px solid black;\">\n  <p>Name: {{room.title}}</p>\n  <p>{{room.description}}</p>\n  <p>Users in room</p>\n  <div id='usersInRoom'>\n    <p *ngFor=\"let user of room._roomMembers\">{{user.username}}</p>\n  </div>\n  <hr>\n  <div *ngIf=\"userInRoom\">\n    <div id=\"allMessages\">\n      <p *ngFor=\"let msg of room.chatlog\">{{msg.user}}: {{msg.message}}</p>\n    </div>\n    <form (submit)=\"sendMessage()\">\n      <input type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <input type=\"submit\" value=\"Send\">\n    </form>\n  </div>\n  <div *ngIf=\"!userInRoom\">\n    <div *ngIf=\"room.isPublic\">\n      <button (click)=\"joinRoom()\">Join Room</button>\n    </div>\n    <div *ngIf=\"!room.isPublic\">\n      <input type=\"text\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n      <button (click)=\"joinRoom()\" [disabled]=\"roomPW != room.password\">Join Room</button>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -896,18 +896,23 @@ var RoomComponent = (function () {
         this.apiService.getCurrentUserInSession().then(function (result) {
             console.log("RESULT");
             console.log(result);
-            console.log(_this.room._roomMembers[0]);
+            console.log(_this.room._roomMembers);
             console.log(_this.room._owner);
-            if (_this.room._roomMembers.includes(result._id) || _this.room._owner == result._id)
+            _this.userInRoom = false;
+            for (var i = 0; i < _this.room._roomMembers.length; i++) {
+                if (_this.room._roomMembers[i]._id == result._id)
+                    _this.userInRoom = true;
+            }
+            if (_this.room._owner == result._id)
                 _this.userInRoom = true;
-            else
-                _this.userInRoom = false;
             console.log(_this.userInRoom);
         });
     };
     RoomComponent.prototype.joinRoom = function () {
         var self = this;
         this.apiService.joinRoom(this.room.roomId, this.roomPW).then(function (result) {
+            self.message = "joined the room.";
+            self.sendMessage();
             self.refreshRoom();
             self._dashboardComp.getCurrentUserInSession();
         });
