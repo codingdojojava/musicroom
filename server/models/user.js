@@ -53,6 +53,7 @@ var UserSchema = new mongoose.Schema({
     isLoggedIn: {
         type: Boolean,
     },
+    onlineFriends: [],
     favoriteSongs: [{type: Schema.Types.ObjectId, ref: 'Song'}],
     joinedRooms: [{type: Schema.Types.ObjectId, ref: 'MusicRoom'}],
     ownedRooms: [{type: Schema.Types.ObjectId, ref: 'MusicRoom'}],

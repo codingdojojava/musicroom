@@ -112,4 +112,24 @@ export class ApiCallService {
       .toPromise();
   }
 
+  saveToOnlineFriends(friend) {
+    return this._http.post('/api/users/friend/online', friend)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  removeFromOnlineFriends(friend) {
+    console.log('removing from online friends');
+    return this._http.post('/api/users/friend/offline', friend)
+      .map(response => response.json())
+      .toPromise();
+  }
+  getOnlineFriends(){
+    console.log('removing from online friends');
+    return this._http.get('/api/users/online_friends')
+      .map(response => response.json())
+      .toPromise();
+  }
+
+
 }

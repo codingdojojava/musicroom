@@ -15,13 +15,16 @@ module.exports = function(app) {
   app.post('/api/users/invite/accept', userRepo.addFriendAndUpdateReceivedInvite);
   app.post('/api/users/invite/reject', userRepo.deleteInviteAndUpdateUsers);
   app.post('/api/users/friends/remove', userRepo.removeFriendFromCurrentUser);
+  app.get('/api/users/online_friends', userRepo.getLoggedInFriends);
+  app.post('/api/users/friend/online', userRepo.saveToOnlineFriends);
+  app.post('/api/users/friend/offline', userRepo.removeFromOnlineFriends);
   app.post('/api/users/profile/edit', userRepo.editCurrentUser);
   app.get('/api/users/:id', userRepo.getUserByUserId);
   app.post('/api/rooms/create', musicroom.create);
   app.get('/api/rooms', musicroom.allRooms);
-  app.get('/api/rooms/:id', musicroom.getRoomById);
   app.post('/api/rooms/:id/messages/new', musicroom.newMessage);
   app.post('/api/rooms/:id/join', musicroom.joinRoom);
+  app.get('/api/rooms/:id', musicroom.getRoomById);
   app.all("*", (req,res,next) => {
     res.sendFile(path.resolve("./musicroom/dist/index.html"))
   });

@@ -29,5 +29,21 @@ io.on('connection', (client)=>{
     console.log("QQQQQQQQQQ");
     io.emit("msg"+data);
   })
+
+  client.on("login", (currentUser) => {
+    // console.log('Server received event name: login from client');
+    // console.log('Server now emitting events to current user friends who are online');
+    for(let friend of currentUser.friends) {
+      client.broadcast.emit("online"+friend._id, currentUser);
+    }
+  })
+
+  client.on("logout", (currentUser) => {
+    console.log('Server received event name: logout from client');
+    console.log('Server now emitting events to current user friends who are online');
+    for(let friend of currentUser.friends) {
+      client.broadcast.emit("offline"+friend, currentUser);
+    }
+  })
 })
 

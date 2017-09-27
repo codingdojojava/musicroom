@@ -71,11 +71,14 @@ module.exports = {
     Room.findOne({roomId: req.params.id}, function(err, room){
       room._roomMembers.push(req.session.currentUser);
       room.save(function(err){
-        User.findOneAndUpdate({userId: req.session.userId}, {$push:{joinedRooms: room}}, {new: true}, function(err2){
-          if(err2)
+        User.findOneAndUpdate({userId: req.session.currentUser.userId}, {$push:{joinedRooms: room}}, {new: true}, function(err2, updatedUser){
+          if(err2) {
             res.json(err2);
-          else
+          }
+          else {
+            req.session.currentUser = updatedUser;
             res.json(true);
+          }
         } )
       })
     })
