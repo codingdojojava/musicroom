@@ -235,8 +235,8 @@ var AppRoutingModule = (function () {
 }());
 AppRoutingModule = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_16__angular_core__["M" /* NgModule */])({
-        imports: [__WEBPACK_IMPORTED_MODULE_17__angular_router__["d" /* RouterModule */].forRoot(routes)],
-        exports: [__WEBPACK_IMPORTED_MODULE_17__angular_router__["d" /* RouterModule */]]
+        imports: [__WEBPACK_IMPORTED_MODULE_17__angular_router__["c" /* RouterModule */].forRoot(routes)],
+        exports: [__WEBPACK_IMPORTED_MODULE_17__angular_router__["c" /* RouterModule */]]
     })
 ], AppRoutingModule);
 
@@ -274,13 +274,12 @@ module.exports = module.exports.toString();
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -296,10 +295,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var AppComponent = (function () {
     function AppComponent(chatService, _route, _searchService, _apicallService, _lastFmApiService) {
-        // this.getCurrentUserInSession();
         this.chatService = chatService;
         this._route = _route;
         this._searchService = _searchService;
@@ -311,60 +308,46 @@ var AppComponent = (function () {
         this.searchVal3 = '';
         this.isInMusicBrowser = false;
         this.searchMode = 'users';
+        this.getCurrentUserInSession();
     }
     AppComponent.prototype.ngAfterViewInit = function () {
     };
-    // sendMsg(msg){
-    //    this.chatService.sendMessage(msg);
-    // }
     AppComponent.prototype.searchUsers = function () {
-        // console.log('hello');
         this._searchService.searchUsers(this.searchVal);
     };
     AppComponent.prototype.searchRooms = function () {
-        // console.log('hello');
         this._searchService.searchRooms(this.searchVal3);
     };
     AppComponent.prototype.searchMusic = function () {
         // console.log('hello');
         if (!this.isInMusicBrowser) {
-            console.log('not in music browser so redirecting');
             this._route.navigate(['home', 'search', 'results', 'music', { q: this.searchVal2 }]);
             this.searchVal2 = '';
         }
         else {
-            console.log('in music browser so just updating search results');
             this._searchService.searchMusic(this.searchVal2);
             this.searchVal2 = '';
         }
     };
     AppComponent.prototype.redirectToSearchPageWithSearchVal = function () {
-        // console.log('redirecting to Search page with keyword SearchVal');
-        // console.log(this.searchVal);
         this._route.navigate(['home', 'search', 'results', 'users', { q: this.searchVal }]);
     };
     AppComponent.prototype.redirectToSearchRoomPageWithSearchVal3 = function () {
-        // console.log('redirecting to Search page with keyword SearchVal');
-        // console.log(this.searchVal);
         this._route.navigate(['home', 'search', 'results', 'rooms', { q: this.searchVal3 }]);
     };
     AppComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
             }
             else {
-                // console.log('user not in session');
                 _this.currentUser = false;
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
         });
     };
     AppComponent.prototype.setIsInMusicBrowser = function () {
@@ -379,44 +362,35 @@ var AppComponent = (function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
             }
             else {
-                // console.log('user not in session');
                 _this.currentUser = false;
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
         });
     };
     AppComponent.prototype.ngOnDestroy = function () {
-        // this.emitLogoutEvent(this.currentUser);
-        this._apicallService.logoutUser()
-            .then(function (data) {
-            console.log(data);
-        });
+        // this._apicallService.logoutUser()
+        //   .then(data => {
+        //     console.log(data);
+        //   });
     };
     return AppComponent;
 }());
-__decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_6__angular_core__["_16" /* ViewChild */])(__WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__["a" /* DashboardComponent */]),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__["a" /* DashboardComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__dashboard_dashboard_component__["a" /* DashboardComponent */]) === "function" && _a || Object)
-], AppComponent.prototype, "dashboardComponent", void 0);
 AppComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_6__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_5__angular_core__["o" /* Component */])({
         selector: 'app-root',
         template: __webpack_require__("../../../../../src/app/app.component.html"),
         styles: [__webpack_require__("../../../../../src/app/app.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__chat_service__["a" /* ChatService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["c" /* Router */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__search_service__["a" /* SearchService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_1__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _f || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__chat_service__["a" /* ChatService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _e || Object])
 ], AppComponent);
 
-var _a, _b, _c, _d, _e, _f;
+var _a, _b, _c, _d, _e;
 //# sourceMappingURL=app.component.js.map
 
 /***/ }),
@@ -680,6 +654,7 @@ var DashboardComponent = (function () {
         this._apicallService = _apicallService;
         this._router = _router;
         this.chatService = chatService;
+        this.onlineFriends = [];
         this.allRooms = [];
         this.userRooms = [];
         this.room = {};
@@ -689,15 +664,7 @@ var DashboardComponent = (function () {
         this.refreshUserSession();
         var self = this;
         this.getAllRooms();
-        // this.chatService
-        // .getMessage(this.room.roomId)
-        // .subscribe(data => {
-        //   console.log("GOT IT");
-        //   self.getCurrentUserInSession();
-        // });
         this._apicallService.getOnlineFriends().then(function (data) {
-            console.log('list of online friends');
-            console.log(data);
             _this.onlineFriends = data;
         });
     };
@@ -705,21 +672,15 @@ var DashboardComponent = (function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
-                console.log('2343424');
-                console.log(data);
             }
             else {
-                // console.log('user not in session');
                 _this._router.navigate(['']);
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
             _this._router.navigate(['']);
         });
     };
@@ -727,21 +688,17 @@ var DashboardComponent = (function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
                 _this.watchForFriendLoginEvent(_this.currentUser._id);
                 _this.watchForFriendLogoutEvent(_this.currentUser._id);
             }
             else {
-                // console.log('user not in session');
                 _this._router.navigate(['']);
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
         });
     };
     DashboardComponent.prototype.getAllRooms = function () {
@@ -795,7 +752,7 @@ DashboardComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/dashboard/dashboard.component.html"),
         styles: [__webpack_require__("../../../../../src/app/dashboard/dashboard.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _c || Object])
 ], DashboardComponent);
 
 var _a, _b, _c;
@@ -1179,7 +1136,7 @@ LoginComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/login/login.component.html"),
         styles: [__webpack_require__("../../../../../src/app/login/login.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _d || Object])
 ], LoginComponent);
 
 var _a, _b, _c, _d;
@@ -1288,7 +1245,7 @@ LogoutComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/logout/logout.component.html"),
         styles: [__webpack_require__("../../../../../src/app/logout/logout.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _d || Object])
 ], LogoutComponent);
 
 var _a, _b, _c, _d;
@@ -1581,7 +1538,7 @@ OtherUserProfileComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _d || Object])
 ], OtherUserProfileComponent);
 
 var _a, _b, _c, _d;
@@ -1671,7 +1628,7 @@ CurrentProfileComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], CurrentProfileComponent);
 
 var _a, _b;
@@ -1775,7 +1732,7 @@ EditProfileComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], EditProfileComponent);
 
 var _a, _b;
@@ -1931,7 +1888,7 @@ ProfileComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/profile/profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/profile/profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], ProfileComponent);
 
 var _a, _b;
@@ -2031,7 +1988,7 @@ RegistrationComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/registration/registration.component.html"),
         styles: [__webpack_require__("../../../../../src/app/registration/registration.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], RegistrationComponent);
 
 var _a, _b;
@@ -2122,7 +2079,7 @@ SearchManagerComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/search-manager/search-manager.component.html"),
         styles: [__webpack_require__("../../../../../src/app/search-manager/search-manager.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], SearchManagerComponent);
 
 var _a, _b;
@@ -2383,7 +2340,7 @@ SearchRoomsComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/search-manager/search-rooms/search-rooms.component.html"),
         styles: [__webpack_require__("../../../../../src/app/search-manager/search-rooms/search-rooms.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
 ], SearchRoomsComponent);
 
 var _a, _b, _c, _d;
@@ -2547,7 +2504,7 @@ SearchUsersComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.html"),
         styles: [__webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
 ], SearchUsersComponent);
 
 var _a, _b, _c, _d;
@@ -2642,7 +2599,6 @@ module.exports = "<p>\n  session-handler works!\n</p>\n"
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2657,71 +2613,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var SessionHandlerComponent = (function () {
     function SessionHandlerComponent(_route, _lastfmApiService, _apiCallService, _md5) {
-        var _this = this;
         this._route = _route;
         this._lastfmApiService = _lastfmApiService;
         this._apiCallService = _apiCallService;
         this._md5 = _md5;
-        this.subscription = this._route.events.subscribe(function (data) {
-            if (data instanceof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* NavigationEnd */]) {
-                var params = new __WEBPACK_IMPORTED_MODULE_5__angular_http__["c" /* URLSearchParams */](data.url.split('?')[1]);
-                _this.authToken = params.get('token');
-                console.log(_this.authToken);
-                _this.apiSig = _this.hashIntoApiSig(_this.authToken);
-                console.log(_this.apiSig);
-                _this.fetchLastFmSessionToken(_this.authToken, _this.apiSig);
-                console.log(_this.lastFmSessionToken);
-                _this._route.navigate(['/home']);
-            }
-        });
+        // this.subscription = this._route.events.subscribe(data => {
+        //   if (data instanceof NavigationEnd) {
+        //     const params = new URLSearchParams(data.url.split('?')[1]);
+        //     this.authToken = params.get('token');
+        //     console.log(this.authToken);
+        //     this.apiSig = this.hashIntoApiSig(this.authToken);
+        //     console.log(this.apiSig);
+        //     this.fetchLastFmSessionToken(this.authToken, this.apiSig);
+        //     console.log(this.lastFmSessionToken);
+        //     this._route.navigate(['/home']);
+        //   }
+        // });
     }
     SessionHandlerComponent.prototype.ngOnInit = function () {
     };
     SessionHandlerComponent.prototype.ngOnDestroy = function () {
-        this.subscription.unsubscribe();
-    };
-    SessionHandlerComponent.prototype.hashIntoApiSig = function (token) {
-        var apikey = 'c595e718d23c51ef68c0d547f1511fe7';
-        var apisecret = 'e66072ab2029e8df10acdf1845093b59';
-        var hash = this._md5.appendStr('api_key' + apikey + 'methodauth.getSessiontoken' + token + apisecret).end();
-        return hash;
-    };
-    SessionHandlerComponent.prototype.fetchLastFmSessionToken = function (authToken, apiSig) {
-        var _this = this;
-        this._lastfmApiService.getAuthSession(authToken, apiSig)
-            .then(function (data) {
-            console.log('then response fetchLastFmSessionToken');
-            console.log(data);
-            _this.lastFmSessionToken = data.session.key;
-            _this.lastFmSessionSig = _this.hashIntoApiSig(_this.lastFmSessionToken);
-            _this.saveLastFmSessionTokenAndSigToUserInSession(_this.lastFmSessionToken, _this.lastFmSessionSig);
-        })
-            .catch(function (error) {
-            console.log(error);
-        });
-    };
-    SessionHandlerComponent.prototype.saveLastFmSessionTokenAndSigToUserInSession = function (lastFmSessionT, lastFMSessionS) {
-        var _this = this;
-        var lastFmSessionData = { lastFmSession: lastFmSessionT, lastFmSessionSig: lastFMSessionS };
-        this._apiCallService.saveLastFmSessionTokenAndSigToUserInSession(lastFmSessionData)
-            .then(function (data) {
-            console.log('then response saveLastFmSessionTokenAndSigToUserInSession');
-            console.log(data);
-            if (data) {
-                _this._route.navigate(['home']);
-            }
-            else {
-                console.log('error adding token to currentUser');
-                _this._apiCallService.logoutUser();
-                _this._route.navigate(['']);
-            }
-        })
-            .catch(function (error) {
-            console.log(error);
-        });
+        // this.subscription.unsubscribe();
     };
     return SessionHandlerComponent;
 }());
@@ -2731,7 +2645,7 @@ SessionHandlerComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/session-handler/session-handler.component.html"),
         styles: [__webpack_require__("../../../../../src/app/session-handler/session-handler.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__["Md5"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__["Md5"]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__["Md5"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__["Md5"]) === "function" && _d || Object])
 ], SessionHandlerComponent);
 
 var _a, _b, _c, _d;
