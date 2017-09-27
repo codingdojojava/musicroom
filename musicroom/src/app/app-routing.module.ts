@@ -21,8 +21,8 @@ const routes: Routes = [
   { path: '', pathMatch: 'full', component: IndexComponent },
   { path: 'login', pathMatch: 'full', component: LoginComponent },
   { path: 'register', pathMatch: 'full', component: RegistrationComponent },
-  { path: 'logout', pathMatch: 'full', component: LogoutComponent },
   { path: 'home', component: DashboardComponent, children: [
+    { path: 'logout', component: LogoutComponent },
     { path: 'profile', component: ProfileComponent, children: [
           {path: 'edit', component: EditProfileComponent},
           {path: 'current', component: CurrentProfileComponent}

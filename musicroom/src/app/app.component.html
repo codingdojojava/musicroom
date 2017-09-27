@@ -33,7 +33,7 @@
     <option value="rooms">Chatrooms</option>
   </select>
 
-  <a *ngIf="currentUser" [routerLink]="['/logout']">Logout</a>
+  <a *ngIf="currentUser" [routerLink]="['/home','logout']">Logout</a>
 </fieldset>
 
 <router-outlet></router-outlet>
