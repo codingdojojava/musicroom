@@ -12,7 +12,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   currentUser;
-  onlineFriends;
+  onlineFriends = [];
   allRooms = [];
   userRooms = [];
   room:object={};
@@ -24,15 +24,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.refreshUserSession();
     var self = this;
     this.getAllRooms();
-    // this.chatService
-    // .getMessage(this.room.roomId)
-    // .subscribe(data => {
-    //   console.log("GOT IT");
-    //   self.getCurrentUserInSession();
-    // });
     this._apicallService.getOnlineFriends().then((data)=>{
-        console.log('list of online friends');
-        console.log(data);
         this.onlineFriends = data;
       });
   }
@@ -40,20 +32,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getCurrentUserInSession() {
     this._apicallService.getCurrentUserInSession()
       .then((data) => {
-        // console.log(data);
         if (data) {
-          // console.log('success getting current user');
           this.currentUser = data;
-          console.log('2343424');
-          console.log(data);
         } else {
-          // console.log('user not in session');
           this._router.navigate(['']);
         }
       })
       .catch((error) => {
-        // console.log('error getting current user');
-        // console.log(error);
+        console.log(error);
         this._router.navigate(['']);
       });
   }
@@ -61,20 +47,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     refreshUserSession() {
     this._apicallService.getCurrentUserInSession()
       .then((data) => {
-        // console.log(data);
         if (data) {
-          // console.log('success getting current user');
           this.currentUser = data;
           this.watchForFriendLoginEvent(this.currentUser._id);
           this.watchForFriendLogoutEvent(this.currentUser._id);
         } else {
-          // console.log('user not in session');
           this._router.navigate(['']);
         }
       })
       .catch((error) => {
-        // console.log('error getting current user');
-        // console.log(error);
+        console.log(error);
       });
   }
 

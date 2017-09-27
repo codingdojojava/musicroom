@@ -277,17 +277,17 @@ module.exports = {
         });
     },
     getLoggedInFriends: (req,res)=>{
-        console.log('ALL FRIENDS');
-        console.log(req.session.currentUser.friends);
-        User.find({_id: {$in:[req.session.currentUser.friends]}, isLoggedIn:true}).populate('friends favoriteSongs joinedRooms ownedRooms received_invites sent_invites onlineFriends')
-        .exec((err, onlineFriends)=>{
-            if(err){
-                console.log("you dun goofed");
-                res.json(err);
-            }else{
-                console.log("found online friends");
-                res.json(onlineFriends);
-            }
-        })
+        if(req.session.currentUser) {
+            User.find({_id: {$in:[req.session.currentUser.friends]}, isLoggedIn:true}).populate('friends favoriteSongs joinedRooms ownedRooms received_invites sent_invites onlineFriends')
+            .exec((err, onlineFriends)=>{
+                if(err){
+                    console.log("you dun goofed");
+                    res.json([]);
+                }else{
+                    console.log("found online friends");
+                    res.json(onlineFriends);
+                }
+            })
+        }
     }
 }
