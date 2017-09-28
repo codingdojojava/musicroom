@@ -16,8 +16,6 @@ module.exports = function(app) {
   app.post('/api/users/invite/reject', userRepo.deleteInviteAndUpdateUsers);
   app.post('/api/users/friends/remove', userRepo.removeFriendFromCurrentUser);
   app.get('/api/users/online_friends', userRepo.getLoggedInFriends);
-  app.post('/api/users/friend/online', userRepo.saveToOnlineFriends);
-  app.post('/api/users/friend/offline', userRepo.removeFromOnlineFriends);
   app.post('/api/users/profile/edit', userRepo.editCurrentUser);
   app.get('/api/users/:id', userRepo.getUserByUserId);
   app.post('/api/rooms/create', musicroom.create);

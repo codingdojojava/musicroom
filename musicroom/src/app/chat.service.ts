@@ -33,11 +33,7 @@ export class ChatService {
     return this.socket
         .fromEvent<any>("online"+id)
         .map(data => {
-          this._apiCallService.saveToOnlineFriends(data)
-            .then(data => {
-              console.log('executing service: saveToOnlineFriends')
-              console.log(data);
-            });
+          console.log('got login event');
           return true;
         });
   }
@@ -48,16 +44,11 @@ export class ChatService {
   }
 
   getLogoutEvent(currentUserid) {
-    console.log(currentUserid);
     return this.socket.fromEvent<any>("offline"+currentUserid)
                       .map(data => {
                         console.log("GOT LOGOUT EVENT");
-                        let removeUserFriendsData = {currUser: currentUserid, friend: data._id};
-                        // this._apiCallService.removeFromOnlineFriends(removeUserFriendsData)
-                        //   .then(data => {
-                        //     console.log(data);
-                        //   });
                         return true;
                       });
   }
+
 }

@@ -94,6 +94,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+
   ngOnDestroy() {
     // this._apicallService.logoutUser()
     //   .then(data => {
@@ -101,6 +102,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if(this.subscription && this.subscription2) {
         this.subscription.unsubscribe();
         this.subscription2.unsubscribe();
+
     }
     // });
   }
