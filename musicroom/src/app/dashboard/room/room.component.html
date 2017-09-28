@@ -1,29 +1,51 @@
-<div style="border: 1px solid black;">
-  <p>Name: {{room.title}}</p>
-  <p>Description: {{room.description}}</p>
-  <p>Users in room</p>
-  <div id='usersInRoom'>
-    <p *ngFor="let user of room._roomMembers">{{user.username}}</p>
-  </div>
-  <hr>
-  <div *ngIf="userInRoom">
-    <button *ngIf="!isOwner" (click)="leaveRoom()">Leave Room</button>
-    <button *ngIf="isOwner" (click)="deleteRoom()">Delete Room</button>
-    <div id="allMessages">
-      <p *ngFor="let msg of room.chatlog">{{msg.user}}: {{msg.message}}</p>
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <h3 style='display:inline-block;' class='panel-title'>{{room.title}}</h3>
+    <button class='btn btn-link details' (click)="changeArrow()" data-toggle="collapse" data-target="#details" aria-expanded="false" aria-controls="details">
+      <span class='glyphicon glyphicon-chevron-up' *ngIf="arrow=='^'"></span>
+      <span class='glyphicon glyphicon-chevron-down' *ngIf="arrow=='v'"></span>
+    </button>
+    <div *ngIf="arrow=='^'">
+      <hr class='style2'>
+      <div style='display: inline-block'>
+        <p>Owner: <a [routerLink]="['users', room._owner.userId]">{{room._owner.username}}</a></p>
+        <p>Description: {{room.description}}</p>
+        <p>Users in room:</p>
+        <div id='usersInRoom'>
+          <p *ngFor="let user of room._roomMembers">
+            <span class='glyphicon glyphicon-record' *ngIf="user.isLoggedIn" style='color: green;'></span>
+            <span class='glyphicon glyphicon-record' *ngIf="!user.isLoggedIn" style='color: red;'></span>
+            <a [routerLink]="['users', user.userId]">{{user.username}}</a>
+          </p>
+        </div>
+      </div>
+      <div style='display: inline-block; float: right;'>
+        <button *ngIf="!isOwner && userInRoom" class='btn btn-danger' (click)="leaveRoom()">Leave Room</button>
+        <button *ngIf="isOwner" class='btn btn-danger' (click)="deleteRoom()">Delete Room</button>
+      </div>
     </div>
-    <form (submit)="sendMessage()">
-      <input type="text" placeholder="Message" [(ngModel)]="message" name="msg">
-      <input type="submit" value="Send">
+  </div>
+  <div class="panel-body">
+    <div *ngIf="userInRoom">
+      <div #scroll id="allMessages">
+        <p class='msg col-md-12' *ngFor="let msg of room.chatlog"><a [routerLink]="['users', msg.id]">{{msg.user}}</a>: {{msg.message}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <form *ngIf="userInRoom" (submit)="sendMessage()">
+      <input class='col-md-11 msgform' type="text" placeholder="Message" [(ngModel)]="message" name="msg">
+      <button type='submit' class='btn btn-primary msgform'>Send <span class='glyphicon glyphicon-send'></span></button>
+      <!-- <input class="btn btn-primary msgform" type="submit" value="Send"> -->
     </form>
-  </div>
-  <div *ngIf="!userInRoom">
-    <div *ngIf="room.isPublic">
-      <button (click)="joinRoom()">Join Room</button>
-    </div>
-    <div *ngIf="!room.isPublic">
-      <input type="text" name="roomPassword" [(ngModel)]="roomPW" placeholder="Enter password">
-      <button (click)="joinRoom()" [disabled]="roomPW != room.password">Join Room</button>
+    <div *ngIf="!userInRoom">
+      <div *ngIf="room.isPublic">
+        <button (click)="joinRoom()" class='btn btn-primary'>Join Room</button>
+      </div>
+      <div *ngIf="!room.isPublic">
+        <input type="password" name="roomPassword" [(ngModel)]="roomPW" placeholder="Enter password">
+        <button (click)="joinRoom()" class='btn btn-primary' [ngClass]="{'disabled':roomPW != room.password}" [disabled]="roomPW != room.password">Join Room</button>
+      </div>
     </div>
   </div>
 </div>
