@@ -11,6 +11,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
   currentUser: User;
+  editMode: Boolean = false;
+  isCheckingRecent: Boolean = false;
+  isCheckingSent: Boolean = false;
   constructor(private _apicallService: ApiCallService, private _router: Router, private _chatService: ChatService) {
     this.getCurrentUserInSession();
    }
@@ -80,6 +83,39 @@ export class ProfileComponent implements OnInit {
             console.log(error);
           });
       }
+    }
+  }
+
+  setEditMode() {
+    if (!this.editMode) {
+      this.editMode = true;
+    } else {
+      this.editMode = false;
+    }
+  }
+
+  checkRecentInvites() {
+    if (!this.isCheckingRecent) {
+      this.isCheckingRecent = true;
+    }
+    if (this.isCheckingSent) {
+      this.isCheckingSent = false;
+    }
+  }
+
+  checkSentInvites() {
+    if (!this.isCheckingSent) {
+      this.isCheckingSent = true;
+    }
+    if (this.isCheckingRecent) {
+      this.isCheckingRecent = false;
+    }
+  }
+
+  disableCheckInvitesMode() {
+    if (this.isCheckingRecent || this.isCheckingSent) {
+      this.isCheckingRecent = false;
+      this.isCheckingSent = false;
     }
   }
 
