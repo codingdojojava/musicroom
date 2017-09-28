@@ -1,12 +1,14 @@
 <div style="border: 1px solid black;">
   <p>Name: {{room.title}}</p>
-  <p>{{room.description}}</p>
+  <p>Description: {{room.description}}</p>
   <p>Users in room</p>
   <div id='usersInRoom'>
     <p *ngFor="let user of room._roomMembers">{{user.username}}</p>
   </div>
   <hr>
   <div *ngIf="userInRoom">
+    <button *ngIf="!isOwner" (click)="leaveRoom()">Leave Room</button>
+    <button *ngIf="isOwner" (click)="deleteRoom()">Delete Room</button>
     <div id="allMessages">
       <p *ngFor="let msg of room.chatlog">{{msg.user}}: {{msg.message}}</p>
     </div>
