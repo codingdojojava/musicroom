@@ -1,7 +1,7 @@
 import { DashboardComponent } from './../dashboard.component';
 import { ChatService } from './../../chat.service';
 import { ApiCallService } from './../../api-call.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-room',
@@ -9,11 +9,13 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./room.component.css']
 })
 export class RoomComponent implements OnInit {
+  @ViewChild('scroll') private scroller: ElementRef
   room;
   message = "";
   userInRoom = false;
   roomPW="";
   isOwner = false;
+  arrow="v";
   constructor(private _route: ActivatedRoute, private apiService: ApiCallService, private chatService: ChatService, private _dashboardComp: DashboardComponent, private router: Router) {
    }
 
@@ -35,6 +37,16 @@ export class RoomComponent implements OnInit {
         });
       })
     })
+  }
+
+  ngAfterViewChecked() {        
+    this.scrollToBottom();        
+  } 
+
+  scrollToBottom(): void {
+      try {
+          this.scroller.nativeElement.scrollTop = this.scroller.nativeElement.scrollHeight;
+      } catch(err) { }                 
   }
 
   refreshRoom(){
@@ -102,5 +114,12 @@ export class RoomComponent implements OnInit {
       self._dashboardComp.getCurrentUserInSession();
       self.router.navigate(['/home']);
     });
+  }
+
+  changeArrow(){
+    if(this.arrow == "^")
+      this.arrow="v";
+    else
+      this.arrow="^";
   }
 }
