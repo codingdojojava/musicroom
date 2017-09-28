@@ -1,4 +1,4 @@
-<div *ngIf="user">
+<!--<div *ngIf="user">
   <h1>Other User's Profile</h1>
   <h2>Username: {{user.username}}</h2>
   <p>Email: {{user.email}}</p>
@@ -12,12 +12,186 @@
       <th>Actions</th>
     </tr>
     <tr *ngFor="let friend of user.friends">
-      <td *ngIf="friend && friend._id != currentUser._id"><a [routerLink]="['/home/users', friend.userId]">{{friend.username}}</a></td>
-      <td *ngIf="friend && friend._id != currentUser._id">
-        <button *ngIf="!friend.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(friend.friends, currentUser._id)" (click)="sendInvite(friend.userId)">Send Invite</button>
-        <span *ngIf="friend.received_invites.includes(currentUser._id)">Invite Sent</span>
-        <span *ngIf="isFriendOfCurrentUser(friend.friends, currentUser._id)">Friend</span>
+      <td ><a [routerLink]="['/home/users', friend.userId]">{{friend.username}}</a></td>
+      <td *ngIf="friend && friend._id != user._id">
+
       </td>
     </tr>
   </table>
+</div>
+-->
+
+<div *ngIf="user">
+<div class="row">
+      <div class="col-md-12 text-center ">
+        <div class="panel panel-default">
+          <div class="userprofile social ">
+            <div class="userpic" > <img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png"  alt="" class="userpicimg"> </div>
+            <h3 class="username">{{user.firstName}} {{user.lastName}}</h3>
+            <p>{{user.username}}</p>
+            <div class="socials tex-center"> <a href="" class="btn btn-circle btn-primary ">
+            <i class="fa fa-facebook"></i></a> <a href="" class="btn btn-circle btn-danger ">
+            <i class="fa fa-google-plus"></i></a> <a href="" class="btn btn-circle btn-info ">
+            <i class="fa fa-twitter"></i></a> <a href="" class="btn btn-circle btn-warning "><i class="fa fa-envelope"></i></a>
+            </div>
+          </div>
+
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <!-- /.col-md-12 -->
+      <div class="col-md-4 col-sm-12 pull-right">
+        <div class="panel panel-default">
+          <div style="min-height: 490px;" class="panel-heading">
+            <h1 class="page-header small">Personal Details</h1>
+              <p>Username: {{user.username}}</p>
+              <p>Email: {{user.email}}</p>
+              <p>First Name: {{user.firstName}}</p>
+              <p>Last Name: {{user.lastName}}</p>
+              <p>Description: {{user.description}}</p>
+            </div>
+
+
+
+          </div>
+
+          <div class="col-md-12 photolist">
+            <div class="row">
+              <div class="col-sm-3 col-xs-3"><img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png" class="" alt=""> </div>
+              <div class="col-sm-3 col-xs-3"><img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png" class="" alt=""> </div>
+              <div class="col-sm-3 col-xs-3"><img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png" class="" alt=""> </div>
+              <div class="col-sm-3 col-xs-3"><img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png" class="" alt=""> </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="page-header small">Friends <button class="btn btn-link" (click)="setEditMode()">Edit</button></h1>
+            <p class="page-subtitle small"> {{user.friends.length}} friends</p>
+          </div>
+          <div class="col-md-12">
+            <div class="memberblock">
+              <span *ngFor="let friend of user.friends" class="member">
+                  <button *ngIf="!hasReceivedInviteFromCurrentUser(friend.received_invites) && !isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id" style="display: block; margin-left: -12%; z-index: 1" class="btn btn-link" (click)="sendInvite(friend.userId)">Friend Request</button>
+                  <span style="display: block; z-index: 1" *ngIf="hasReceivedInviteFromCurrentUser(friend.received_invites)">Invite Sent</span>
+                  <span style="display: block; z-index: 1" *ngIf="isFriendOfCurrentUser(friend.friends)">Your Friend</span>
+                  <span style="display: block; z-index: 1" *ngIf="friend._id == currentUser._id">You</span>
+                  <a [routerLink]="['/home/users', friend.userId]" > 
+                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
+                  </a>
+                  <div class="memmbername">{{friend.firstName}}</div>
+              </span> 
+            </div>
+          </div>
+          <div class="clearfix"></div>
+      </div>
+      </div>
+
+      <div class="col-md-8 col-sm-12 pull-left posttimeline">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="status-upload nopaddingbtm">
+              <form>
+                <textarea class="form-control" placeholder="What are you doing right now?"></textarea>
+                <br>
+                <ul class="nav nav-pills pull-left ">
+                  <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Audio"><i class="glyphicon glyphicon-bullhorn"></i></a></li>
+                  <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Video"><i class=" glyphicon glyphicon-facetime-video"></i></a></li>
+                  <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Picture"><i class="glyphicon glyphicon-picture"></i></a></li>
+                </ul>
+                <button type="submit" class="btn btn-success pull-right"> Share</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="btn-group pull-right postbtn">
+            <button type="button" class="dotbtn dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="dots"></span> </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+              <li><a href="javascript:void(0)">Hide this</a></li>
+              <li><a href="javascript:void(0)">Report</a></li>
+            </ul>
+          </div>
+          <div class="col-md-12">
+            <div class="media">
+              <div class="media-left"> <a href="javascript:void(0)"> <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" class="media-object"> </a> </div>
+              <div class="media-body">
+                <h4 class="media-heading">Lucky Sans<br>
+                  <small><i class="fa fa-clock-o"></i> Yesterday, 2:00 am</small> </h4>
+                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>
+
+                <ul class="nav nav-pills pull-left ">
+                  <li><a href="" title=""><i class="glyphicon glyphicon-thumbs-up"></i> 2015</a></li>
+                  <li><a href="" title=""><i class=" glyphicon glyphicon-comment"></i> 25</a></li>
+                  <li><a href="" title=""><i class="glyphicon glyphicon-share-alt"></i> 15</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 commentsblock border-top">
+            <div class="media">
+              <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="media-object"> </a> </div>
+              <div class="media-body">
+                <h4 class="media-heading">Astha Smith</h4>
+                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+              </div>
+            </div>
+            <div class="media">
+              <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="media-object"> </a> </div>
+              <div class="media-body">
+                <h4 class="media-heading">Lucky Sans</h4>
+                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. </p>
+                <div class="media">
+                  <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="media-object"> </a> </div>
+                  <div class="media-body">
+                    <h4 class="media-heading">Astha Smith</h4>
+                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="btn-group pull-right postbtn">
+            <button type="button" class="dotbtn dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="dots"></span> </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+              <li><a href="javascript:void(0)">Hide this</a></li>
+              <li><a href="javascript:void(0)">Report</a></li>
+            </ul>
+          </div>
+          <div class="col-md-12">
+            <div class="media">
+              <div class="media-left"> <a href="javascript:void(0)"> <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="media-object"> </a> </div>
+              <div class="media-body">
+                <h4 class="media-heading"> Lucky Sans<br>
+                  <small><i class="fa fa-clock-o"></i> Yesterday, 2:00 am</small> </h4>
+                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>
+                <ul class="nav nav-pills pull-left ">
+                  <li><a href="" title=""><i class="glyphicon glyphicon-thumbs-up"></i> 2015</a></li>
+                  <li><a href="" title=""><i class=" glyphicon glyphicon-comment"></i> 25</a></li>
+                  <li><a href="" title=""><i class="glyphicon glyphicon-share-alt"></i> 15</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 border-top">
+            <div class="status-upload">
+              <form>
+                <label>Comment</label>
+                <textarea class="form-control" placeholder="Comment here"></textarea>
+                <br>
+                <ul class="nav nav-pills pull-left ">
+                  <li><a title=""><i class="glyphicon glyphicon-bullhorn"></i></a></li>
+                  <li><a title=""><i class=" glyphicon glyphicon-facetime-video"></i></a></li>
+                  <li><a title=""><i class="glyphicon glyphicon-picture"></i></a></li>
+                </ul>
+                <button type="submit" class="btn btn-success pull-right"> Comment</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
