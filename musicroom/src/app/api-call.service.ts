@@ -3,11 +3,14 @@ import { Http } from '@angular/http';
 import 'rxjs';
 @Injectable()
 export class ApiCallService {
-
+  defaultPicUrl = 'http://style.anu.edu.au/_anu/4/images/placeholders/person.png';
   constructor(private _http: Http) { }
 
   registerAUser(userData) {
     // console.log('service sending user data for registration');
+    if (userData.profileImageUrl === '') {
+      userData.profileImageUrl = this.defaultPicUrl;
+    }
     return this._http.post('/api/users/register', userData)
       .map(response => response.json())
       .toPromise();
