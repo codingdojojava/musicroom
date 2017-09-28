@@ -57,6 +57,14 @@ export class ApiCallService {
     return this._http.post('/api/rooms/'+id+'/join', pw).map(data=>data.json()).toPromise();
   }
 
+  leaveRoom(id){
+    return this._http.get('/api/rooms/'+id+'/leave').map(data=>data.json()).toPromise();
+  }
+
+  deleteRoom(id){
+    return this._http.get('/api/rooms/'+id+'/delete').map(data=>data.json()).toPromise();
+  }
+
   getAllUsers() {
     // console.log('service getting all users');
     return this._http.get('/api/users')

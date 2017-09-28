@@ -2,7 +2,7 @@ import { DashboardComponent } from './../dashboard.component';
 import { ChatService } from './../../chat.service';
 import { ApiCallService } from './../../api-call.service';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
@@ -13,7 +13,8 @@ export class RoomComponent implements OnInit {
   message = "";
   userInRoom = false;
   roomPW="";
-  constructor(private _route: ActivatedRoute, private apiService: ApiCallService, private chatService: ChatService, private _dashboardComp: DashboardComponent) {
+  isOwner = false;
+  constructor(private _route: ActivatedRoute, private apiService: ApiCallService, private chatService: ChatService, private _dashboardComp: DashboardComponent, private router: Router) {
    }
 
   ngOnInit() {
@@ -67,8 +68,10 @@ export class RoomComponent implements OnInit {
         if(this.room._roomMembers[i]._id == result._id)
           this.userInRoom = true;
       }
-      if(this.room._owner == result._id)
+      if(this.room._owner._id == result._id){
         this.userInRoom = true;
+        this.isOwner = true;
+      }
       console.log(this.userInRoom);
     })
   }
@@ -80,6 +83,24 @@ export class RoomComponent implements OnInit {
       self.sendMessage();
       self.refreshRoom();
       self._dashboardComp.getCurrentUserInSession();
+    });
+  }
+
+  leaveRoom(){
+    var self = this;
+    this.apiService.leaveRoom(this.room.roomId).then(function(result){
+      self.message = "left the room.";
+      self.sendMessage();
+      self.refreshRoom();
+      self._dashboardComp.getCurrentUserInSession();
+    });
+  }
+
+  deleteRoom(){
+    var self = this;
+    this.apiService.deleteRoom(this.room.roomId).then(function(result){
+      self._dashboardComp.getCurrentUserInSession();
+      self.router.navigate(['/home']);
     });
   }
 }

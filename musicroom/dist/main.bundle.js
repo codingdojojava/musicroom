@@ -84,6 +84,12 @@ var ApiCallService = (function () {
     ApiCallService.prototype.joinRoom = function (id, pw) {
         return this._http.post('/api/rooms/' + id + '/join', pw).map(function (data) { return data.json(); }).toPromise();
     };
+    ApiCallService.prototype.leaveRoom = function (id) {
+        return this._http.get('/api/rooms/' + id + '/leave').map(function (data) { return data.json(); }).toPromise();
+    };
+    ApiCallService.prototype.deleteRoom = function (id) {
+        return this._http.get('/api/rooms/' + id + '/delete').map(function (data) { return data.json(); }).toPromise();
+    };
     ApiCallService.prototype.getAllUsers = function () {
         // console.log('service getting all users');
         return this._http.get('/api/users')
@@ -748,7 +754,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/room/room.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"border: 1px solid black;\">\n  <p>Name: {{room.title}}</p>\n  <p>{{room.description}}</p>\n  <p>Users in room</p>\n  <div id='usersInRoom'>\n    <p *ngFor=\"let user of room._roomMembers\">{{user.username}}</p>\n  </div>\n  <hr>\n  <div *ngIf=\"userInRoom\">\n    <div id=\"allMessages\">\n      <p *ngFor=\"let msg of room.chatlog\">{{msg.user}}: {{msg.message}}</p>\n    </div>\n    <form (submit)=\"sendMessage()\">\n      <input type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <input type=\"submit\" value=\"Send\">\n    </form>\n  </div>\n  <div *ngIf=\"!userInRoom\">\n    <div *ngIf=\"room.isPublic\">\n      <button (click)=\"joinRoom()\">Join Room</button>\n    </div>\n    <div *ngIf=\"!room.isPublic\">\n      <input type=\"text\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n      <button (click)=\"joinRoom()\" [disabled]=\"roomPW != room.password\">Join Room</button>\n    </div>\n  </div>\n</div>"
+module.exports = "<div style=\"border: 1px solid black;\">\n  <p>Name: {{room.title}}</p>\n  <p>Description: {{room.description}}</p>\n  <p>Users in room</p>\n  <div id='usersInRoom'>\n    <p *ngFor=\"let user of room._roomMembers\">{{user.username}}</p>\n  </div>\n  <hr>\n  <div *ngIf=\"userInRoom\">\n    <button *ngIf=\"!isOwner\" (click)=\"leaveRoom()\">Leave Room</button>\n    <button *ngIf=\"isOwner\" (click)=\"deleteRoom()\">Delete Room</button>\n    <div id=\"allMessages\">\n      <p *ngFor=\"let msg of room.chatlog\">{{msg.user}}: {{msg.message}}</p>\n    </div>\n    <form (submit)=\"sendMessage()\">\n      <input type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <input type=\"submit\" value=\"Send\">\n    </form>\n  </div>\n  <div *ngIf=\"!userInRoom\">\n    <div *ngIf=\"room.isPublic\">\n      <button (click)=\"joinRoom()\">Join Room</button>\n    </div>\n    <div *ngIf=\"!room.isPublic\">\n      <input type=\"text\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n      <button (click)=\"joinRoom()\" [disabled]=\"roomPW != room.password\">Join Room</button>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -777,14 +783,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var RoomComponent = (function () {
-    function RoomComponent(_route, apiService, chatService, _dashboardComp) {
+    function RoomComponent(_route, apiService, chatService, _dashboardComp, router) {
         this._route = _route;
         this.apiService = apiService;
         this.chatService = chatService;
         this._dashboardComp = _dashboardComp;
+        this.router = router;
         this.message = "";
         this.userInRoom = false;
         this.roomPW = "";
+        this.isOwner = false;
     }
     RoomComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -837,8 +845,10 @@ var RoomComponent = (function () {
                 if (_this.room._roomMembers[i]._id == result._id)
                     _this.userInRoom = true;
             }
-            if (_this.room._owner == result._id)
+            if (_this.room._owner._id == result._id) {
                 _this.userInRoom = true;
+                _this.isOwner = true;
+            }
             console.log(_this.userInRoom);
         });
     };
@@ -851,6 +861,22 @@ var RoomComponent = (function () {
             self._dashboardComp.getCurrentUserInSession();
         });
     };
+    RoomComponent.prototype.leaveRoom = function () {
+        var self = this;
+        this.apiService.leaveRoom(this.room.roomId).then(function (result) {
+            self.message = "left the room.";
+            self.sendMessage();
+            self.refreshRoom();
+            self._dashboardComp.getCurrentUserInSession();
+        });
+    };
+    RoomComponent.prototype.deleteRoom = function () {
+        var self = this;
+        this.apiService.deleteRoom(this.room.roomId).then(function (result) {
+            self._dashboardComp.getCurrentUserInSession();
+            self.router.navigate(['/home']);
+        });
+    };
     return RoomComponent;
 }());
 RoomComponent = __decorate([
@@ -859,10 +885,10 @@ RoomComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/dashboard/room/room.component.html"),
         styles: [__webpack_require__("../../../../../src/app/dashboard/room/room.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */]) === "function" && _e || Object])
 ], RoomComponent);
 
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e;
 //# sourceMappingURL=room.component.js.map
 
 /***/ }),

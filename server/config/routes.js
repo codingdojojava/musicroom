@@ -22,6 +22,8 @@ module.exports = function(app) {
   app.get('/api/rooms', musicroom.allRooms);
   app.post('/api/rooms/:id/messages/new', musicroom.newMessage);
   app.post('/api/rooms/:id/join', musicroom.joinRoom);
+  app.get('/api/rooms/:id/leave', musicroom.leaveRoom);
+  app.get('/api/rooms/:id/delete', musicroom.deleteRoom);
   app.get('/api/rooms/:id', musicroom.getRoomById);
   app.all("*", (req,res,next) => {
     res.sendFile(path.resolve("./musicroom/dist/index.html"))

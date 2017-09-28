@@ -268,7 +268,7 @@ module.exports = {
                     res.json([]);
                 }else{
                     console.log("found online friends");
-                    console.log("Took "+Date.now()-startTime+ " milliseconds to finish the query");
+                    console.log("Took "+(Date.now()-startTime)+ " milliseconds to finish the query");
                     res.json(onlineFriends);
                 }
             })
