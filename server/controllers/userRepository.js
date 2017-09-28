@@ -258,33 +258,17 @@ module.exports = {
                               });
     },
 
-    saveToOnlineFriends: (req, res) => {
-        User.findOneAndUpdate({_id: req.session.currentUser._id}, {$push: {onlineFriends: req.body._id}}, (err, updatedUser) => {
-            req.session.currentUser = updatedUser;
-            res.json(updatedUser);
-        });
-    },
-
-    removeFromOnlineFriends: (req, res) => {
-        console.log('ID TO DELETE!');
-        console.log(req.body.friend);
-        // var newFobject = mongoose.Types.ObjectId(req.body.friend);
-        User.findOneAndUpdate({_id: req.body.currUser}, {$pull: {onlineFriends: req.body.friend}}, {new:true}, (err, updatedUser) => {
-            req.session.currentUser = updatedUser;
-            console.log('after updating ' + updatedUser.username);
-            console.log(updatedUser.onlineFriends);
-            res.json(updatedUser);
-        });
-    },
     getLoggedInFriends: (req,res)=>{
         if(req.session.currentUser) {
-            User.find({_id: {$in:[req.session.currentUser.friends]}, isLoggedIn:true}).populate('friends favoriteSongs joinedRooms ownedRooms received_invites sent_invites onlineFriends')
+            let startTime = Date.now();
+            User.find({_id: {$in:[req.session.currentUser.friends]}, isLoggedIn:true}).populate('friends')
             .exec((err, onlineFriends)=>{
                 if(err){
                     console.log("you dun goofed");
                     res.json([]);
                 }else{
                     console.log("found online friends");
+                    console.log("Took "+(Date.now()-startTime)+ " milliseconds to finish the query");
                     res.json(onlineFriends);
                 }
             })

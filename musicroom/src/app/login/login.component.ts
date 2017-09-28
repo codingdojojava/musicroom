@@ -33,7 +33,8 @@ export class LoginComponent implements OnInit {
           this.incorrectLogin = false;
           this._appComponent.getCurrentUserInSession();
           this.getCurrentUserInSession();
-          this._router.navigate(['home']);
+          console.log(this.currentUser);
+          this._router.navigate(['home', 'profile', 'current']);
           // }
         }
       })

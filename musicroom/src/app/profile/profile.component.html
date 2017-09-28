@@ -1,34 +1,216 @@
 <div *ngIf="currentUser">
-  <h1>My Profile</h1>
-  <router-outlet></router-outlet>
-  <h3>Invites</h3>
-  <table>
-    <tr>
-      <th>Username</th>
-      <th>Actions</th>
-    </tr>
-    <tr *ngFor="let invite of currentUser.received_invites">
-      <td>{{invite.username}}</td>
-      <td>
-        <button (click)="acceptInvite(invite._id)">Accept Invite</button>
-        <button (click)="rejectInvite(invite._id)">Reject Invite</button>
-      </td>
-    </tr>
-  </table>
-  <h3>Friends</h3>
-  <table>
-    <tr>
-      <th>Username</th>
-      <th>Actions</th>
-    </tr>
-    <tr *ngFor="let friend of currentUser.friends">
-      <td>
-        <a [routerLink]="['/home/users', friend.userId]">{{friend.username}}</a>
-      </td>
-      <td>
-        <button (click)="removeFriend(friend._id)">Remove Friend</button>
-      </td>
-    </tr>
-  </table>
-</div>
+<div class="row">
+      <div class="col-md-12 text-center ">
+        <div class="panel panel-default">
+          <div class="userprofile social ">
+            <div class="userpic" > <img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png"  alt="" class="userpicimg"> </div>
+            <h3 class="username">{{currentUser.firstName}} {{currentUser.lastName}}</h3>
+            <p>{{currentUser.username}}</p>
+            <div class="socials tex-center"> <a href="" class="btn btn-circle btn-primary ">
+            <i class="fa fa-facebook"></i></a> <a href="" class="btn btn-circle btn-danger ">
+            <i class="fa fa-google-plus"></i></a> <a href="" class="btn btn-circle btn-info ">
+            <i class="fa fa-twitter"></i></a> <a href="" class="btn btn-circle btn-warning "><i class="fa fa-envelope"></i></a>
+            </div>
+          </div>
 
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <!-- /.col-md-12 -->
+      <div class="col-md-4 col-sm-12 pull-right">
+        <div class="panel panel-default">
+          <div style="min-height: 490px;" class="panel-heading">
+            <h1 class="page-header small">Personal Details</h1>
+            <router-outlet></router-outlet>
+          </div>
+
+          <div class="col-md-12 photolist">
+            <div class="row">
+              <div class="col-sm-3 col-xs-3"><img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png" class="" alt=""> </div>
+              <div class="col-sm-3 col-xs-3"><img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png" class="" alt=""> </div>
+              <div class="col-sm-3 col-xs-3"><img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png" class="" alt=""> </div>
+              <div class="col-sm-3 col-xs-3"><img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png" class="" alt=""> </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="col-md-12">
+            <div class="panel-body">
+            <div class="tex-center"> 
+              <button (click)="checkRecentInvites()" style="border-radius: 24px;" class="btn btn-primary ">
+                Received {{currentUser.received_invites.length}} friend invites
+              </button> 
+              <button (click)="checkSentInvites()" style="border-radius: 24px;" class="btn btn-info ">
+                Sent {{currentUser.sent_invites.length}} friend invites
+              </button> 
+              <button (click)="disableCheckInvitesMode()" class="btn btn-circle btn-danger ">
+                <i style="font-size: 14px;" class="glyphicon glyphicon-remove"></i>
+              </button> 
+            </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+        <div *ngIf="isCheckingRecent" class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="page-header small">Most Recent Friend Invites</h1>
+          </div>
+          <div class="col-md-12">
+            <ul class="list-group">
+              <li class="list-group-item" *ngIf="currentUser.received_invites.length == 0">You have no friend invites at this time</li>
+              <li *ngFor="let invite of currentUser.received_invites" class="list-group-item">
+                    <button class="btn btn-circle btn-success" (click)="acceptInvite(invite._id)"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button class="btn btn-circle btn-danger" (click)="rejectInvite(invite._id)"><span class="glyphicon glyphicon-remove"></span></button>
+                    <img style="height: 40px;" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
+                    <a [routerLink]="['/home/users', invite.userId]">{{invite.firstName}}</a> wants to be your friend
+              </li>
+            </ul>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+        <div *ngIf="isCheckingSent" class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="page-header small">Your Sent Invites</h1>
+          </div>
+          <div class="col-md-12">
+            <ul class="list-group">
+              <li class="list-group-item" *ngIf="currentUser.sent_invites.length == 0">You currently have not sent any invites</li>
+              <li *ngFor="let invite of currentUser.sent_invites" class="list-group-item">
+                    You have sent an invite to <img style="height: 40px;" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt=""> <a [routerLink]="['/home/users', invite.userId]">{{invite.firstName}}</a>
+              </li>
+            </ul>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="page-header small">Friends <button class="btn btn-link" (click)="setEditMode()">Edit</button></h1>
+            <p class="page-subtitle small">You have {{currentUser.friends.length}} friends</p>
+          </div>
+          <div class="col-md-12">
+            <div class="memberblock">
+              <span *ngFor="let friend of currentUser.friends" class="member">
+                <button *ngIf="editMode" style="display: block; margin-left: 6%; z-index: 1" class="btn btn-link" (click)="removeFriend(friend._id)">Remove</button>
+                <a [routerLink]="['/home/users', friend.userId]" > 
+                  <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
+                </a>
+                <div class="memmbername">{{friend.username}}</div>
+              </span> 
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+
+      <div class="col-md-8 col-sm-12 pull-left posttimeline">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="status-upload nopaddingbtm">
+              <form>
+                <textarea class="form-control" placeholder="What are you doing right now?"></textarea>
+                <br>
+                <ul class="nav nav-pills pull-left ">
+                  <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Audio"><i class="glyphicon glyphicon-bullhorn"></i></a></li>
+                  <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Video"><i class=" glyphicon glyphicon-facetime-video"></i></a></li>
+                  <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Picture"><i class="glyphicon glyphicon-picture"></i></a></li>
+                </ul>
+                <button type="submit" class="btn btn-success pull-right"> Share</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="btn-group pull-right postbtn">
+            <button type="button" class="dotbtn dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="dots"></span> </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+              <li><a href="javascript:void(0)">Hide this</a></li>
+              <li><a href="javascript:void(0)">Report</a></li>
+            </ul>
+          </div>
+          <div class="col-md-12">
+            <div class="media">
+              <div class="media-left"> <a href="javascript:void(0)"> <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" class="media-object"> </a> </div>
+              <div class="media-body">
+                <h4 class="media-heading">Lucky Sans<br>
+                  <small><i class="fa fa-clock-o"></i> Yesterday, 2:00 am</small> </h4>
+                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>
+
+                <ul class="nav nav-pills pull-left ">
+                  <li><a href="" title=""><i class="glyphicon glyphicon-thumbs-up"></i> 2015</a></li>
+                  <li><a href="" title=""><i class=" glyphicon glyphicon-comment"></i> 25</a></li>
+                  <li><a href="" title=""><i class="glyphicon glyphicon-share-alt"></i> 15</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 commentsblock border-top">
+            <div class="media">
+              <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="media-object"> </a> </div>
+              <div class="media-body">
+                <h4 class="media-heading">Astha Smith</h4>
+                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+              </div>
+            </div>
+            <div class="media">
+              <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="media-object"> </a> </div>
+              <div class="media-body">
+                <h4 class="media-heading">Lucky Sans</h4>
+                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. </p>
+                <div class="media">
+                  <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="media-object"> </a> </div>
+                  <div class="media-body">
+                    <h4 class="media-heading">Astha Smith</h4>
+                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="btn-group pull-right postbtn">
+            <button type="button" class="dotbtn dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="dots"></span> </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+              <li><a href="javascript:void(0)">Hide this</a></li>
+              <li><a href="javascript:void(0)">Report</a></li>
+            </ul>
+          </div>
+          <div class="col-md-12">
+            <div class="media">
+              <div class="media-left"> <a href="javascript:void(0)"> <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="media-object"> </a> </div>
+              <div class="media-body">
+                <h4 class="media-heading"> Lucky Sans<br>
+                  <small><i class="fa fa-clock-o"></i> Yesterday, 2:00 am</small> </h4>
+                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>
+                <ul class="nav nav-pills pull-left ">
+                  <li><a href="" title=""><i class="glyphicon glyphicon-thumbs-up"></i> 2015</a></li>
+                  <li><a href="" title=""><i class=" glyphicon glyphicon-comment"></i> 25</a></li>
+                  <li><a href="" title=""><i class="glyphicon glyphicon-share-alt"></i> 15</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 border-top">
+            <div class="status-upload">
+              <form>
+                <label>Comment</label>
+                <textarea class="form-control" placeholder="Comment here"></textarea>
+                <br>
+                <ul class="nav nav-pills pull-left ">
+                  <li><a title=""><i class="glyphicon glyphicon-bullhorn"></i></a></li>
+                  <li><a title=""><i class=" glyphicon glyphicon-facetime-video"></i></a></li>
+                  <li><a title=""><i class="glyphicon glyphicon-picture"></i></a></li>
+                </ul>
+                <button type="submit" class="btn btn-success pull-right"> Comment</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
