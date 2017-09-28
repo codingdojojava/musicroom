@@ -1,0 +1,27 @@
+.msgform{
+    height: 35px;
+}
+
+#allMessages{
+    overflow-y: scroll;
+    height: 250px;
+}
+
+.details{
+    font-size: 15px;
+    float: right;
+    height: 12px;
+}
+
+hr.style2 {
+	border-top: 1px solid black;
+}
+
+.msg{
+    border-bottom: 1px solid lightgrey;
+    word-wrap: break-word;
+}
+
+.msg:last-child{
+    border: none;
+}

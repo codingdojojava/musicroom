@@ -34,6 +34,7 @@ const routes: Routes = [
     { path: 'users/:id', component: OtherUserProfileComponent },
     {path: 'room/new', component: NewRoomComponent},
     {path: 'room/:id', component: RoomComponent},
+    {path: 'room/:id1/users/:id2', redirectTo:"/home/users/:id2"},
   ] }
 ];
 

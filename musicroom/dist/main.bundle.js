@@ -229,6 +229,7 @@ var routes = [
             { path: 'users/:id', component: __WEBPACK_IMPORTED_MODULE_7__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] },
             { path: 'room/new', component: __WEBPACK_IMPORTED_MODULE_1__new_room_new_room_component__["a" /* NewRoomComponent */] },
             { path: 'room/:id', component: __WEBPACK_IMPORTED_MODULE_2__dashboard_room_room_component__["a" /* RoomComponent */] },
+            { path: 'room/:id1/users/:id2', redirectTo: "/home/users/:id2" },
         ] }
 ];
 var AppRoutingModule = (function () {
@@ -619,7 +620,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<!-- <router-outlet></router-outlet> -->\n<!-- <a [routerLink]=\"['room']\">qqqq</a> -->\n<div *ngIf=\"currentUser\">\n    <fieldset class=\"wrapper\">\n        <legend>Dashboard Page</legend>\n        <fieldset class=\"joined inblock\">\n            <legend>Joined Rooms</legend>\n            <a [routerLink]='[\"room\",\"new\"]' >Create Room</a>\n            <div *ngFor=\"let room of currentUser.joinedRooms\">\n                <a [routerLink]=\"['room', room.roomId]\">{{room.title}}</a>\n            </div>\n        </fieldset>\n        <fieldset class=\"main inblock\">\n            <legend>Main View</legend>\n            <fieldset class=\"router\">\n                <legend>Router-Outlet</legend>\n                <router-outlet></router-outlet>\n            </fieldset>\n        <fieldset class=\"active-music\">\n            <legend>Active MusicRoom/Player present if active room is minimized</legend>\n        </fieldset>\n        </fieldset>\n        <fieldset class=\"secondary inblock\">\n            <legend>Secondary View</legend>\n            <fieldset class=\"online subcomponents\">\n                <legend>See who's online</legend>\n                <div *ngFor=\"let friend of onlineFriends\">\n                    <a [routerLink]=\"['home','users', friend.userId]\">{{friend.username}}</a>\n                </div>\n            </fieldset>\n            <fieldset class=\"favorites subcomponents\">\n                <legend>Current User's Favorite Songs</legend>\n            </fieldset>\n        </fieldset>\n    </fieldset>\n</div>\n"
+module.exports = "\n<!-- <router-outlet></router-outlet> -->\n<!-- <a [routerLink]=\"['room']\">qqqq</a> -->\n<div *ngIf=\"currentUser\">\n    <fieldset class=\"wrapper\">\n        <legend>Dashboard Page</legend>\n        <fieldset class=\"joined inblock\">\n            <legend>Joined Rooms</legend>\n            <a [routerLink]='[\"room\",\"new\"]' >Create Room</a>\n            <div *ngFor=\"let room of currentUser.joinedRooms\">\n                <a [routerLink]=\"['room', room.roomId]\">{{room.title}}</a>\n            </div>\n        </fieldset>\n        <fieldset class=\"main inblock\">\n            <legend>Main View</legend>\n            <fieldset class=\"router\">\n                <legend>Router-Outlet</legend>\n                <router-outlet></router-outlet>\n            </fieldset>\n        </fieldset>\n        <fieldset class=\"secondary inblock\">\n            <legend>Secondary View</legend>\n            <fieldset class=\"online subcomponents\">\n                <legend>See who's online</legend>\n                <div *ngFor=\"let friend of onlineFriends\">\n                    <a [routerLink]=\"['home','users', friend.userId]\">{{friend.username}}</a>\n                </div>\n            </fieldset>\n            <fieldset class=\"favorites subcomponents\">\n                <legend>Current User's Favorite Songs</legend>\n            </fieldset>\n        </fieldset>\n    </fieldset>\n</div>\n"
 
 /***/ }),
 
@@ -764,7 +765,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".msgform{\n    height: 35px;\n}\n\n#allMessages{\n    overflow-y: scroll;\n    height: 250px;\n}\n\n.details{\n    font-size: 15px;\n    float: right;\n    height: 12px;\n}\n\nhr.style2 {\n\tborder-top: 1px solid black;\n}\n\n.msg{\n    border-bottom: 1px solid lightgrey;\n    word-wrap: break-word;\n}\n\n.msg:last-child{\n    border: none;\n}", ""]);
 
 // exports
 
@@ -777,7 +778,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/room/room.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"border: 1px solid black;\">\n  <p>Name: {{room.title}}</p>\n  <p>Description: {{room.description}}</p>\n  <p>Users in room</p>\n  <div id='usersInRoom'>\n    <p *ngFor=\"let user of room._roomMembers\">{{user.username}}</p>\n  </div>\n  <hr>\n  <div *ngIf=\"userInRoom\">\n    <button *ngIf=\"!isOwner\" (click)=\"leaveRoom()\">Leave Room</button>\n    <button *ngIf=\"isOwner\" (click)=\"deleteRoom()\">Delete Room</button>\n    <div id=\"allMessages\">\n      <p *ngFor=\"let msg of room.chatlog\">{{msg.user}}: {{msg.message}}</p>\n    </div>\n    <form (submit)=\"sendMessage()\">\n      <input type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <input type=\"submit\" value=\"Send\">\n    </form>\n  </div>\n  <div *ngIf=\"!userInRoom\">\n    <div *ngIf=\"room.isPublic\">\n      <button (click)=\"joinRoom()\">Join Room</button>\n    </div>\n    <div *ngIf=\"!room.isPublic\">\n      <input type=\"text\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n      <button (click)=\"joinRoom()\" [disabled]=\"roomPW != room.password\">Join Room</button>\n    </div>\n  </div>\n</div>"
+module.exports = "<div class='panel panel-default'>\n  <div class='panel-heading'>\n    <h3 style='display:inline-block;' class='panel-title'>{{room.title}}</h3>\n    <button class='btn btn-link details' (click)=\"changeArrow()\" data-toggle=\"collapse\" data-target=\"#details\" aria-expanded=\"false\" aria-controls=\"details\">\n      <span class='glyphicon glyphicon-chevron-up' *ngIf=\"arrow=='^'\"></span>\n      <span class='glyphicon glyphicon-chevron-down' *ngIf=\"arrow=='v'\"></span>\n    </button>\n    <div *ngIf=\"arrow=='^'\">\n      <hr class='style2'>\n      <div style='display: inline-block'>\n        <p>Owner: <a [routerLink]=\"['users', room._owner.userId]\">{{room._owner.username}}</a></p>\n        <p>Description: {{room.description}}</p>\n        <p>Users in room:</p>\n        <div id='usersInRoom'>\n          <p *ngFor=\"let user of room._roomMembers\">\n            <span class='glyphicon glyphicon-record' *ngIf=\"user.isLoggedIn\" style='color: green;'></span>\n            <span class='glyphicon glyphicon-record' *ngIf=\"!user.isLoggedIn\" style='color: red;'></span>\n            <a [routerLink]=\"['users', user.userId]\">{{user.username}}</a>\n          </p>\n        </div>\n      </div>\n      <div style='display: inline-block; float: right;'>\n        <button *ngIf=\"!isOwner && userInRoom\" class='btn btn-danger' (click)=\"leaveRoom()\">Leave Room</button>\n        <button *ngIf=\"isOwner\" class='btn btn-danger' (click)=\"deleteRoom()\">Delete Room</button>\n      </div>\n    </div>\n  </div>\n  <div class=\"panel-body\">\n    <div *ngIf=\"userInRoom\">\n      <div #scroll id=\"allMessages\">\n        <p class='msg col-md-12' *ngFor=\"let msg of room.chatlog\"><a [routerLink]=\"['users', msg.id]\">{{msg.user}}</a>: {{msg.message}}</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"panel-footer\">\n    <form *ngIf=\"userInRoom\" (submit)=\"sendMessage()\">\n      <input class='col-md-11 msgform' type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <button type='submit' class='btn btn-primary msgform'>Send <span class='glyphicon glyphicon-send'></span></button>\n      <!-- <input class=\"btn btn-primary msgform\" type=\"submit\" value=\"Send\"> -->\n    </form>\n    <div *ngIf=\"!userInRoom\">\n      <div *ngIf=\"room.isPublic\">\n        <button (click)=\"joinRoom()\" class='btn btn-primary'>Join Room</button>\n      </div>\n      <div *ngIf=\"!room.isPublic\">\n        <input type=\"password\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n        <button (click)=\"joinRoom()\" class='btn btn-primary' [ngClass]=\"{'disabled':roomPW != room.password}\" [disabled]=\"roomPW != room.password\">Join Room</button>\n      </div>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -816,6 +817,7 @@ var RoomComponent = (function () {
         this.userInRoom = false;
         this.roomPW = "";
         this.isOwner = false;
+        this.arrow = "v";
     }
     RoomComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -836,6 +838,15 @@ var RoomComponent = (function () {
                 });
             });
         });
+    };
+    RoomComponent.prototype.ngAfterViewChecked = function () {
+        this.scrollToBottom();
+    };
+    RoomComponent.prototype.scrollToBottom = function () {
+        try {
+            this.scroller.nativeElement.scrollTop = this.scroller.nativeElement.scrollHeight;
+        }
+        catch (err) { }
     };
     RoomComponent.prototype.refreshRoom = function () {
         var _this = this;
@@ -900,18 +911,28 @@ var RoomComponent = (function () {
             self.router.navigate(['/home']);
         });
     };
+    RoomComponent.prototype.changeArrow = function () {
+        if (this.arrow == "^")
+            this.arrow = "v";
+        else
+            this.arrow = "^";
+    };
     return RoomComponent;
 }());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["_16" /* ViewChild */])('scroll'),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__angular_core__["v" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_core__["v" /* ElementRef */]) === "function" && _a || Object)
+], RoomComponent.prototype, "scroller", void 0);
 RoomComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["o" /* Component */])({
         selector: 'app-room',
         template: __webpack_require__("../../../../../src/app/dashboard/room/room.component.html"),
         styles: [__webpack_require__("../../../../../src/app/dashboard/room/room.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */]) === "function" && _e || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */]) === "function" && _f || Object])
 ], RoomComponent);
 
-var _a, _b, _c, _d, _e;
+var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=room.component.js.map
 
 /***/ }),
