@@ -76,6 +76,16 @@ export class OtherUserProfileComponent implements OnInit, OnDestroy {
     if (friend) { return true; }
     return false;
   }
+  hasReceivedInviteFromCurrentUser(userReceivedInvites) {
+    // console.log(this.currentUser._id);
+    // console.log(userFriends);
+    const invite = userReceivedInvites.find(index => {
+      return index === this.currentUser._id;
+    });
+    // console.log(friend);
+    if (invite) { return true; }
+    return false;
+  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

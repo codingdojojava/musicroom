@@ -29,5 +29,17 @@ io.on('connection', (client)=>{
     console.log("QQQQQQQQQQ");
     io.emit("msg"+data);
   })
+
+  client.on("login", (currentUser) => {
+    for(let friend of currentUser.friends) {
+      client.broadcast.emit("online"+friend._id);
+    }
+  })
+
+  client.on("logout", (currentUser) => {
+    for(let friend of currentUser.friends) {
+      client.broadcast.emit("offline"+friend);
+    }
+  })
 })
 

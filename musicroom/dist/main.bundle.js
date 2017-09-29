@@ -41,9 +41,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var ApiCallService = (function () {
     function ApiCallService(_http) {
         this._http = _http;
+        this.defaultPicUrl = 'http://style.anu.edu.au/_anu/4/images/placeholders/person.png';
     }
     ApiCallService.prototype.registerAUser = function (userData) {
         // console.log('service sending user data for registration');
+        if (userData.profileImageUrl === '') {
+            userData.profileImageUrl = this.defaultPicUrl;
+        }
         return this._http.post('/api/users/register', userData)
             .map(function (response) { return response.json(); })
             .toPromise();
@@ -83,6 +87,12 @@ var ApiCallService = (function () {
     };
     ApiCallService.prototype.joinRoom = function (id, pw) {
         return this._http.post('/api/rooms/' + id + '/join', pw).map(function (data) { return data.json(); }).toPromise();
+    };
+    ApiCallService.prototype.leaveRoom = function (id) {
+        return this._http.get('/api/rooms/' + id + '/leave').map(function (data) { return data.json(); }).toPromise();
+    };
+    ApiCallService.prototype.deleteRoom = function (id) {
+        return this._http.get('/api/rooms/' + id + '/delete').map(function (data) { return data.json(); }).toPromise();
     };
     ApiCallService.prototype.getAllUsers = function () {
         // console.log('service getting all users');
@@ -131,6 +141,11 @@ var ApiCallService = (function () {
             .map(function (response) { return response.json(); })
             .toPromise();
     };
+    ApiCallService.prototype.getOnlineFriends = function () {
+        return this._http.get('/api/users/online_friends')
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
     return ApiCallService;
 }());
 ApiCallService = __decorate([
@@ -149,23 +164,22 @@ var _a;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__search_manager_search_rooms_search_rooms_component__ = __webpack_require__("../../../../../src/app/search-manager/search-rooms/search-rooms.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__session_handler_session_handler_component__ = __webpack_require__("../../../../../src/app/session-handler/session-handler.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__new_room_new_room_component__ = __webpack_require__("../../../../../src/app/new-room/new-room.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__dashboard_room_room_component__ = __webpack_require__("../../../../../src/app/dashboard/room/room.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__new_room_new_room_component__ = __webpack_require__("../../../../../src/app/new-room/new-room.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dashboard_room_room_component__ = __webpack_require__("../../../../../src/app/dashboard/room/room.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -189,27 +203,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-
 var routes = [
-    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_15__index_index_component__["a" /* IndexComponent */] },
-    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_12__login_login_component__["a" /* LoginComponent */] },
-    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_11__registration_registration_component__["a" /* RegistrationComponent */] },
-    { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_10__logout_logout_component__["a" /* LogoutComponent */] },
-    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_14__dashboard_dashboard_component__["a" /* DashboardComponent */], children: [
-            { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_13__profile_profile_component__["a" /* ProfileComponent */], children: [
-                    { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_7__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
-                    { path: 'current', component: __WEBPACK_IMPORTED_MODULE_6__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
+    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_14__index_index_component__["a" /* IndexComponent */] },
+    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_11__login_login_component__["a" /* LoginComponent */] },
+    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_10__registration_registration_component__["a" /* RegistrationComponent */] },
+    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_13__dashboard_dashboard_component__["a" /* DashboardComponent */], children: [
+            { path: 'logout', component: __WEBPACK_IMPORTED_MODULE_9__logout_logout_component__["a" /* LogoutComponent */] },
+            { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_12__profile_profile_component__["a" /* ProfileComponent */], children: [
+                    { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_6__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
+                    { path: 'current', component: __WEBPACK_IMPORTED_MODULE_5__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
                 ] },
-            { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_9__search_manager_search_manager_component__["a" /* SearchManagerComponent */], children: [
-                    { path: 'music', component: __WEBPACK_IMPORTED_MODULE_5__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */] },
-                    { path: 'users', component: __WEBPACK_IMPORTED_MODULE_4__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */] },
+            { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_8__search_manager_search_manager_component__["a" /* SearchManagerComponent */], children: [
+                    { path: 'music', component: __WEBPACK_IMPORTED_MODULE_4__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */] },
+                    { path: 'users', component: __WEBPACK_IMPORTED_MODULE_3__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */] },
                     { path: 'rooms', component: __WEBPACK_IMPORTED_MODULE_0__search_manager_search_rooms_search_rooms_component__["a" /* SearchRoomsComponent */] }
                 ] },
-            { path: 'users/:id', component: __WEBPACK_IMPORTED_MODULE_8__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] },
-            { path: 'room/new', component: __WEBPACK_IMPORTED_MODULE_2__new_room_new_room_component__["a" /* NewRoomComponent */] },
-            { path: 'room/:id', component: __WEBPACK_IMPORTED_MODULE_3__dashboard_room_room_component__["a" /* RoomComponent */] },
-        ] },
-    { path: 'session', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_1__session_handler_session_handler_component__["a" /* SessionHandlerComponent */] }
+            { path: 'users/:id', component: __WEBPACK_IMPORTED_MODULE_7__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] },
+            { path: 'room/new', component: __WEBPACK_IMPORTED_MODULE_1__new_room_new_room_component__["a" /* NewRoomComponent */] },
+            { path: 'room/:id', component: __WEBPACK_IMPORTED_MODULE_2__dashboard_room_room_component__["a" /* RoomComponent */] },
+            { path: 'room/:id1/users/:id2', redirectTo: "/home/users/:id2" },
+        ] }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -217,9 +230,9 @@ var AppRoutingModule = (function () {
     return AppRoutingModule;
 }());
 AppRoutingModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_16__angular_core__["M" /* NgModule */])({
-        imports: [__WEBPACK_IMPORTED_MODULE_17__angular_router__["d" /* RouterModule */].forRoot(routes)],
-        exports: [__WEBPACK_IMPORTED_MODULE_17__angular_router__["d" /* RouterModule */]]
+    Object(__WEBPACK_IMPORTED_MODULE_15__angular_core__["M" /* NgModule */])({
+        imports: [__WEBPACK_IMPORTED_MODULE_16__angular_router__["c" /* RouterModule */].forRoot(routes)],
+        exports: [__WEBPACK_IMPORTED_MODULE_16__angular_router__["c" /* RouterModule */]]
     })
 ], AppRoutingModule);
 
@@ -230,7 +243,7 @@ AppRoutingModule = __decorate([
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<fieldset>\n  <legend>Nav Bar</legend>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/']\">Home</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home']\">Home</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/login']\">Login</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/register']\">Register</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home/profile/current']\">My Profile</a>\n\n  <div *ngIf=\"searchMode==='users'\" style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchPageWithSearchVal()\">\n      <input type=\"text\" name=\"searchU\" placeholder=\"Search User\" [(ngModel)]=\"searchVal\" (keyup) = \"searchUsers()\" />\n      <input type=\"submit\" value=\"Search Users\" />\n    </form>\n  </div>\n\n  <div *ngIf=\"searchMode==='music'\"style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"searchMusic()\">\n      <input type=\"text\" name=\"searchM\" placeholder=\"Search Music\" [(ngModel)]=\"searchVal2\" />\n      <input type=\"submit\" value=\"Search Music\" />\n    </form>\n  </div>\n\n  <div *ngIf=\"searchMode==='rooms'\"style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchRoomPageWithSearchVal3()\">\n      <input type=\"text\" name=\"searchM\" placeholder=\"Search Chatrooms\" [(ngModel)]=\"searchVal3\" (keyup) = \"searchRooms()\"/>\n      <input type=\"submit\" value=\"Search Rooms\" />\n    </form>\n  </div>\n\n  <select *ngIf=\"currentUser\" name=\"searchMode\" [(ngModel)]=\"searchMode\">\n    <option value=\"users\">Users</option>\n    <option value=\"music\">Music</option>\n    <option value=\"rooms\">Chatrooms</option>\n  </select>\n\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/logout']\">Logout</a>\n</fieldset>\n\n<router-outlet></router-outlet>"
+module.exports = "<fieldset>\n  <legend>Nav Bar</legend>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/']\">Home</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home/profile/current']\">Home</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/login']\">Login</a>\n  <a *ngIf=\"!currentUser\" [routerLink]=\"['/register']\">Register</a>\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home/profile/current']\">My Profile</a>\n\n  <div *ngIf=\"searchMode==='users'\" style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchPageWithSearchVal()\">\n      <input type=\"text\" name=\"searchU\" placeholder=\"Search User\" [(ngModel)]=\"searchVal\" (keyup) = \"searchUsers()\" />\n      <input type=\"submit\" value=\"Search Users\" />\n    </form>\n  </div>\n\n  <div *ngIf=\"searchMode==='music'\"style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"searchMusic()\">\n      <input type=\"text\" name=\"searchM\" placeholder=\"Search Music\" [(ngModel)]=\"searchVal2\" />\n      <input type=\"submit\" value=\"Search Music\" />\n    </form>\n  </div>\n\n  <div *ngIf=\"searchMode==='rooms'\"style=\"display: inline-block;\">\n    <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchRoomPageWithSearchVal3()\">\n      <input type=\"text\" name=\"searchM\" placeholder=\"Search Chatrooms\" [(ngModel)]=\"searchVal3\" (keyup) = \"searchRooms()\"/>\n      <input type=\"submit\" value=\"Search Rooms\" />\n    </form>\n  </div>\n\n  <select *ngIf=\"currentUser\" name=\"searchMode\" [(ngModel)]=\"searchMode\">\n    <option value=\"users\">Users</option>\n    <option value=\"music\">Music</option>\n    <option value=\"rooms\">Chatrooms</option>\n  </select>\n\n  <a *ngIf=\"currentUser\" [routerLink]=\"['/home','logout']\">Logout</a>\n</fieldset>\n\n<router-outlet></router-outlet>"
 
 /***/ }),
 
@@ -293,57 +306,44 @@ var AppComponent = (function () {
         this.searchMode = 'users';
         this.getCurrentUserInSession();
     }
-    // sendMsg(msg){
-    //    this.chatService.sendMessage(msg);
-    // }
+    AppComponent.prototype.ngAfterViewInit = function () {
+    };
     AppComponent.prototype.searchUsers = function () {
-        // console.log('hello');
         this._searchService.searchUsers(this.searchVal);
     };
     AppComponent.prototype.searchRooms = function () {
-        // console.log('hello');
         this._searchService.searchRooms(this.searchVal3);
     };
     AppComponent.prototype.searchMusic = function () {
         // console.log('hello');
         if (!this.isInMusicBrowser) {
-            console.log('not in music browser so redirecting');
             this._route.navigate(['home', 'search', 'results', 'music', { q: this.searchVal2 }]);
             this.searchVal2 = '';
         }
         else {
-            console.log('in music browser so just updating search results');
             this._searchService.searchMusic(this.searchVal2);
             this.searchVal2 = '';
         }
     };
     AppComponent.prototype.redirectToSearchPageWithSearchVal = function () {
-        // console.log('redirecting to Search page with keyword SearchVal');
-        // console.log(this.searchVal);
         this._route.navigate(['home', 'search', 'results', 'users', { q: this.searchVal }]);
     };
     AppComponent.prototype.redirectToSearchRoomPageWithSearchVal3 = function () {
-        // console.log('redirecting to Search page with keyword SearchVal');
-        // console.log(this.searchVal);
         this._route.navigate(['home', 'search', 'results', 'rooms', { q: this.searchVal3 }]);
     };
     AppComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
             }
             else {
-                // console.log('user not in session');
                 _this.currentUser = false;
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
         });
     };
     AppComponent.prototype.setIsInMusicBrowser = function () {
@@ -354,6 +354,27 @@ var AppComponent = (function () {
             this.isInMusicBrowser = true;
         }
     };
+    AppComponent.prototype.refreshUserSession = function () {
+        var _this = this;
+        this._apicallService.getCurrentUserInSession()
+            .then(function (data) {
+            if (data) {
+                _this.currentUser = data;
+            }
+            else {
+                _this.currentUser = false;
+            }
+        })
+            .catch(function (error) {
+            console.log(error);
+        });
+    };
+    AppComponent.prototype.ngOnDestroy = function () {
+        // this._apicallService.logoutUser()
+        //   .then(data => {
+        //     console.log(data);
+        //   });
+    };
     return AppComponent;
 }());
 AppComponent = __decorate([
@@ -362,7 +383,7 @@ AppComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/app.component.html"),
         styles: [__webpack_require__("../../../../../src/app/app.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__chat_service__["a" /* ChatService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _e || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__chat_service__["a" /* ChatService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _e || Object])
 ], AppComponent);
 
 var _a, _b, _c, _d, _e;
@@ -375,43 +396,39 @@ var _a, _b, _c, _d, _e;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__ = __webpack_require__("../../../../ts-md5/dist/md5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_ng_socket_io__ = __webpack_require__("../../../../ng-socket-io/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_ng_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_ng_socket_io__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_routing_module__ = __webpack_require__("../../../../../src/app/app-routing.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__dashboard_room_room_component__ = __webpack_require__("../../../../../src/app/dashboard/room/room.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__session_handler_session_handler_component__ = __webpack_require__("../../../../../src/app/session-handler/session-handler.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__new_room_new_room_component__ = __webpack_require__("../../../../../src/app/new-room/new-room.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__search_manager_search_rooms_search_rooms_component__ = __webpack_require__("../../../../../src/app/search-manager/search-rooms/search-rooms.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ng_socket_io__ = __webpack_require__("../../../../ng-socket-io/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ng_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_ng_socket_io__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_routing_module__ = __webpack_require__("../../../../../src/app/app-routing.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__dashboard_room_room_component__ = __webpack_require__("../../../../../src/app/dashboard/room/room.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__new_room_new_room_component__ = __webpack_require__("../../../../../src/app/new-room/new-room.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__search_manager_search_rooms_search_rooms_component__ = __webpack_require__("../../../../../src/app/search-manager/search-rooms/search-rooms.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
 
 
 
@@ -438,7 +455,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-
 var config = { url: 'http://localhost:8000', options: {} };
 var AppModule = (function () {
     function AppModule() {
@@ -446,42 +462,40 @@ var AppModule = (function () {
     return AppModule;
 }());
 AppModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["M" /* NgModule */])({
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["M" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_7__app_component__["a" /* AppComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__index_index_component__["a" /* IndexComponent */],
-            __WEBPACK_IMPORTED_MODULE_13__dashboard_dashboard_component__["a" /* DashboardComponent */],
-            __WEBPACK_IMPORTED_MODULE_14__profile_profile_component__["a" /* ProfileComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__login_login_component__["a" /* LoginComponent */],
-            __WEBPACK_IMPORTED_MODULE_16__registration_registration_component__["a" /* RegistrationComponent */],
-            __WEBPACK_IMPORTED_MODULE_17__logout_logout_component__["a" /* LogoutComponent */],
-            __WEBPACK_IMPORTED_MODULE_18__search_manager_search_manager_component__["a" /* SearchManagerComponent */],
-            __WEBPACK_IMPORTED_MODULE_19__dashboard_room_room_component__["a" /* RoomComponent */],
-            __WEBPACK_IMPORTED_MODULE_20__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */],
-            __WEBPACK_IMPORTED_MODULE_21__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */],
-            __WEBPACK_IMPORTED_MODULE_22__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */],
-            __WEBPACK_IMPORTED_MODULE_23__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */],
-            __WEBPACK_IMPORTED_MODULE_24__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */],
-            __WEBPACK_IMPORTED_MODULE_25__session_handler_session_handler_component__["a" /* SessionHandlerComponent */],
-            __WEBPACK_IMPORTED_MODULE_26__new_room_new_room_component__["a" /* NewRoomComponent */],
-            __WEBPACK_IMPORTED_MODULE_27__search_manager_search_rooms_search_rooms_component__["a" /* SearchRoomsComponent */],
+            __WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */],
+            __WEBPACK_IMPORTED_MODULE_11__index_index_component__["a" /* IndexComponent */],
+            __WEBPACK_IMPORTED_MODULE_12__dashboard_dashboard_component__["a" /* DashboardComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__profile_profile_component__["a" /* ProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_14__login_login_component__["a" /* LoginComponent */],
+            __WEBPACK_IMPORTED_MODULE_15__registration_registration_component__["a" /* RegistrationComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__logout_logout_component__["a" /* LogoutComponent */],
+            __WEBPACK_IMPORTED_MODULE_17__search_manager_search_manager_component__["a" /* SearchManagerComponent */],
+            __WEBPACK_IMPORTED_MODULE_18__dashboard_room_room_component__["a" /* RoomComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_20__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_21__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_22__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */],
+            __WEBPACK_IMPORTED_MODULE_23__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */],
+            __WEBPACK_IMPORTED_MODULE_24__new_room_new_room_component__["a" /* NewRoomComponent */],
+            __WEBPACK_IMPORTED_MODULE_25__search_manager_search_rooms_search_rooms_component__["a" /* SearchRoomsComponent */],
         ],
         imports: [
-            __WEBPACK_IMPORTED_MODULE_9__angular_platform_browser__["a" /* BrowserModule */],
-            __WEBPACK_IMPORTED_MODULE_6__app_routing_module__["a" /* AppRoutingModule */],
-            __WEBPACK_IMPORTED_MODULE_5_ng_socket_io__["SocketIoModule"].forRoot(config),
-            __WEBPACK_IMPORTED_MODULE_10__angular_forms__["a" /* FormsModule */],
-            __WEBPACK_IMPORTED_MODULE_11__angular_http__["b" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_10__angular_forms__["b" /* ReactiveFormsModule */]
+            __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser__["a" /* BrowserModule */],
+            __WEBPACK_IMPORTED_MODULE_5__app_routing_module__["a" /* AppRoutingModule */],
+            __WEBPACK_IMPORTED_MODULE_4_ng_socket_io__["SocketIoModule"].forRoot(config),
+            __WEBPACK_IMPORTED_MODULE_9__angular_forms__["a" /* FormsModule */],
+            __WEBPACK_IMPORTED_MODULE_10__angular_http__["b" /* HttpModule */],
+            __WEBPACK_IMPORTED_MODULE_9__angular_forms__["b" /* ReactiveFormsModule */]
         ],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_3__chat_service__["a" /* ChatService */],
-            __WEBPACK_IMPORTED_MODULE_8__api_call_service__["a" /* ApiCallService */],
-            __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */],
-            __WEBPACK_IMPORTED_MODULE_1__last_fm_api_service__["a" /* LastFmApiService */],
-            __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__["Md5"]
+            __WEBPACK_IMPORTED_MODULE_2__chat_service__["a" /* ChatService */],
+            __WEBPACK_IMPORTED_MODULE_7__api_call_service__["a" /* ApiCallService */],
+            __WEBPACK_IMPORTED_MODULE_1__search_service__["a" /* SearchService */],
+            __WEBPACK_IMPORTED_MODULE_0__last_fm_api_service__["a" /* LastFmApiService */],
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_7__app_component__["a" /* AppComponent */]]
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
 
@@ -494,11 +508,12 @@ AppModule = __decorate([
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChatService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ng_socket_io__ = __webpack_require__("../../../../ng-socket-io/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ng_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_ng_socket_io__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ng_socket_io__ = __webpack_require__("../../../../ng-socket-io/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ng_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_ng_socket_io__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -511,9 +526,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var ChatService = (function () {
-    function ChatService(socket) {
+    function ChatService(socket, _apiCallService) {
         this.socket = socket;
+        this._apiCallService = _apiCallService;
     }
     ChatService.prototype.getMessage = function (id) {
         return this.socket
@@ -528,14 +545,37 @@ var ChatService = (function () {
         this.socket
             .emit("msg", id);
     };
+    ChatService.prototype.loginEvent = function (currentUser) {
+        console.log('loginEvent Triggered: Sending currentuser data to server event name: login');
+        this.socket.emit('login', currentUser);
+    };
+    ChatService.prototype.getLoginEvent = function (id) {
+        return this.socket
+            .fromEvent("online" + id)
+            .map(function (data) {
+            console.log('got login event');
+            return true;
+        });
+    };
+    ChatService.prototype.logoutEvent = function (currentUser) {
+        console.log('logoutEvent triggered: Sending currentuser data to server event name: logout');
+        this.socket.emit('logout', currentUser);
+    };
+    ChatService.prototype.getLogoutEvent = function (currentUserid) {
+        return this.socket.fromEvent("offline" + currentUserid)
+            .map(function (data) {
+            console.log("GOT LOGOUT EVENT");
+            return true;
+        });
+    };
     return ChatService;
 }());
 ChatService = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ng_socket_io__["Socket"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ng_socket_io__["Socket"]) === "function" && _a || Object])
+    Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2_ng_socket_io__["Socket"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ng_socket_io__["Socket"]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _b || Object])
 ], ChatService);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=chat.service.js.map
 
 /***/ }),
@@ -548,7 +588,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".wrapper {\n    height: 100vh;\n}\n\n.inblock {\n    display: inline-block;\n    vertical-align: top;\n}\n\n.joined {\n    height:95%;\n    width: 10%;\n}\n\n.main {\n    height: 95%;\n    width: 73%;\n}\n\n.secondary {\n    height: 95%;\n    width: 10%;\n}\n\n.subcomponents {\n    height: 45%;\n}\n\n.online {\n\n}\n\n.favorites {\n\n}\n\n.router {\n    height: 85%;\n}\n\n.active-music {\n    height: 8%;\n}", ""]);
+exports.push([module.i, "\n\n/*\n * Base structure\n */\n\n/* Move down content because we have a fixed navbar that is 50px tall */\nbody {\n  padding-top: 50px;\n}\n\n\n/*\n * Global add-ons\n */\n\n.sub-header {\n  padding-bottom: 10px;\n  border-bottom: 1px solid #eee;\n}\n\n/*\n * Top navigation\n * Hide default border to remove 1px line.\n */\n.navbar-fixed-top {\n  border: 0;\n}\n\n/*\n * Sidebar\n */\n\n/* Hide for mobile, show later */\n.sidebar {\n  display: none;\n}\n@media (min-width: 768px) {\n  .sidebar {\n    position: fixed;\n    top: 90px;\n    bottom: 0;\n    left: 0;\n    z-index: 1000;\n    display: block;\n    padding: 20px;\n    overflow-x: hidden;\n    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */\n    background-color: #f5f5f5;\n    border-right: 1px solid #eee;\n  }\n}\n\n/* Sidebar navigation */\n.nav-sidebar {\n  margin-right: -21px; /* 20px padding + 1px border */\n  margin-bottom: 20px;\n  margin-left: -20px;\n}\n.nav-sidebar > li > a {\n  padding-right: 20px;\n  padding-left: 20px;\n}\n.nav-sidebar > .active > a,\n.nav-sidebar > .active > a:hover,\n.nav-sidebar > .active > a:focus {\n  color: #fff;\n  background-color: #428bca;\n}\n\n\n/*\n * Main content\n */\n\n.main {\n  padding: 20px;\n}\n@media (min-width: 768px) {\n  .main {\n    padding-right: 40px;\n    padding-left: 40px;\n  }\n}\n.main .page-header {\n  margin-top: 0;\n}\n\n\n/*\n * Placeholder dashboard ideas\n */\n\n.placeholders {\n  margin-bottom: 30px;\n  text-align: center;\n}\n.placeholders h4 {\n  margin-bottom: 0;\n}\n.placeholder {\n  margin-bottom: 20px;\n}\n.placeholder img {\n  display: inline-block;\n  border-radius: 50%;\n}", ""]);
 
 // exports
 
@@ -561,7 +601,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>You now in dashboard</p>\n\n<!-- <router-outlet></router-outlet> -->\n<!-- <a [routerLink]=\"['room']\">qqqq</a> -->\n<fieldset class=\"wrapper\">\n    <legend>Dashboard Page</legend>\n    <fieldset class=\"joined inblock\">\n        <legend>Joined Rooms</legend>\n        <a [routerLink]='[\"room\",\"new\"]' >Create Room</a>\n        <div *ngFor=\"let room of currentUser.joinedRooms\">\n            <a [routerLink]=\"['room', room.roomId]\">{{room.title}}</a>\n        </div>\n    </fieldset>\n    <fieldset class=\"main inblock\">\n        <legend>Main View</legend>\n        <fieldset class=\"router\">\n            <legend>Router-Outlet</legend>\n            <router-outlet></router-outlet>\n        </fieldset>\n    <fieldset class=\"active-music\">\n        <legend>Active MusicRoom/Player present if active room is minimized</legend>\n    </fieldset>\n    </fieldset>\n    <fieldset class=\"secondary inblock\">\n        <legend>Secondary View</legend>\n        <fieldset class=\"online subcomponents\">\n            <legend>See who's online</legend>\n        </fieldset>\n        <fieldset class=\"favorites subcomponents\">\n            <legend>Current User's Favorite Songs</legend>\n        </fieldset>\n    </fieldset>\n\n\n</fieldset>\n"
+module.exports = "\n<!-- <router-outlet></router-outlet> -->\n<!-- <a [routerLink]=\"['room']\">qqqq</a> -->\n<div *ngIf=\"currentUser\">\n    <div class=\"container-fluid\">\n        <div class=\"row\">\n        <div class=\"col-sm-3 col-md-2 sidebar\">\n            <ul class=\"nav nav-sidebar\">\n            <li class=\"active\"><a [routerLink]='[\"room\",\"new\"]'>Friends Online</a></li>\n            <li *ngFor=\"let friend of onlineFriends\">\n                <a [routerLink]=\"['home','users', friend.userId]\">{{friend.username}}</a>\n            </li>\n            </ul>\n            <ul class=\"nav nav-sidebar\">\n            <li class=\"active\"><a [routerLink]='[\"room\",\"new\"]'>+ Create Room</a></li>\n            <li *ngFor=\"let room of currentUser.joinedRooms\">\n                <a [routerLink]=\"['room', room.roomId]\">{{room.title}}</a>\n            </li>\n            </ul>\n        </div>\n\n        <div class=\"col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main\">\n\n           \n            <router-outlet></router-outlet>\n\n        </div>\n        </div>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -572,9 +612,8 @@ module.exports = "<p>You now in dashboard</p>\n\n<!-- <router-outlet></router-ou
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DashboardComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_user__ = __webpack_require__("../../../../../src/app/models/user.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -588,46 +627,56 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var DashboardComponent = (function () {
     function DashboardComponent(_apicallService, _router, chatService) {
         this._apicallService = _apicallService;
         this._router = _router;
         this.chatService = chatService;
-        this.currentUser = new __WEBPACK_IMPORTED_MODULE_2__models_user__["a" /* User */]();
+        this.onlineFriends = [];
         this.allRooms = [];
         this.userRooms = [];
         this.room = {};
-        this.getCurrentUserInSession();
     }
     DashboardComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.refreshUserSession();
         var self = this;
         this.getAllRooms();
-        // this.chatService
-        // .getMessage(this.room.roomId)
-        // .subscribe(data => {
-        //   console.log("GOT IT");
-        //   self.getCurrentUserInSession();
-        // });
+        this._apicallService.getOnlineFriends().then(function (data) {
+            _this.onlineFriends = data;
+        });
     };
     DashboardComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
             }
             else {
-                // console.log('user not in session');
                 _this._router.navigate(['']);
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
             _this._router.navigate(['']);
+        });
+    };
+    DashboardComponent.prototype.refreshUserSession = function () {
+        var _this = this;
+        this._apicallService.getCurrentUserInSession()
+            .then(function (data) {
+            if (data) {
+                _this.currentUser = data;
+                _this.watchForFriendLoginEvent(_this.currentUser._id);
+                _this.watchForFriendLogoutEvent(_this.currentUser._id);
+            }
+            else {
+                _this._router.navigate(['']);
+            }
+        })
+            .catch(function (error) {
+            console.log(error);
         });
     };
     DashboardComponent.prototype.getAllRooms = function () {
@@ -636,15 +685,52 @@ var DashboardComponent = (function () {
             _this.allRooms = rooms;
         });
     };
+    DashboardComponent.prototype.watchForFriendLoginEvent = function (id) {
+        var _this = this;
+        console.log('Client On: Now Watching for Current User Friends Logging in');
+        this.subscription = this.chatService.getLoginEvent(id).subscribe(function (data) {
+            console.log('Login Event Happened');
+            _this.getCurrentUserInSession();
+            _this._apicallService.getOnlineFriends().then(function (data) {
+                console.log('list of online friends');
+                console.log(data);
+                _this.onlineFriends = data;
+            });
+        });
+    };
+    DashboardComponent.prototype.watchForFriendLogoutEvent = function (id) {
+        var _this = this;
+        console.log('Client On: Now Watching for Current User Friends Logging out');
+        this.subscription2 = this.chatService.getLogoutEvent(id).subscribe(function (data) {
+            console.log('a friend is offline');
+            _this.getCurrentUserInSession();
+            console.log("getting online friends");
+            _this._apicallService.getOnlineFriends().then(function (data) {
+                console.log('list of online friends');
+                console.log(data);
+                _this.onlineFriends = data;
+            });
+        });
+    };
+    DashboardComponent.prototype.ngOnDestroy = function () {
+        // this._apicallService.logoutUser()
+        //   .then(data => {
+        //     console.log(data);
+        if (this.subscription && this.subscription2) {
+            this.subscription.unsubscribe();
+            this.subscription2.unsubscribe();
+        }
+        // });
+    };
     return DashboardComponent;
 }());
 DashboardComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["o" /* Component */])({
         selector: 'app-dashboard',
         template: __webpack_require__("../../../../../src/app/dashboard/dashboard.component.html"),
         styles: [__webpack_require__("../../../../../src/app/dashboard/dashboard.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _c || Object])
 ], DashboardComponent);
 
 var _a, _b, _c;
@@ -660,7 +746,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".msgform{\n    height: 35px;\n}\n\n#allMessages{\n    overflow-y: scroll;\n    height: 250px;\n}\n\n.details{\n    font-size: 15px;\n    float: right;\n    height: 12px;\n}\n\nhr.style2 {\n\tborder-top: 1px solid black;\n}\n\n.msg{\n    border-bottom: 1px solid lightgrey;\n    word-wrap: break-word;\n}\n\n.msg:last-child{\n    border: none;\n}", ""]);
 
 // exports
 
@@ -673,7 +759,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/room/room.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"border: 1px solid black;\">\n  {{room.title}}\n  <div *ngIf=\"userInRoom\">\n    <div id=\"allMessages\">\n      <p *ngFor=\"let msg of room.chatlog\">{{msg.user}}: {{msg.message}}</p>\n    </div>\n    <form (submit)=\"sendMessage()\">\n      <input type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <input type=\"submit\" value=\"Send\">\n    </form>\n  </div>\n  <div *ngIf=\"!userInRoom\">\n    <div *ngIf=\"room.isPublic\">\n      <button (click)=\"joinRoom()\">Join Room</button>\n    </div>\n    <div *ngIf=\"!room.isPublic\">\n      <input type=\"text\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n      <button (click)=\"joinRoom()\" [disabled]=\"roomPW != room.password\">Join Room</button>\n    </div>\n  </div>\n</div>"
+module.exports = "<div class='panel panel-default'>\n  <div class='panel-heading'>\n    <h3 style='display:inline-block;' class='panel-title'>{{room.title}}</h3>\n    <button class='btn btn-link details' (click)=\"changeArrow()\" data-toggle=\"collapse\" data-target=\"#details\" aria-expanded=\"false\" aria-controls=\"details\">\n      <span class='glyphicon glyphicon-chevron-up' *ngIf=\"arrow=='^'\"></span>\n      <span class='glyphicon glyphicon-chevron-down' *ngIf=\"arrow=='v'\"></span>\n    </button>\n    <div *ngIf=\"arrow=='^'\">\n      <hr class='style2'>\n      <div style='display: inline-block'>\n        <p>Owner: <a [routerLink]=\"['users', room._owner.userId]\">{{room._owner.username}}</a></p>\n        <p>Description: {{room.description}}</p>\n        <p>Users in room:</p>\n        <div id='usersInRoom'>\n          <p *ngFor=\"let user of room._roomMembers\">\n            <span class='glyphicon glyphicon-record' *ngIf=\"user.isLoggedIn\" style='color: green;'></span>\n            <span class='glyphicon glyphicon-record' *ngIf=\"!user.isLoggedIn\" style='color: red;'></span>\n            <a [routerLink]=\"['users', user.userId]\">{{user.username}}</a>\n          </p>\n        </div>\n      </div>\n      <div style='display: inline-block; float: right;'>\n        <button *ngIf=\"!isOwner && userInRoom\" class='btn btn-danger' (click)=\"leaveRoom()\">Leave Room</button>\n        <button *ngIf=\"isOwner\" class='btn btn-danger' (click)=\"deleteRoom()\">Delete Room</button>\n      </div>\n    </div>\n  </div>\n  <div class=\"panel-body\">\n    <div *ngIf=\"userInRoom\">\n      <div #scroll id=\"allMessages\">\n        <p class='msg col-md-12' *ngFor=\"let msg of room.chatlog\"><a [routerLink]=\"['users', msg.id]\">{{msg.user}}</a>: {{msg.message}}</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"panel-footer\">\n    <form *ngIf=\"userInRoom\" (submit)=\"sendMessage()\">\n      <input class='col-md-11 msgform' type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <button type='submit' class='btn btn-primary msgform'>Send <span class='glyphicon glyphicon-send'></span></button>\n      <!-- <input class=\"btn btn-primary msgform\" type=\"submit\" value=\"Send\"> -->\n    </form>\n    <div *ngIf=\"!userInRoom\">\n      <div *ngIf=\"room.isPublic\">\n        <button (click)=\"joinRoom()\" class='btn btn-primary'>Join Room</button>\n      </div>\n      <div *ngIf=\"!room.isPublic\">\n        <input type=\"password\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n        <button (click)=\"joinRoom()\" class='btn btn-primary' [ngClass]=\"{'disabled':roomPW != room.password}\" [disabled]=\"roomPW != room.password\">Join Room</button>\n      </div>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -702,14 +788,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var RoomComponent = (function () {
-    function RoomComponent(_route, apiService, chatService, _dashboardComp) {
+    function RoomComponent(_route, apiService, chatService, _dashboardComp, router) {
         this._route = _route;
         this.apiService = apiService;
         this.chatService = chatService;
         this._dashboardComp = _dashboardComp;
+        this.router = router;
         this.message = "";
         this.userInRoom = false;
         this.roomPW = "";
+        this.isOwner = false;
+        this.arrow = "v";
     }
     RoomComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -730,6 +819,15 @@ var RoomComponent = (function () {
                 });
             });
         });
+    };
+    RoomComponent.prototype.ngAfterViewChecked = function () {
+        this.scrollToBottom();
+    };
+    RoomComponent.prototype.scrollToBottom = function () {
+        try {
+            this.scroller.nativeElement.scrollTop = this.scroller.nativeElement.scrollHeight;
+        }
+        catch (err) { }
     };
     RoomComponent.prototype.refreshRoom = function () {
         var _this = this;
@@ -755,34 +853,67 @@ var RoomComponent = (function () {
         this.apiService.getCurrentUserInSession().then(function (result) {
             console.log("RESULT");
             console.log(result);
-            console.log(_this.room._roomMembers[0]);
+            console.log(_this.room._roomMembers);
             console.log(_this.room._owner);
-            if (_this.room._roomMembers.includes(result._id) || _this.room._owner == result._id)
+            _this.userInRoom = false;
+            for (var i = 0; i < _this.room._roomMembers.length; i++) {
+                if (_this.room._roomMembers[i]._id == result._id)
+                    _this.userInRoom = true;
+            }
+            if (_this.room._owner._id == result._id) {
                 _this.userInRoom = true;
-            else
-                _this.userInRoom = false;
+                _this.isOwner = true;
+            }
             console.log(_this.userInRoom);
         });
     };
     RoomComponent.prototype.joinRoom = function () {
         var self = this;
         this.apiService.joinRoom(this.room.roomId, this.roomPW).then(function (result) {
+            self.message = "joined the room.";
+            self.sendMessage();
             self.refreshRoom();
             self._dashboardComp.getCurrentUserInSession();
         });
     };
+    RoomComponent.prototype.leaveRoom = function () {
+        var self = this;
+        this.apiService.leaveRoom(this.room.roomId).then(function (result) {
+            self.message = "left the room.";
+            self.sendMessage();
+            self.refreshRoom();
+            self._dashboardComp.getCurrentUserInSession();
+        });
+    };
+    RoomComponent.prototype.deleteRoom = function () {
+        var self = this;
+        this.apiService.deleteRoom(this.room.roomId).then(function (result) {
+            self._dashboardComp.getCurrentUserInSession();
+            self.router.navigate(['/home']);
+        });
+    };
+    RoomComponent.prototype.changeArrow = function () {
+        if (this.arrow == "^")
+            this.arrow = "v";
+        else
+            this.arrow = "^";
+    };
     return RoomComponent;
 }());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["_16" /* ViewChild */])('scroll'),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__angular_core__["v" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_core__["v" /* ElementRef */]) === "function" && _a || Object)
+], RoomComponent.prototype, "scroller", void 0);
 RoomComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["o" /* Component */])({
         selector: 'app-room',
         template: __webpack_require__("../../../../../src/app/dashboard/room/room.component.html"),
         styles: [__webpack_require__("../../../../../src/app/dashboard/room/room.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__dashboard_component__["a" /* DashboardComponent */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */]) === "function" && _f || Object])
 ], RoomComponent);
 
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=room.component.js.map
 
 /***/ }),
@@ -948,11 +1079,12 @@ module.exports = "<fieldset>\n  <legend>Login</legend>\n<div style=\"color: red;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_user__ = __webpack_require__("../../../../../src/app/models/user.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_user__ = __webpack_require__("../../../../../src/app/models/user.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -967,60 +1099,71 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var LoginComponent = (function () {
     // currentUser;
-    function LoginComponent(_apicallService, _router, _appComponent) {
+    function LoginComponent(_apicallService, _router, _appComponent, _chatService) {
         this._apicallService = _apicallService;
         this._router = _router;
         this._appComponent = _appComponent;
-        this.user = new __WEBPACK_IMPORTED_MODULE_3__models_user__["a" /* User */]();
+        this._chatService = _chatService;
+        this.user = new __WEBPACK_IMPORTED_MODULE_4__models_user__["a" /* User */]();
         this.incorrectLogin = false;
     }
     LoginComponent.prototype.ngOnInit = function () {
     };
     LoginComponent.prototype.loginUser = function () {
         var _this = this;
-        // console.log('login User');
-        // console.log(this.user);
         this._apicallService.loginUser(this.user)
             .then(function (data) {
-            // console.log('success logging in user');
-            // console.log(data);
             if (!data) {
                 _this.incorrectLogin = true;
-                _this.user = new __WEBPACK_IMPORTED_MODULE_3__models_user__["a" /* User */]();
+                _this.user = new __WEBPACK_IMPORTED_MODULE_4__models_user__["a" /* User */]();
             }
             else {
-                // this.currentUser = data;
                 _this.incorrectLogin = false;
                 _this._appComponent.getCurrentUserInSession();
-                // console.log(this.currentUser);
-                // if (!this.currentUser.lastfmSessionToken && !this.currentUser.lastfmSessionSig) {
-                //   window.location.href = 'http://www.last.fm/api/auth/?api_key=c595e718d23c51ef68c0d547f1511fe7&cb=http://localhost:8000/session/';
-                // } else {
-                // add a test if session token is valid later
-                // ---------------
-                _this._router.navigate(['home']);
+                _this.getCurrentUserInSession();
+                console.log(_this.currentUser);
+                _this._router.navigate(['home', 'profile', 'current']);
                 // }
             }
         })
             .catch(function (error) {
-            // console.log('error logging in user');
-            // console.log(error);
+            console.log(error);
         });
+    };
+    LoginComponent.prototype.getCurrentUserInSession = function () {
+        var _this = this;
+        this._apicallService.getCurrentUserInSession()
+            .then(function (data) {
+            if (data) {
+                _this.currentUser = data;
+                _this.emitLoginEvent(_this.currentUser);
+            }
+            else {
+            }
+        })
+            .catch(function (error) {
+            console.log(error);
+        });
+    };
+    LoginComponent.prototype.emitLoginEvent = function (friendsData) {
+        console.log('emitLoginEvent');
+        this._chatService.loginEvent(friendsData);
     };
     return LoginComponent;
 }());
 LoginComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_5__angular_core__["o" /* Component */])({
         selector: 'app-login',
         template: __webpack_require__("../../../../../src/app/login/login.component.html"),
         styles: [__webpack_require__("../../../../../src/app/login/login.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__app_component__["a" /* AppComponent */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _d || Object])
 ], LoginComponent);
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
 //# sourceMappingURL=login.component.js.map
 
 /***/ }),
@@ -1055,10 +1198,11 @@ module.exports = "<p>\n  logout works!\n</p>\n"
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LogoutComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1072,37 +1216,63 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var LogoutComponent = (function () {
-    function LogoutComponent(_apicallService, _router, _appComponent) {
-        var _this = this;
+    function LogoutComponent(_apicallService, _router, _appComponent, _chatService) {
         this._apicallService = _apicallService;
         this._router = _router;
         this._appComponent = _appComponent;
+        this._chatService = _chatService;
+    }
+    LogoutComponent.prototype.ngOnInit = function () {
+        this.loggingOut();
+    };
+    LogoutComponent.prototype.loggingOut = function () {
+        var _this = this;
         this._apicallService.logoutUser()
             .then(function (data) {
-            // console.log('success logging user out');
-            _this._appComponent.getCurrentUserInSession();
+            console.log('success logging user out refreshing user session');
+            _this.emitLogoutEvent(data);
+            _this._appComponent.refreshUserSession();
             _this._router.navigate(['']);
         })
             .catch(function (error) {
-            // console.log('error logging user out');
             _this._router.navigate(['']);
         });
-    }
-    LogoutComponent.prototype.ngOnInit = function () {
+    };
+    // getCurrentUserInSession() {
+    //   this._apicallService.getCurrentUserInSession()
+    //     .then((data) => {
+    //       // console.log(data);
+    //       if (data) {
+    //         console.log('success getting current user emitting logout event');
+    //         this.currentUser = data;
+    //         this.emitLogoutEvent(this.currentUser);
+    //       } else {
+    //         console.log('user not in session');
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       // console.log('error getting current user');
+    //       console.log(error);
+    //     });
+    // }
+    LogoutComponent.prototype.emitLogoutEvent = function (currentUser) {
+        console.log('Client Emitting Logout Event');
+        this._chatService.logoutEvent(currentUser);
     };
     return LogoutComponent;
 }());
 LogoutComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
         selector: 'app-logout',
         template: __webpack_require__("../../../../../src/app/logout/logout.component.html"),
         styles: [__webpack_require__("../../../../../src/app/logout/logout.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__app_component__["a" /* AppComponent */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _d || Object])
 ], LogoutComponent);
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
 //# sourceMappingURL=logout.component.js.map
 
 /***/ }),
@@ -1136,7 +1306,7 @@ var Room = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return User; });
 var User = (function () {
-    function User(_id, userId, username, email, firstName, lastName, password, description, profileImageUrl, isLoggedIn, favoriteSongs, joinedRooms, ownedRooms, friends, received_invites, sent_invites, created_at, updated_at) {
+    function User(_id, userId, username, email, firstName, lastName, password, description, profileImageUrl, isLoggedIn, onlineFriends, favoriteSongs, joinedRooms, ownedRooms, friends, received_invites, sent_invites, created_at, updated_at) {
         if (_id === void 0) { _id = null; }
         if (userId === void 0) { userId = null; }
         if (username === void 0) { username = ''; }
@@ -1147,6 +1317,7 @@ var User = (function () {
         if (description === void 0) { description = ''; }
         if (profileImageUrl === void 0) { profileImageUrl = ''; }
         if (isLoggedIn === void 0) { isLoggedIn = false; }
+        if (onlineFriends === void 0) { onlineFriends = []; }
         if (favoriteSongs === void 0) { favoriteSongs = []; }
         if (joinedRooms === void 0) { joinedRooms = []; }
         if (ownedRooms === void 0) { ownedRooms = []; }
@@ -1165,6 +1336,7 @@ var User = (function () {
         this.description = description;
         this.profileImageUrl = profileImageUrl;
         this.isLoggedIn = isLoggedIn;
+        this.onlineFriends = onlineFriends;
         this.favoriteSongs = favoriteSongs;
         this.joinedRooms = joinedRooms;
         this.ownedRooms = ownedRooms;
@@ -1271,7 +1443,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, "\n\n/*\n * Base structure\n */\n\n/* Move down content because we have a fixed navbar that is 50px tall */\nbody {\n  padding-top: 50px;\n}\n\n\n/*\n * Global add-ons\n */\n\n.sub-header {\n  padding-bottom: 10px;\n  border-bottom: 1px solid #eee;\n}\n\n/*\n * Top navigation\n * Hide default border to remove 1px line.\n */\n.navbar-fixed-top {\n  border: 0;\n}\n\n/*\n * Sidebar\n */\n\n/* Hide for mobile, show later */\n.sidebar {\n  display: none;\n}\n@media (min-width: 768px) {\n  .sidebar {\n    position: fixed;\n    top: 90px;\n    bottom: 0;\n    left: 0;\n    z-index: 1000;\n    display: block;\n    padding: 20px;\n    overflow-x: hidden;\n    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */\n    background-color: #f5f5f5;\n    border-right: 1px solid #eee;\n  }\n}\n\n/* Sidebar navigation */\n.nav-sidebar {\n  margin-right: -21px; /* 20px padding + 1px border */\n  margin-bottom: 20px;\n  margin-left: -20px;\n}\n.nav-sidebar > li > a {\n  padding-right: 20px;\n  padding-left: 20px;\n}\n.nav-sidebar > .active > a,\n.nav-sidebar > .active > a:hover,\n.nav-sidebar > .active > a:focus {\n  color: #fff;\n  background-color: #428bca;\n}\n\n\n/*\n * Main content\n */\n\n.main {\n  padding: 20px;\n}\n@media (min-width: 768px) {\n  .main {\n    padding-right: 40px;\n    padding-left: 40px;\n  }\n}\n.main .page-header {\n  margin-top: 0;\n}\n\n\n/*\n * Placeholder dashboard ideas\n */\n\n.placeholders {\n  margin-bottom: 30px;\n  text-align: center;\n}\n.placeholders h4 {\n  margin-bottom: 0;\n}\n.placeholder {\n  margin-bottom: 20px;\n}\n.placeholder img {\n  display: inline-block;\n  border-radius: 50%;\n}\n\n\n\n\n\n\nbody {\n    font-family: 'Roboto', sans-serif;\n    font-weight: 400;\n    background-color: #f0f3f5;\n    margin-top:40px;\n}\n/*==============================*/\n/*====== siderbar user profile =====*/\n/*==============================*/\n.nav>li>a.userdd {\n    padding: 5px 15px\n}\n.userprofile {\n    width: 100%;\n\tfloat: left;\n\tclear: both;\n\tmargin: 40px auto\n}\n.userprofile .userpic {\n\theight: 100px;\n\twidth: 100px;\n\tclear: both;\n\tmargin: 0 auto;\n\tdisplay: block;\n\tborder-radius: 100%;\n\tbox-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-moz-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-webkit-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-ms-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\tposition: relative; \n}\n.userprofile .userpic .userpicimg {\n\theight: auto;\n\twidth: 100%;\n\tborder-radius: 100%;\n}\n.username {\n\tfont-weight: 400;\n\tfont-size: 20px;\n\tline-height: 20px;\n\tcolor: #000000;\n\tmargin-top: 20px;\n\twhite-space: nowrap;\n\toverflow: hidden;\n\ttext-overflow: ellipsis;\n}\n.username+p {\n\tcolor: #607d8b;\n\tfont-size: 13px;\n\tline-height: 15px;\n\twhite-space: nowrap;\n\ttext-overflow: ellipsis;\n\toverflow: hidden;\n}\n.settingbtn {\n\theight: 30px;\n\twidth: 30px;\n\tborder-radius: 30px;\n\tdisplay: block;\n\tposition: absolute;\n\tbottom: 0px;\n\tright: 0px;\n\tline-height: 30px;\n\tvertical-align: middle;\n\ttext-align: center;\n\tpadding: 0;\n\tbox-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.15);\n\t-moz-box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.15);\n\t-webkit-box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.15);\n\t-ms-box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.15);\n}\n.userprofile.small {\n\twidth: auto;\n\tclear: both;\n\tmargin: 0px auto;\n}\n.userprofile.small .userpic {\n\theight: 40px;\n\twidth: 40px;\n\tmargin: 0 10px 0 0;\n\tdisplay: block;\n\tborder-radius: 100%;\n\tbox-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-moz-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-webkit-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-ms-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\tposition: relative;\n\tfloat: left;\n}\n.userprofile.small .textcontainer {\n\tfloat: left;\n\tmax-width: 100px;\n\tpadding: 0\n}\n.userprofile.small .userpic .userpicimg {\n\tmin-height: 100%;\n\twidth: 100%;\n\tborder-radius: 100%;\n}\n.userprofile.small .username {\n\tfont-weight: 400;\n\tfont-size: 16px;\n\tline-height: 21px;\n\tcolor: #000000;\n\tmargin: 0px;\n\tfloat: left;\n\twidth: 100%;\n}\n.userprofile.small .username+p {\n\tcolor: #607d8b;\n\tfont-size: 13px;\n\tfloat: left;\n\twidth: 100%;\n\tmargin: 0;\n}\n/*==============================*/\n/*====== Social Profile css =====*/\n/*==============================*/\n.countlist h3 {\n\tmargin: 0;\n\tfont-weight: 400;\n\tline-height: 28px;\n}\n.countlist {\n\ttext-transform: uppercase\n}\n.countlist li {\n\tpadding: 15px 30px 15px 0;\n\tfont-size: 14px;\n\ttext-align: left;\n}\n.countlist li small {\n\tfont-size: 12px;\n\tmargin: 0\n}\n.followbtn {\n\tfloat: right;\n\tmargin: 22px;\n}\n.userprofile.social {\n\tbackground: url(http://www.prestigepublicity.com/wp-content/uploads/2013/04/bannerdeco.png) no-repeat top center;\n\tbackground-size: 100%;\n\tpadding: 50px 0;\n\tmargin: 0\n}\n.userprofile.social .username {\n\tcolor: #ffffff\n}\n.userprofile.social .username+p {\n\tcolor: #ffffff;\n\topacity: 0.8\n}\n.postbtn {\n\tposition: absolute;\n\tright: 5px;\n\ttop: 5px;\n\tz-index: 9\n}\n.status-upload {\n\twidth: 100%;\n\tfloat: left;\n\tmargin-bottom: 15px\n}\n.posttimeline .panel {\n\tmargin-bottom: 15px\n}\n.commentsblock {\n\tbackground: #f8f9fb;\n}\n.nopaddingbtm {\n\tmargin-bottom: 0\n}\n/*==============================*/\n/*====== Recently connected  heading =====*/\n/*==============================*/\n.memberblock {\n\twidth: 100%;\n\tfloat: left;\n\tclear: both;\n\tmargin-bottom: 15px\n}\n.member {\n\twidth: 24%;\n\tfloat: left;\n\tmargin: 2px 1% 2px 0;\n\tbackground: #ffffff;\n\tborder: 1px solid #d8d0c3;\n\tpadding: 3px;\n\tposition: relative;\n\toverflow: hidden\n}\n.memmbername {\n\tposition: absolute;\n\tbottom: -70px;\n\tbackground: rgba(0, 0, 0, 0.8);\n\tcolor: #ffffff;\n\tline-height: 30px;\n\tpadding: 0 5px;\n\twhite-space: nowrap;\n\ttext-overflow: ellipsis;\n\toverflow: hidden;\n\twidth: 100%;\n\tfont-size: 11px;\n\ttransition: 0.5s ease all;\n}\n.member:hover .memmbername {\n\tbottom: 0\n}\n\n\n.member img {\n\twidth: 100%;\n\ttransition: 0.5s ease all;\n}\n.member:hover img {\n\topacity: 0.8;\n\t-webkit-transform: scale(1.2);\n\t        transform: scale(1.2)\n}\n\n.panel-default>.panel-heading {\n    color: #607D8B;\n    background-color: #ffffff;\n    font-weight: 400;\n    font-size: 15px;\n    border-radius: 0;\n    border-color: #e1eaef;\n}\n\n\n\n.btn-circle {\n    width: 30px;\n    height: 30px;\n    padding: 6px 0;\n    border-radius: 15px;\n    text-align: center;\n    font-size: 12px;\n    line-height: 1.428571429;\n}\n\n.page-header.small {\n    position: relative;\n    line-height: 22px;\n    font-weight: 400;\n    font-size: 20px;\n}\n\n.favorite i {\n    color: #eb3147;\n}\n\n.btn i {\n    font-size: 17px;\n}\n\n.panel {\n    box-shadow: 0px 2px 10px 0 rgba(0, 0, 0, 0.05);\n    -moz-box-shadow: 0px 2px 10px 0 rgba(0, 0, 0, 0.05);\n    -webkit-box-shadow: 0px 2px 10px 0 rgba(0, 0, 0, 0.05);\n    -ms-box-shadow: 0px 2px 10px 0 rgba(0, 0, 0, 0.05);\n    transition: all ease 0.5s;\n    -moz-transition: all ease 0.5s;\n    -webkit-transition: all ease 0.5s;\n    -ms-transition: all ease 0.5s;\n    margin-bottom: 35px;\n    border-radius: 0px;\n    position: relative;\n    border: 0;\n    display: inline-block;\n    width: 100%;\n}\n\n.panel-footer {\n    padding: 10px 15px;\n    background-color: #ffffff;\n    border-top: 1px solid #eef2f4;\n    border-bottom-right-radius: 0;\n    border-bottom-left-radius: 0;\n    color: #607d8b;\n}\n\n.panel-blue {\n    color: #ffffff;\n    background-color: #03A9F4;\n}\n\n.panel-red.userlist .username, .panel-green.userlist .username, .panel-yellow.userlist .username, .panel-blue.userlist .username {\n    color: #ffffff;\n}\n\n.panel-red.userlist p, .panel-green.userlist p, .panel-yellow.userlist p, .panel-blue.userlist p {\n    color: rgba(255, 255, 255, 0.8);\n}\n\n.panel-red.userlist p a, .panel-green.userlist p a, .panel-yellow.userlist p a, .panel-blue.userlist p a {\n    color: rgba(255, 255, 255, 0.8);\n}\n\n.progress-bar-success, .status.active, .panel-green, .panel-green > .panel-heading, .btn-success, .fc-event, .badge.green, .event_green {\n    color: white;\n    background-color: #8BC34A;\n}\n\n.progress-bar-warning, .panel-yellow, .status.pending, .panel-yellow > .panel-heading, .btn-warning, .fc-unthemed .fc-today, .badge.yellow, .event_yellow {\n    color: white;\n    background-color: #FFC107;\n}\n\n.progress-bar-danger, .panel-red, .status.inactive, .panel-red > .panel-heading, .btn-danger, .badge.red, .event_red {\n    color: white;\n    background-color: #F44336;\n}\n\n.media-object {\n    max-width: 50px;\n    border-radius: 50px;\n    box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n    -moz-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n    -webkit-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n    -ms-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n}\n\n.media:first-child {\n    margin-top: 15px;\n}\n\n.media-object {\n    display: block;\n}\n\n.dotbtn {\n    height: 40px;\n    width: 40px;\n    background: none;\n    border: 0;\n    line-height: 40px;\n    vertical-align: middle;\n    padding: 0;\n    margin-right: -15px;\n}\n\n.dots {\n    height: 4px;\n    width: 4px;\n    position: relative;\n    display: block;\n    background: rgba(0,0,0,0.5);\n    border-radius: 2px;\n    margin: 0 auto;\n}\n\n.dots:after, .dots:before {\n    content: \" \";\n    height: 4px;\n    width: 4px;\n    position: absolute;\n    display: inline-block;\n    background: rgba(0,0,0,0.5);\n    border-radius: 2px;\n    top: -7px;\n    left: 0;\n}\n\n.dots:after {\n    content: \" \";\n    top: auto;\n    bottom: -7px;\n    left: 0;\n}\n\n.photolist img {\n    width: 100%;\n}\n\n.photolist {\n    background: #e1eaef;\n    padding-top: 15px;\n    padding-bottom: 15px;\n}\n\n.profilegallery .grid-item a {\n    height: 100%;\n    display: block;\n}\n\n.grid a {\n    width: 100%;\n    display: block;\n    float: left;\n}\n\n.media-body {\n    color: #607D8B;\n    overflow: visible;\n}", ""]);
 
 // exports
 
@@ -1284,7 +1456,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/other-user-profile/other-user-profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"user\">\n  <h1>Other User's Profile</h1>\n  <h2>Username: {{user.username}}</h2>\n  <p>Email: {{user.email}}</p>\n  <p>First Name: {{user.firstName}}</p>\n  <p>Last Name: {{user.lastName}}</p>\n  <p>Description: {{user.description}}</p>\n<h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let friend of user.friends\">\n      <td *ngIf=\"friend && friend._id != currentUser._id\"><a [routerLink]=\"['/home/users', friend.userId]\">{{friend.username}}</a></td>\n      <td *ngIf=\"friend && friend._id != currentUser._id\">\n        <button *ngIf=\"!friend.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(friend.friends, currentUser._id)\" (click)=\"sendInvite(friend.userId)\">Send Invite</button>\n        <span *ngIf=\"friend.received_invites.includes(currentUser._id)\">Invite Sent</span>\n        <span *ngIf=\"isFriendOfCurrentUser(friend.friends, currentUser._id)\">Friend</span>\n      </td>\n    </tr>\n  </table>\n</div>\n"
+module.exports = "<!--<div *ngIf=\"user\">\n  <h1>Other User's Profile</h1>\n  <h2>Username: {{user.username}}</h2>\n  <p>Email: {{user.email}}</p>\n  <p>First Name: {{user.firstName}}</p>\n  <p>Last Name: {{user.lastName}}</p>\n  <p>Description: {{user.description}}</p>\n<h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let friend of user.friends\">\n      <td ><a [routerLink]=\"['/home/users', friend.userId]\">{{friend.username}}</a></td>\n      <td *ngIf=\"friend && friend._id != user._id\">\n\n      </td>\n    </tr>\n  </table>\n</div>\n-->\n\n<div *ngIf=\"user\">\n<div class=\"row\">\n      <div class=\"col-md-12 text-center \">\n        <div class=\"panel panel-default\">\n          <div class=\"userprofile social \">\n            <div class=\"userpic\" > <img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\"  alt=\"\" class=\"userpicimg\"> </div>\n            <h3 class=\"username\">{{user.firstName}} {{user.lastName}}</h3>\n            <p>{{user.username}}</p>\n            <div class=\"socials tex-center\"> <a href=\"\" class=\"btn btn-circle btn-primary \">\n            <i class=\"fa fa-facebook\"></i></a> <a href=\"\" class=\"btn btn-circle btn-danger \">\n            <i class=\"fa fa-google-plus\"></i></a> <a href=\"\" class=\"btn btn-circle btn-info \">\n            <i class=\"fa fa-twitter\"></i></a> <a href=\"\" class=\"btn btn-circle btn-warning \"><i class=\"fa fa-envelope\"></i></a>\n            </div>\n          </div>\n\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n      <!-- /.col-md-12 -->\n      <div class=\"col-md-4 col-sm-12 pull-right\">\n        <div class=\"panel panel-default\">\n          <div style=\"min-height: 490px;\" class=\"panel-heading\">\n            <h1 class=\"page-header small\">Personal Details</h1>\n              <p>Username: {{user.username}}</p>\n              <p>Email: {{user.email}}</p>\n              <p>First Name: {{user.firstName}}</p>\n              <p>Last Name: {{user.lastName}}</p>\n              <p>Description: {{user.description}}</p>\n            </div>\n\n\n\n          </div>\n\n          <div class=\"col-md-12 photolist\">\n            <div class=\"row\">\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Friends</h1>\n            <p class=\"page-subtitle small\"> {{user.friends.length}} friends</p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n              <span *ngFor=\"let friend of user.friends\" class=\"member\">\n                  <button *ngIf=\"!hasReceivedInviteFromCurrentUser(friend.received_invites) && !isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id\" style=\"display: block; margin-left: -12%; z-index: 1\" class=\"btn btn-link\" (click)=\"sendInvite(friend.userId)\">Friend Request</button>\n                  <a *ngIf=\"friend._id != currentUser._id\" [routerLink]=\"['/home/users', friend.userId]\" > \n                    <img src=\"https://bootdey.com/img/Content/avatar/avatar2.png\" alt=\"\">\n                  </a>\n                  <a *ngIf=\"friend._id == currentUser._id\" [routerLink]=\"['/home/profile/current']\" > \n                    <img src=\"https://bootdey.com/img/Content/avatar/avatar2.png\" alt=\"\">\n                  </a>\n                  <div class=\"memmbername\">\n                    {{friend.firstName}}\n                  <div style=\"display: block; z-index: 1\" *ngIf=\"hasReceivedInviteFromCurrentUser(friend.received_invites)\">Invite Sent</div>\n                  <div style=\"display: block; z-index: 1\" *ngIf=\"isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id\">Your Friend</div>\n                  </div>\n              </span> \n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n      </div>\n      </div>\n\n      <div class=\"col-md-8 col-sm-12 pull-left posttimeline\">\n        <div class=\"panel panel-default\">\n          <div class=\"panel-body\">\n            <div class=\"status-upload nopaddingbtm\">\n              <form>\n                <textarea class=\"form-control\" placeholder=\"What are you doing right now?\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Audio\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Video\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Picture\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Share</button>\n              </form>\n            </div>\n          </div>\n        </div>\n        <div class=\"panel panel-default\">\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"https://bootdey.com/img/Content/avatar/avatar3.png\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">Lucky Sans<br>\n                  <small><i class=\"fa fa-clock-o\"></i> Yesterday, 2:00 am</small> </h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>\n\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> 2015</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> 25</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-share-alt\"></i> 15</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n          <div class=\"col-md-12 commentsblock border-top\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">Astha Smith</h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n              </div>\n            </div>\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">Lucky Sans</h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. </p>\n                <div class=\"media\">\n                  <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n                  <div class=\"media-body\">\n                    <h4 class=\"media-heading\">Astha Smith</h4>\n                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n                  </div>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div class=\"panel panel-default\">\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\"> Lucky Sans<br>\n                  <small><i class=\"fa fa-clock-o\"></i> Yesterday, 2:00 am</small> </h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> 2015</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> 25</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-share-alt\"></i> 15</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n          <div class=\"col-md-12 border-top\">\n            <div class=\"status-upload\">\n              <form>\n                <label>Comment</label>\n                <textarea class=\"form-control\" placeholder=\"Comment here\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Comment</button>\n              </form>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -1379,6 +1551,19 @@ var OtherUserProfileComponent = (function () {
         }
         return false;
     };
+    OtherUserProfileComponent.prototype.hasReceivedInviteFromCurrentUser = function (userReceivedInvites) {
+        var _this = this;
+        // console.log(this.currentUser._id);
+        // console.log(userFriends);
+        var invite = userReceivedInvites.find(function (index) {
+            return index === _this.currentUser._id;
+        });
+        // console.log(friend);
+        if (invite) {
+            return true;
+        }
+        return false;
+    };
     OtherUserProfileComponent.prototype.ngOnDestroy = function () {
         this.subscription.unsubscribe();
     };
@@ -1390,7 +1575,7 @@ OtherUserProfileComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__chat_service__["a" /* ChatService */]) === "function" && _d || Object])
 ], OtherUserProfileComponent);
 
 var _a, _b, _c, _d;
@@ -1406,7 +1591,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, "\n\n/*\n * Base structure\n */\n\n/* Move down content because we have a fixed navbar that is 50px tall */\nbody {\n  padding-top: 50px;\n}\n\n\n/*\n * Global add-ons\n */\n\n.sub-header {\n  padding-bottom: 10px;\n  border-bottom: 1px solid #eee;\n}\n\n/*\n * Top navigation\n * Hide default border to remove 1px line.\n */\n.navbar-fixed-top {\n  border: 0;\n}\n\n/*\n * Sidebar\n */\n\n/* Hide for mobile, show later */\n.sidebar {\n  display: none;\n}\n@media (min-width: 768px) {\n  .sidebar {\n    position: fixed;\n    top: 90px;\n    bottom: 0;\n    left: 0;\n    z-index: 1000;\n    display: block;\n    padding: 20px;\n    overflow-x: hidden;\n    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */\n    background-color: #f5f5f5;\n    border-right: 1px solid #eee;\n  }\n}\n\n/* Sidebar navigation */\n.nav-sidebar {\n  margin-right: -21px; /* 20px padding + 1px border */\n  margin-bottom: 20px;\n  margin-left: -20px;\n}\n.nav-sidebar > li > a {\n  padding-right: 20px;\n  padding-left: 20px;\n}\n.nav-sidebar > .active > a,\n.nav-sidebar > .active > a:hover,\n.nav-sidebar > .active > a:focus {\n  color: #fff;\n  background-color: #428bca;\n}\n\n\n/*\n * Main content\n */\n\n.main {\n  padding: 20px;\n}\n@media (min-width: 768px) {\n  .main {\n    padding-right: 40px;\n    padding-left: 40px;\n  }\n}\n.main .page-header {\n  margin-top: 0;\n}\n\n\n/*\n * Placeholder dashboard ideas\n */\n\n.placeholders {\n  margin-bottom: 30px;\n  text-align: center;\n}\n.placeholders h4 {\n  margin-bottom: 0;\n}\n.placeholder {\n  margin-bottom: 20px;\n}\n.placeholder img {\n  display: inline-block;\n  border-radius: 50%;\n}", ""]);
 
 // exports
 
@@ -1419,7 +1604,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/profile/current-profile/current-profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"currentUser\">\n  <a [routerLink]=\"['/home/profile/edit']\">Edit Profile</a>\n  <p>Username: {{currentUser.username}}</p>\n  <p>Email: {{currentUser.email}}</p>\n  <p>First Name: {{currentUser.firstName}}</p>\n  <p>Last Name: {{currentUser.lastName}}</p>\n  <p>Description: {{currentUser.description}}</p>\n</div>\n"
+module.exports = "<div *ngIf=\"currentUser\">\n  <p class=\"btn btn-link\" style=\"margin-left: -13px;\"><a [routerLink]=\"['/home/profile/edit']\">Edit Profile</a></p>\n  \n  <p>Username: {{currentUser.username}}</p>\n  <p>Email: {{currentUser.email}}</p>\n  <p>First Name: {{currentUser.firstName}}</p>\n  <p>Last Name: {{currentUser.lastName}}</p>\n  <p>Description: {{currentUser.description}}</p>\n</div>\n"
 
 /***/ }),
 
@@ -1480,7 +1665,7 @@ CurrentProfileComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], CurrentProfileComponent);
 
 var _a, _b;
@@ -1493,10 +1678,10 @@ var _a, _b;
 
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
 // imports
-
+exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Lobster);", ""]);
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, "/*panel heading*/\nh1 {\n    text-align:center;\n    font-size: 28px;\n}\n/*panel align center*/\n.col-centered{\n    float: none;\n    margin: 0 auto;\n    padding-top:5px;\n}\n/*property for the bootstrap panel*/\n.panel  {\nbox-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3);\n}\n\n.panel-default > .panel-heading {\n  color: #000 !important;\n  height:80px;\n}\n\n/*property for the HTML input placeholder*/\ninput:focus::-webkit-input-placeholder { color:transparent; }\ninput:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */\ninput:focus::-moz-placeholder { color:transparent; } /* FF 19+ */\ninput:focus::-moz-placeholder { color:transparent; } /* FF 19+ */\ninput:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */\n\n/*property for reset button*/\nbutton[type=\"reset\"]    {\n    background-color:transparent;\n    border:1px solid black;\n}\n\n/*Glyphicon color*/\n.blue   {\n    color: #80bfff;\n}", ""]);
 
 // exports
 
@@ -1509,7 +1694,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/profile/edit-profile/edit-profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"currentUser\">\n  <form (submit)=\"editCurrentUser()\">\n  <input type=\"submit\" value=\"Save\" [disabled] = \"lastName.invalid || firstName.invalid || email.invalid\">\n  <p>Username: {{currentUser.username}}</p>\n  <p>\n    <label>Email: \n        <input \n          type=\"text\" \n          name=\"email\" \n          required \n          pattern='(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))'\n          [(ngModel)]=\"currentUser.email\"\n          #email='ngModel'\n        />\n    </label>\n  </p>\n  <div style=\"color: red;\" *ngIf=\"!email.valid && (email.dirty || email.touched)\">\n    <p *ngIf=\"email.errors.required\">Email is Required</p> \n    <p *ngIf=\"email.errors.pattern\">Please enter a valid email</p> \n  </div>\n    <p>\n      <label>First Name: \n        <input \n          type=\"text\" \n          name=\"firstName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"currentUser.firstName\"\n          #firstName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!firstName.valid && (firstName.dirty || firstName.touched)\">\n    <p *ngIf=\"firstName.errors.required\">First Name is Required</p> \n    <p *ngIf=\"firstName.errors.minlength\">First Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Last Name: \n        <input \n          type=\"text\" \n          name=\"lastName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"currentUser.lastName\"\n          #lastName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!lastName.valid && (lastName.dirty || lastName.touched)\">\n    <p *ngIf=\"lastName.errors.required\">Last Name is Required</p> \n    <p *ngIf=\"lastName.errors.minlength\">Last Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Description (optional): \n        <textarea \n          type=\"text\" \n          name=\"description\" \n          [(ngModel)]=\"currentUser.description\"\n          #description='ngModel'\n        ></textarea>\n      </label>\n    </p>\n  </form>\n</div>\n\n"
+module.exports = "<!--<div *ngIf=\"currentUser\">\n<form>\n  <input style=\"margin-left: -13px;\" class=\"btn btn-link\" type=\"submit\" value=\"Save\" >\n  <p>Username: {{currentUser.username}}</p>\n\n\n    <div class=\"form-group row\">\n      <label for=\"\" class=\"col-2 col-form-label\">First Name:</label> \n      <div class=\"col-10\">\n        <input id=\"\" class=\"form-control\" \n          type=\"text\" \n          name=\"firstName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"currentUser.firstName\"\n          #firstName='ngModel'\n        />\n      </div>\n    </div>\n\n    <div class=\"form-group row\">\n      <label for=\"\" class=\"col-2 col-form-label\">Last Name:</label> \n      <div class=\"col-10\">\n        <input id=\"\" class=\"form-control\" \n          type=\"text\" \n          name=\"lastName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"currentUser.lastName\"\n          #lastName='ngModel'\n        />\n      </div>\n    </div>\n  <div style=\"color: red;\" *ngIf=\"!lastName.valid && (lastName.dirty || lastName.touched)\">\n    <p *ngIf=\"lastName.errors.required\">Last Name is Required</p> \n    <p *ngIf=\"lastName.errors.minlength\">Last Name must be at least 2 characters long</p> \n  </div>\n    <div class=\"form-group row\">\n      <label for=\"\" class=\"col-2 col-form-label\">Description (optional):</label> \n        <input id=\"\" class=\"form-control\"\n          type=\"text\" \n          name=\"description\" \n          [(ngModel)]=\"currentUser.description\"\n          #description='ngModel'\n        />\n      \n    </div>\n  </form>\n</div>-->\n\n<div *ngIf=\"currentUser\" class=\"row\">\n    <div class=\"col-sm-12 col-centered\">\n        <div class=\"panel panel-default\">\n            <!--<div class=\"panel-heading\" >\n                <h1>Edit Personal Details</h1>\n            </div>-->\n      <form (submit)=\"editCurrentUser()\">\n        <div class=\"panel-body\">\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-envelope blue\"></i></span>\n                    <input type=\"text\" \n                            name=\"email\" \n                            required \n                            pattern='(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))'\n                            [(ngModel)]=\"currentUser.email\"\n                            #email='ngModel'\n                            placeholder=\"Email\" class=\"form-control\" \n                    />\n                </div>\n                    <div style=\"color: red;\" *ngIf=\"!email.valid && (email.dirty || email.touched)\">\n                    <p *ngIf=\"email.errors.required\">Email is Required</p> \n                    <p *ngIf=\"email.errors.pattern\">Please enter a valid email</p> \n                  </div>\n            </div>\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-user blue\"></i></span>\n                    <input \n                      type=\"text\" \n                      name=\"firstName\" \n                      required \n                      minlength=\"2\" \n                      [(ngModel)]=\"currentUser.firstName\"\n                      #firstName='ngModel' \n                      placeholder=\"First Name\" \n                      class=\"form-control\">\n                </div>\n                  <div style=\"color: red;\" *ngIf=\"!firstName.valid && (firstName.dirty || firstName.touched)\">\n                  <p *ngIf=\"firstName.errors.required\">First Name is Required</p> \n                  <p *ngIf=\"firstName.errors.minlength\">First Name must be at least 2 characters long</p> \n                </div>\n            </div>\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-user blue\"></i></span>\n                    <input \n                      type=\"text\" \n                      name=\"lastName\" \n                      required \n                      minlength=\"2\" \n                      [(ngModel)]=\"currentUser.lastName\"\n                      #lastName='ngModel'\n                      placeholder=\"Last Name\" \n                      class=\"form-control\">\n                </div>\n                  <div style=\"color: red;\" *ngIf=\"!lastName.valid && (lastName.dirty || lastName.touched)\">\n                    <p *ngIf=\"lastName.errors.required\">Last Name is Required</p> \n                    <p *ngIf=\"lastName.errors.minlength\">Last Name must be at least 2 characters long</p> \n                  </div>\n            </div>\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-comment blue\"></i></span>\n                    <textarea \n                      name=\"description\"\n                      placeholder=\"Description(optional)\"\n                      rows=\"4\" \n                      class=\"form-control\" \n                      [(ngModel)]=\"currentUser.description\"\n                      #description='ngModel'\n                      type=\"text\" ></textarea>\n                </div>\n            </div>\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-picture blue\"></i></span>\n                    <input \n                      name=\"profileImageUrl\"\n                      placeholder=\"Profile Image(optional)\"\n                      class=\"form-control\" \n                      [(ngModel)]=\"currentUser.profileImageUrl\"\n                      #profileImageUrl='ngModel'\n                      type=\"text\" />\n                </div>\n            </div>\n            <div class=\"\">\n            <input type=\"submit\" class=\"btn btn-success pull-right\" [disabled] = \"lastName.invalid || firstName.invalid || email.invalid\" />\n            </div>\n        </div>\n        </form>\n    </div>\n</div>\n</div>"
 
 /***/ }),
 
@@ -1518,9 +1703,10 @@ module.exports = "<div *ngIf=\"currentUser\">\n  <form (submit)=\"editCurrentUse
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EditProfileComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1533,10 +1719,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var EditProfileComponent = (function () {
-    function EditProfileComponent(_apicallService, _router) {
+    function EditProfileComponent(_apicallService, _router, _searchService) {
         this._apicallService = _apicallService;
         this._router = _router;
+        this._searchService = _searchService;
         this.getCurrentUserInSession();
     }
     EditProfileComponent.prototype.getCurrentUserInSession = function () {
@@ -1566,7 +1754,7 @@ var EditProfileComponent = (function () {
         this._apicallService.editCurrentUser(this.currentUser)
             .then(function (data) {
             // console.log('then response to update current user');
-            // console.log(data);
+            _this._searchService.editUserEvent('it happened');
             _this._router.navigate(['/home/profile/current']);
         })
             .catch(function (error) {
@@ -1579,15 +1767,15 @@ var EditProfileComponent = (function () {
     return EditProfileComponent;
 }());
 EditProfileComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["o" /* Component */])({
         selector: 'app-edit-profile',
         template: __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _c || Object])
 ], EditProfileComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=edit-profile.component.js.map
 
 /***/ }),
@@ -1600,7 +1788,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, "\n\n/*\n * Base structure\n */\n\n/* Move down content because we have a fixed navbar that is 50px tall */\nbody {\n  padding-top: 50px;\n}\n\n\n/*\n * Global add-ons\n */\n\n.sub-header {\n  padding-bottom: 10px;\n  border-bottom: 1px solid #eee;\n}\n\n/*\n * Top navigation\n * Hide default border to remove 1px line.\n */\n.navbar-fixed-top {\n  border: 0;\n}\n\n/*\n * Sidebar\n */\n\n/* Hide for mobile, show later */\n.sidebar {\n  display: none;\n}\n@media (min-width: 768px) {\n  .sidebar {\n    position: fixed;\n    top: 90px;\n    bottom: 0;\n    left: 0;\n    z-index: 1000;\n    display: block;\n    padding: 20px;\n    overflow-x: hidden;\n    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */\n    background-color: #f5f5f5;\n    border-right: 1px solid #eee;\n  }\n}\n\n/* Sidebar navigation */\n.nav-sidebar {\n  margin-right: -21px; /* 20px padding + 1px border */\n  margin-bottom: 20px;\n  margin-left: -20px;\n}\n.nav-sidebar > li > a {\n  padding-right: 20px;\n  padding-left: 20px;\n}\n.nav-sidebar > .active > a,\n.nav-sidebar > .active > a:hover,\n.nav-sidebar > .active > a:focus {\n  color: #fff;\n  background-color: #428bca;\n}\n\n\n/*\n * Main content\n */\n\n.main {\n  padding: 20px;\n}\n@media (min-width: 768px) {\n  .main {\n    padding-right: 40px;\n    padding-left: 40px;\n  }\n}\n.main .page-header {\n  margin-top: 0;\n}\n\n\n/*\n * Placeholder dashboard ideas\n */\n\n.placeholders {\n  margin-bottom: 30px;\n  text-align: center;\n}\n.placeholders h4 {\n  margin-bottom: 0;\n}\n.placeholder {\n  margin-bottom: 20px;\n}\n.placeholder img {\n  display: inline-block;\n  border-radius: 50%;\n}\n\n\n\n\n\n\nbody {\n    font-family: 'Roboto', sans-serif;\n    font-weight: 400;\n    background-color: #f0f3f5;\n    margin-top:40px;\n}\n/*==============================*/\n/*====== siderbar user profile =====*/\n/*==============================*/\n.nav>li>a.userdd {\n    padding: 5px 15px\n}\n.userprofile {\n    width: 100%;\n\tfloat: left;\n\tclear: both;\n\tmargin: 40px auto\n}\n.userprofile .userpic {\n\theight: 100px;\n\twidth: 100px;\n\tclear: both;\n\tmargin: 0 auto;\n\tdisplay: block;\n\tborder-radius: 100%;\n\tbox-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-moz-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-webkit-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-ms-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\tposition: relative; \n}\n.userprofile .userpic .userpicimg {\n\theight: auto;\n\twidth: 100%;\n\tborder-radius: 100%;\n}\n.username {\n\tfont-weight: 400;\n\tfont-size: 20px;\n\tline-height: 20px;\n\tcolor: #000000;\n\tmargin-top: 20px;\n\twhite-space: nowrap;\n\toverflow: hidden;\n\ttext-overflow: ellipsis;\n}\n.username+p {\n\tcolor: #607d8b;\n\tfont-size: 13px;\n\tline-height: 15px;\n\twhite-space: nowrap;\n\ttext-overflow: ellipsis;\n\toverflow: hidden;\n}\n.settingbtn {\n\theight: 30px;\n\twidth: 30px;\n\tborder-radius: 30px;\n\tdisplay: block;\n\tposition: absolute;\n\tbottom: 0px;\n\tright: 0px;\n\tline-height: 30px;\n\tvertical-align: middle;\n\ttext-align: center;\n\tpadding: 0;\n\tbox-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.15);\n\t-moz-box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.15);\n\t-webkit-box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.15);\n\t-ms-box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.15);\n}\n.userprofile.small {\n\twidth: auto;\n\tclear: both;\n\tmargin: 0px auto;\n}\n.userprofile.small .userpic {\n\theight: 40px;\n\twidth: 40px;\n\tmargin: 0 10px 0 0;\n\tdisplay: block;\n\tborder-radius: 100%;\n\tbox-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-moz-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-webkit-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\t-ms-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n\tposition: relative;\n\tfloat: left;\n}\n.userprofile.small .textcontainer {\n\tfloat: left;\n\tmax-width: 100px;\n\tpadding: 0\n}\n.userprofile.small .userpic .userpicimg {\n\tmin-height: 100%;\n\twidth: 100%;\n\tborder-radius: 100%;\n}\n.userprofile.small .username {\n\tfont-weight: 400;\n\tfont-size: 16px;\n\tline-height: 21px;\n\tcolor: #000000;\n\tmargin: 0px;\n\tfloat: left;\n\twidth: 100%;\n}\n.userprofile.small .username+p {\n\tcolor: #607d8b;\n\tfont-size: 13px;\n\tfloat: left;\n\twidth: 100%;\n\tmargin: 0;\n}\n/*==============================*/\n/*====== Social Profile css =====*/\n/*==============================*/\n.countlist h3 {\n\tmargin: 0;\n\tfont-weight: 400;\n\tline-height: 28px;\n}\n.countlist {\n\ttext-transform: uppercase\n}\n.countlist li {\n\tpadding: 15px 30px 15px 0;\n\tfont-size: 14px;\n\ttext-align: left;\n}\n.countlist li small {\n\tfont-size: 12px;\n\tmargin: 0\n}\n.followbtn {\n\tfloat: right;\n\tmargin: 22px;\n}\n.userprofile.social {\n\tbackground: url(http://www.prestigepublicity.com/wp-content/uploads/2013/04/bannerdeco.png) no-repeat top center;\n\tbackground-size: 100%;\n\tpadding: 50px 0;\n\tmargin: 0\n}\n.userprofile.social .username {\n\tcolor: #ffffff\n}\n.userprofile.social .username+p {\n\tcolor: #ffffff;\n\topacity: 0.8\n}\n.postbtn {\n\tposition: absolute;\n\tright: 5px;\n\ttop: 5px;\n\tz-index: 9\n}\n.status-upload {\n\twidth: 100%;\n\tfloat: left;\n\tmargin-bottom: 15px\n}\n.posttimeline .panel {\n\tmargin-bottom: 15px\n}\n.commentsblock {\n\tbackground: #f8f9fb;\n}\n.nopaddingbtm {\n\tmargin-bottom: 0\n}\n/*==============================*/\n/*====== Recently connected  heading =====*/\n/*==============================*/\n.memberblock {\n\twidth: 100%;\n\tfloat: left;\n\tclear: both;\n\tmargin-bottom: 15px\n}\n.member {\n\twidth: 24%;\n\tfloat: left;\n\tmargin: 2px 1% 2px 0;\n\tbackground: #ffffff;\n\tborder: 1px solid #d8d0c3;\n\tpadding: 3px;\n\tposition: relative;\n\toverflow: hidden\n}\n.memmbername {\n\tposition: absolute;\n\tbottom: -30px;\n\tbackground: rgba(0, 0, 0, 0.8);\n\tcolor: #ffffff;\n\tline-height: 30px;\n\tpadding: 0 5px;\n\twhite-space: nowrap;\n\ttext-overflow: ellipsis;\n\toverflow: hidden;\n\twidth: 100%;\n\tfont-size: 11px;\n\ttransition: 0.5s ease all;\n}\n.member:hover .memmbername {\n\tbottom: 0\n}\n.member img {\n\twidth: 100%;\n\ttransition: 0.5s ease all;\n}\n.member:hover img {\n\topacity: 0.8;\n\t-webkit-transform: scale(1.2);\n\t        transform: scale(1.2)\n}\n\n.panel-default>.panel-heading {\n    color: #607D8B;\n    background-color: #ffffff;\n    font-weight: 400;\n    font-size: 15px;\n    border-radius: 0;\n    border-color: #e1eaef;\n}\n\n\n\n.btn-circle {\n    width: 30px;\n    height: 30px;\n    padding: 6px 0;\n    border-radius: 15px;\n    text-align: center;\n    font-size: 12px;\n    line-height: 1.428571429;\n}\n\n.page-header.small {\n    position: relative;\n    line-height: 22px;\n    font-weight: 400;\n    font-size: 20px;\n}\n\n.favorite i {\n    color: #eb3147;\n}\n\n.btn i {\n    font-size: 17px;\n}\n\n.panel {\n    box-shadow: 0px 2px 10px 0 rgba(0, 0, 0, 0.05);\n    -moz-box-shadow: 0px 2px 10px 0 rgba(0, 0, 0, 0.05);\n    -webkit-box-shadow: 0px 2px 10px 0 rgba(0, 0, 0, 0.05);\n    -ms-box-shadow: 0px 2px 10px 0 rgba(0, 0, 0, 0.05);\n    transition: all ease 0.5s;\n    -moz-transition: all ease 0.5s;\n    -webkit-transition: all ease 0.5s;\n    -ms-transition: all ease 0.5s;\n    margin-bottom: 35px;\n    border-radius: 0px;\n    position: relative;\n    border: 0;\n    display: inline-block;\n    width: 100%;\n}\n\n.panel-footer {\n    padding: 10px 15px;\n    background-color: #ffffff;\n    border-top: 1px solid #eef2f4;\n    border-bottom-right-radius: 0;\n    border-bottom-left-radius: 0;\n    color: #607d8b;\n}\n\n.panel-blue {\n    color: #ffffff;\n    background-color: #03A9F4;\n}\n\n.panel-red.userlist .username, .panel-green.userlist .username, .panel-yellow.userlist .username, .panel-blue.userlist .username {\n    color: #ffffff;\n}\n\n.panel-red.userlist p, .panel-green.userlist p, .panel-yellow.userlist p, .panel-blue.userlist p {\n    color: rgba(255, 255, 255, 0.8);\n}\n\n.panel-red.userlist p a, .panel-green.userlist p a, .panel-yellow.userlist p a, .panel-blue.userlist p a {\n    color: rgba(255, 255, 255, 0.8);\n}\n\n.progress-bar-success, .status.active, .panel-green, .panel-green > .panel-heading, .btn-success, .fc-event, .badge.green, .event_green {\n    color: white;\n    background-color: #8BC34A;\n}\n\n.progress-bar-warning, .panel-yellow, .status.pending, .panel-yellow > .panel-heading, .btn-warning, .fc-unthemed .fc-today, .badge.yellow, .event_yellow {\n    color: white;\n    background-color: #FFC107;\n}\n\n.progress-bar-danger, .panel-red, .status.inactive, .panel-red > .panel-heading, .btn-danger, .badge.red, .event_red {\n    color: white;\n    background-color: #F44336;\n}\n\n.media-object {\n    max-width: 50px;\n    border-radius: 50px;\n    box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n    -moz-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n    -webkit-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n    -ms-box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.15);\n}\n\n.media:first-child {\n    margin-top: 15px;\n}\n\n.media-object {\n    display: block;\n}\n\n.dotbtn {\n    height: 40px;\n    width: 40px;\n    background: none;\n    border: 0;\n    line-height: 40px;\n    vertical-align: middle;\n    padding: 0;\n    margin-right: -15px;\n}\n\n.dots {\n    height: 4px;\n    width: 4px;\n    position: relative;\n    display: block;\n    background: rgba(0,0,0,0.5);\n    border-radius: 2px;\n    margin: 0 auto;\n}\n\n.dots:after, .dots:before {\n    content: \" \";\n    height: 4px;\n    width: 4px;\n    position: absolute;\n    display: inline-block;\n    background: rgba(0,0,0,0.5);\n    border-radius: 2px;\n    top: -7px;\n    left: 0;\n}\n\n.dots:after {\n    content: \" \";\n    top: auto;\n    bottom: -7px;\n    left: 0;\n}\n\n.photolist img {\n    width: 100%;\n}\n\n.photolist {\n    background: #e1eaef;\n    padding-top: 15px;\n    padding-bottom: 15px;\n}\n\n.profilegallery .grid-item a {\n    height: 100%;\n    display: block;\n}\n\n.grid a {\n    width: 100%;\n    display: block;\n    float: left;\n}\n\n.media-body {\n    color: #607D8B;\n    overflow: visible;\n}", ""]);
 
 // exports
 
@@ -1613,7 +1801,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/profile/profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"currentUser\">\n  <h1>My Profile</h1>\n  <router-outlet></router-outlet>\n  <h3>Invites</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let invite of currentUser.received_invites\">\n      <td>{{invite.username}}</td>\n      <td>\n        <button (click)=\"acceptInvite(invite._id)\">Accept Invite</button>\n        <button (click)=\"rejectInvite(invite._id)\">Reject Invite</button>\n      </td>\n    </tr>\n  </table>\n  <h3>Friends</h3>\n  <table>\n    <tr>\n      <th>Username</th>\n      <th>Actions</th>\n    </tr>\n    <tr *ngFor=\"let friend of currentUser.friends\">\n      <td>\n        <a [routerLink]=\"['/home/users', friend.userId]\">{{friend.username}}</a>\n      </td>\n      <td>\n        <button (click)=\"removeFriend(friend._id)\">Remove Friend</button>\n      </td>\n    </tr>\n  </table>\n</div>\n\n"
+module.exports = "<div *ngIf=\"currentUser\">\n<div class=\"row\">\n      <div class=\"col-md-12 text-center \">\n        <div class=\"panel panel-default\">\n          <div class=\"userprofile social \">\n            <div class=\"userpic\" > <img src=\"{{currentUser.profileImageUrl}}\"  alt=\"\" class=\"userpicimg\"> </div>\n            <h3 class=\"username\">{{currentUser.firstName}} {{currentUser.lastName}}</h3>\n            <p>{{currentUser.username}}</p>\n            <div class=\"socials tex-center\"> <a href=\"\" class=\"btn btn-circle btn-primary \">\n            <i class=\"fa fa-facebook\"></i></a> <a href=\"\" class=\"btn btn-circle btn-danger \">\n            <i class=\"fa fa-google-plus\"></i></a> <a href=\"\" class=\"btn btn-circle btn-info \">\n            <i class=\"fa fa-twitter\"></i></a> <a href=\"\" class=\"btn btn-circle btn-warning \"><i class=\"fa fa-envelope\"></i></a>\n            </div>\n          </div>\n\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n      <!-- /.col-md-12 -->\n      <div class=\"col-md-4 col-sm-12 pull-right\">\n        <div class=\"panel panel-default\">\n          <div style=\"min-height: 490px;\" class=\"panel-heading\">\n            <h1 class=\"page-header small\">Personal Details</h1>\n            <router-outlet></router-outlet>\n          </div>\n\n          <div class=\"col-md-12 photolist\">\n            <div class=\"row\">\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"col-md-12\">\n            <div class=\"panel-body\">\n            <div class=\"tex-center\"> \n              <button (click)=\"checkRecentInvites()\" style=\"border-radius: 24px;\" class=\"btn btn-primary \">\n                Received {{currentUser.received_invites.length}} friend invites\n              </button> \n              <button (click)=\"checkSentInvites()\" style=\"border-radius: 24px;\" class=\"btn btn-info \">\n                Sent {{currentUser.sent_invites.length}} friend invites\n              </button> \n              <button (click)=\"disableCheckInvitesMode()\" class=\"btn btn-circle btn-danger \">\n                <i style=\"font-size: 14px;\" class=\"glyphicon glyphicon-remove\"></i>\n              </button> \n            </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div *ngIf=\"isCheckingRecent\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Most Recent Friend Invites</h1>\n          </div>\n          <div class=\"col-md-12\">\n            <ul class=\"list-group\">\n              <li class=\"list-group-item\" *ngIf=\"currentUser.received_invites.length == 0\">You have no friend invites at this time</li>\n              <li *ngFor=\"let invite of currentUser.received_invites\" class=\"list-group-item\">\n                    <button class=\"btn btn-circle btn-success\" (click)=\"acceptInvite(invite._id)\"><span class=\"glyphicon glyphicon-ok\"></span></button>\n                    <button class=\"btn btn-circle btn-danger\" (click)=\"rejectInvite(invite._id)\"><span class=\"glyphicon glyphicon-remove\"></span></button>\n                    <img style=\"height: 40px;\" src=\"https://bootdey.com/img/Content/avatar/avatar2.png\" alt=\"\">\n                    <a [routerLink]=\"['/home/users', invite.userId]\">{{invite.firstName}}</a> wants to be your friend\n              </li>\n            </ul>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div *ngIf=\"isCheckingSent\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Your Sent Invites</h1>\n          </div>\n          <div class=\"col-md-12\">\n            <ul class=\"list-group\">\n              <li class=\"list-group-item\" *ngIf=\"currentUser.sent_invites.length == 0\">You currently have not sent any invites</li>\n              <li *ngFor=\"let invite of currentUser.sent_invites\" class=\"list-group-item\">\n                    You have sent an invite to <img style=\"height: 40px;\" src=\"https://bootdey.com/img/Content/avatar/avatar2.png\" alt=\"\"> <a [routerLink]=\"['/home/users', invite.userId]\">{{invite.firstName}}</a>\n              </li>\n            </ul>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Friends <button class=\"btn btn-link\" (click)=\"setEditMode()\">Edit</button></h1>\n            <p class=\"page-subtitle small\">You have {{currentUser.friends.length}} friends</p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n              <span *ngFor=\"let friend of currentUser.friends\" class=\"member\">\n                <button *ngIf=\"editMode\" style=\"display: block; margin-left: 6%; z-index: 1\" class=\"btn btn-link\" (click)=\"removeFriend(friend._id)\">Remove</button>\n                <a [routerLink]=\"['/home/users', friend.userId]\" > \n                  <img src=\"https://bootdey.com/img/Content/avatar/avatar2.png\" alt=\"\">\n                </a>\n                <div class=\"memmbername\">{{friend.username}}</div>\n              </span> \n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n\n      <div class=\"col-md-8 col-sm-12 pull-left posttimeline\">\n        <div class=\"panel panel-default\">\n          <div class=\"panel-body\">\n            <div class=\"status-upload nopaddingbtm\">\n              <form>\n                <textarea class=\"form-control\" placeholder=\"What are you doing right now?\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Audio\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Video\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Picture\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Share</button>\n              </form>\n            </div>\n          </div>\n        </div>\n        <div class=\"panel panel-default\">\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"https://bootdey.com/img/Content/avatar/avatar3.png\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">Lucky Sans<br>\n                  <small><i class=\"fa fa-clock-o\"></i> Yesterday, 2:00 am</small> </h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>\n\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> 2015</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> 25</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-share-alt\"></i> 15</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n          <div class=\"col-md-12 commentsblock border-top\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">Astha Smith</h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n              </div>\n            </div>\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">Lucky Sans</h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. </p>\n                <div class=\"media\">\n                  <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n                  <div class=\"media-body\">\n                    <h4 class=\"media-heading\">Astha Smith</h4>\n                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n                  </div>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div class=\"panel panel-default\">\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\"> Lucky Sans<br>\n                  <small><i class=\"fa fa-clock-o\"></i> Yesterday, 2:00 am</small> </h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> 2015</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> 25</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-share-alt\"></i> 15</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n          <div class=\"col-md-12 border-top\">\n            <div class=\"status-upload\">\n              <form>\n                <label>Comment</label>\n                <textarea class=\"form-control\" placeholder=\"Comment here\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Comment</button>\n              </form>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -1622,9 +1810,11 @@ module.exports = "<div *ngIf=\"currentUser\">\n  <h1>My Profile</h1>\n  <router-
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProfileComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1637,70 +1827,72 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var ProfileComponent = (function () {
-    function ProfileComponent(_apicallService, _router) {
+    function ProfileComponent(_apicallService, _router, _chatService, _searchService) {
         this._apicallService = _apicallService;
         this._router = _router;
+        this._chatService = _chatService;
+        this._searchService = _searchService;
+        this.editMode = false;
+        this.isCheckingRecent = false;
+        this.isCheckingSent = false;
         this.getCurrentUserInSession();
     }
     ProfileComponent.prototype.ngOnInit = function () {
+        this.watchForEditUserEvent();
+    };
+    ProfileComponent.prototype.watchForEditUserEvent = function () {
+        var _this = this;
+        this.subscription = this._searchService.editUserEvent$.subscribe(function (search) {
+            // console.log('hiiiii');
+            // console.log(search);
+            _this.getCurrentUserInSession();
+        });
     };
     ProfileComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
-                // console.log(this.currentUser);
             }
             else {
-                // console.log('user not in session');
                 _this._router.navigate(['']);
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
             console.log(error);
             _this._router.navigate(['']);
         });
     };
     ProfileComponent.prototype.acceptInvite = function (invite_id) {
         var _this = this;
-        // console.log('controller accepting invite');
         var receivedInvites = this.currentUser.received_invites;
         for (var _i = 0, receivedInvites_1 = receivedInvites; _i < receivedInvites_1.length; _i++) {
             var invite = receivedInvites_1[_i];
             if (invite._id === invite_id) {
-                // console.log('found invite');
                 var inviteId = { inviteId: invite_id };
                 this._apicallService.addFriendAndUpdateReceivedInvite(inviteId)
                     .then(function (data) {
-                    // console.log('then response addFriendAndUpdateReceivedInvite');
-                    // console.log(data);
                     _this.getCurrentUserInSession();
                 })
                     .catch(function (error) {
-                    // console.log('catch response addFriendAndUpdateReceivedInvite');
-                    // console.log(error);
+                    console.log(error);
                 });
             }
         }
     };
     ProfileComponent.prototype.rejectInvite = function (invite_id) {
         var _this = this;
-        // console.log('controller rejecting invite');
         var receivedInvites = this.currentUser.received_invites;
         for (var _i = 0, receivedInvites_2 = receivedInvites; _i < receivedInvites_2.length; _i++) {
             var invite = receivedInvites_2[_i];
             if (invite._id === invite_id) {
-                // console.log('found invite');
                 var inviteId = { inviteId: invite_id };
                 this._apicallService.rejectInvite(inviteId)
                     .then(function (data) {
-                    // console.log('then response rejectInvite');
-                    // console.log(data);
                     _this.getCurrentUserInSession();
                 })
                     .catch(function (error) {
@@ -1712,17 +1904,13 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.removeFriend = function (friend_id) {
         var _this = this;
-        // console.log('controller removing friend');
         var friendList = this.currentUser.friends;
         for (var _i = 0, friendList_1 = friendList; _i < friendList_1.length; _i++) {
             var friend = friendList_1[_i];
             if (friend._id === friend_id) {
-                // console.log('found invite');
                 var friendId = { friendId: friend_id };
                 this._apicallService.removeFriend(friendId)
                     .then(function (data) {
-                    // console.log('then response removeFriend');
-                    // console.log(data);
                     _this.getCurrentUserInSession();
                 })
                     .catch(function (error) {
@@ -1732,18 +1920,48 @@ var ProfileComponent = (function () {
             }
         }
     };
+    ProfileComponent.prototype.setEditMode = function () {
+        if (!this.editMode) {
+            this.editMode = true;
+        }
+        else {
+            this.editMode = false;
+        }
+    };
+    ProfileComponent.prototype.checkRecentInvites = function () {
+        if (!this.isCheckingRecent) {
+            this.isCheckingRecent = true;
+        }
+        if (this.isCheckingSent) {
+            this.isCheckingSent = false;
+        }
+    };
+    ProfileComponent.prototype.checkSentInvites = function () {
+        if (!this.isCheckingSent) {
+            this.isCheckingSent = true;
+        }
+        if (this.isCheckingRecent) {
+            this.isCheckingRecent = false;
+        }
+    };
+    ProfileComponent.prototype.disableCheckInvitesMode = function () {
+        if (this.isCheckingRecent || this.isCheckingSent) {
+            this.isCheckingRecent = false;
+            this.isCheckingSent = false;
+        }
+    };
     return ProfileComponent;
 }());
 ProfileComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
         selector: 'app-profile',
         template: __webpack_require__("../../../../../src/app/profile/profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/profile/profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
 ], ProfileComponent);
 
-var _a, _b;
+var _a, _b, _c, _d;
 //# sourceMappingURL=profile.component.js.map
 
 /***/ }),
@@ -1756,7 +1974,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, "#flipkart-navbar {\n    background-color: #2874f0;\n    color: #FFFFFF;\n}\n\n.row1{\n    padding-top: 10px;\n}\n\n.row2 {\n    padding-bottom: 20px;\n}\n\n.flipkart-navbar-input {\n    padding: 11px 16px;\n    border-radius: 2px 0 0 2px;\n    border: 0 none;\n    outline: 0 none;\n    font-size: 15px;\n}\n\n.flipkart-navbar-button {\n    background-color: #ffe11b;\n    border: 1px solid #ffe11b;\n    border-radius: 0 2px 2px 0;\n    color: #565656;\n    padding: 10px 0;\n    height: 43px;\n    cursor: pointer;\n}\n\n.cart-button {\n    background-color: #2469d9;\n    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .23), inset 1px 1px 0 0 hsla(0, 0%, 100%, .2);\n    padding: 10px 0;\n    text-align: center;\n    height: 41px;\n    border-radius: 2px;\n    font-weight: 500;\n    width: 120px;\n    display: inline-block;\n    color: #FFFFFF;\n    text-decoration: none;\n    color: inherit;\n    border: none;\n    outline: none;\n}\n\n.cart-button:hover{\n    text-decoration: none;\n    color: #fff;\n    cursor: pointer;\n}\n\n.cart-svg {\n    display: inline-block;\n    width: 16px;\n    height: 16px;\n    vertical-align: middle;\n    margin-right: 8px;\n}\n\n.item-number {\n    border-radius: 3px;\n    background-color: rgba(0, 0, 0, .1);\n    height: 20px;\n    padding: 3px 6px;\n    font-weight: 500;\n    display: inline-block;\n    color: #fff;\n    line-height: 12px;\n    margin-left: 10px;\n}\n\n.upper-links {\n    display: inline-block;\n    padding: 0 11px;\n    line-height: 23px;\n    font-family: 'Roboto', sans-serif;\n    letter-spacing: 0;\n    color: inherit;\n    border: none;\n    outline: none;\n    font-size: 12px;\n}\n\n.dropdown {\n    position: relative;\n    display: inline-block;\n    margin-bottom: 0px;\n}\n\n.dropdown:hover {\n    background-color: #fff;\n}\n\n.dropdown:hover .links {\n    color: #000;\n}\n\n.dropdown:hover .dropdown-menu {\n    display: block;\n}\n\n.dropdown .dropdown-menu {\n    position: absolute;\n    top: 100%;\n    display: none;\n    background-color: #fff;\n    color: #333;\n    left: 0px;\n    border: 0;\n    border-radius: 0;\n    box-shadow: 0 4px 8px -3px #555454;\n    margin: 0;\n    padding: 0px;\n}\n\n.links {\n    color: #fff;\n    text-decoration: none;\n}\n\n.links:hover {\n    color: #fff;\n    text-decoration: none;\n}\n\n.profile-links {\n    font-size: 12px;\n    font-family: 'Roboto', sans-serif;\n    border-bottom: 1px solid #e9e9e9;\n    box-sizing: border-box;\n    display: block;\n    padding: 0 11px;\n    line-height: 23px;\n}\n\n.profile-li{\n    padding-top: 2px;\n}\n\n.largenav {\n    display: none;\n}\n\n.smallnav{\n    display: block;\n}\n\n.smallsearch{\n    margin-left: 15px;\n    margin-top: 15px;\n}\n\n.menu{\n    cursor: pointer;\n}\n\n@media screen and (min-width: 768px) {\n    .largenav {\n        display: block;\n    }\n    .smallnav{\n        display: none;\n    }\n    .smallsearch{\n        margin: 0px;\n    }\n}\n\n/*Sidenav*/\n.sidenav {\n    height: 100%;\n    width: 0;\n    position: fixed;\n    z-index: 1;\n    top: 0;\n    left: 0;\n    background-color: #fff;\n    overflow-x: hidden;\n    transition: 0.5s;\n    box-shadow: 0 4px 8px -3px #555454;\n    padding-top: 0px;\n}\n\n.sidenav a {\n    padding: 8px 8px 8px 32px;\n    text-decoration: none;\n    font-size: 25px;\n    color: #818181;\n    display: block;\n    transition: 0.3s\n}\n\n.sidenav .closebtn {\n    position: absolute;\n    top: 0;\n    right: 25px;\n    font-size: 36px;\n    margin-left: 50px;\n    color: #fff;        \n}\n\n@media screen and (max-height: 450px) {\n  .sidenav a {font-size: 18px;}\n}\n\n.sidenav-heading{\n    font-size: 36px;\n    color: #fff;\n}", ""]);
 
 // exports
 
@@ -1769,7 +1987,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/registration/registration.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<fieldset>\n  <legend>Registration</legend>\n    <div style=\"color: red;\" *ngIf=\"isDuplicate && username\">\n    <p *ngIf=\"username.errors.required\">Username has already been taken.</p> \n  </div>\n  <form (submit)=\"registerUser(); form.reset()\" #form=\"ngForm\" >\n    <p>\n      <label>Username: \n        <input \n          type=\"text\" \n          name=\"username\" \n          required \n          minlength=\"5\" \n          [(ngModel)]=\"user.username\"\n          #username='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!username.valid && (username.dirty || username.touched)\">\n    <p *ngIf=\"username.errors.required\">Username is Required</p> \n    <p *ngIf=\"username.errors.minlength\">Username must be at least 5 characters long</p> \n  </div>\n    <p>\n      <label>Email: \n          <input \n            type=\"text\" \n            name=\"email\" \n            required \n            pattern='(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))'\n            [(ngModel)]=\"user.email\"\n            #email='ngModel'\n          />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!email.valid && (email.dirty || email.touched)\">\n    <p *ngIf=\"email.errors.required\">Email is Required</p> \n    <p *ngIf=\"email.errors.pattern\">Please enter a valid email</p> \n  </div>\n    <p>\n      <label>First Name: \n        <input \n          type=\"text\" \n          name=\"firstName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"user.firstName\"\n          #firstName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!firstName.valid && (firstName.dirty || firstName.touched)\">\n    <p *ngIf=\"firstName.errors.required\">First Name is Required</p> \n    <p *ngIf=\"firstName.errors.minlength\">First Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Last Name: \n        <input \n          type=\"text\" \n          name=\"lastName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"user.lastName\"\n          #lastName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!lastName.valid && (lastName.dirty || lastName.touched)\">\n    <p *ngIf=\"lastName.errors.required\">Last Name is Required</p> \n    <p *ngIf=\"lastName.errors.minlength\">Last Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Password: \n        <input \n          type=\"password\" \n          name=\"password\" \n          required \n          minlength=\"8\" \n          [(ngModel)]=\"user.password\"\n          #password='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!password.valid && (password.dirty || password.touched)\">\n    <p *ngIf=\"password.errors.required\">Password is Required</p> \n    <p *ngIf=\"password.errors.minlength\">Password must be at least 8 characters long</p> \n  </div>\n    <p>\n      <label>Password Confirmation: \n        <input type=\"password\" name=\"passwordConfirmation\" required [(ngModel)] = \"user.passwordConfirmation\" pattern=\"{{user.password}}\" #passwordConfirmation=\"ngModel\"/>\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!passwordConfirmation.valid && (passwordConfirmation.dirty || passwordConfirmation.touched)\">\n    <p *ngIf=\"passwordConfirmation.errors.required\">Password Confirmation is Required</p> \n    <p *ngIf=\"passwordConfirmation.errors.pattern\">Password Confirmation must match with Password</p> \n  </div>\n    <input type=\"submit\" value=\"Register\" [disabled] = \"password.invalid || lastName.invalid || firstName.invalid || passwordConfirmation.invalid || email.invalid || username.invalid\">\n  </form>\n</fieldset>\n"
+module.exports = "<fieldset>\n  <legend>Registration</legend>\n    <div style=\"color: red;\" *ngIf=\"isDuplicate && username\">\n    <p *ngIf=\"username.errors.required\">Username has already been taken.</p> \n  </div>\n  <form (submit)=\"registerUser(); form.reset()\" #form=\"ngForm\" >\n    <p>\n      <label>Username: \n        <input \n          type=\"text\" \n          name=\"username\" \n          required \n          minlength=\"5\" \n          [(ngModel)]=\"user.username\"\n          #username='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!username.valid && (username.dirty || username.touched)\">\n    <p *ngIf=\"username.errors.required\">Username is Required</p> \n    <p *ngIf=\"username.errors.minlength\">Username must be at least 5 characters long</p> \n  </div>\n    <p>\n      <label>Email: \n          <input \n            type=\"text\" \n            name=\"email\" \n            required \n            pattern='(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))'\n            [(ngModel)]=\"user.email\"\n            #email='ngModel'\n          />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!email.valid && (email.dirty || email.touched)\">\n    <p *ngIf=\"email.errors.required\">Email is Required</p> \n    <p *ngIf=\"email.errors.pattern\">Please enter a valid email</p> \n  </div>\n    <p>\n      <label>First Name: \n        <input \n          type=\"text\" \n          name=\"firstName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"user.firstName\"\n          #firstName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!firstName.valid && (firstName.dirty || firstName.touched)\">\n    <p *ngIf=\"firstName.errors.required\">First Name is Required</p> \n    <p *ngIf=\"firstName.errors.minlength\">First Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Last Name: \n        <input \n          type=\"text\" \n          name=\"lastName\" \n          required \n          minlength=\"2\" \n          [(ngModel)]=\"user.lastName\"\n          #lastName='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!lastName.valid && (lastName.dirty || lastName.touched)\">\n    <p *ngIf=\"lastName.errors.required\">Last Name is Required</p> \n    <p *ngIf=\"lastName.errors.minlength\">Last Name must be at least 2 characters long</p> \n  </div>\n    <p>\n      <label>Password: \n        <input \n          type=\"password\" \n          name=\"password\" \n          required \n          minlength=\"8\" \n          [(ngModel)]=\"user.password\"\n          #password='ngModel'\n        />\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!password.valid && (password.dirty || password.touched)\">\n    <p *ngIf=\"password.errors.required\">Password is Required</p> \n    <p *ngIf=\"password.errors.minlength\">Password must be at least 8 characters long</p> \n  </div>\n    <p>\n      <label>Password Confirmation: \n        <input type=\"password\" name=\"passwordConfirmation\" required [(ngModel)] = \"user.passwordConfirmation\" pattern=\"{{user.password}}\" #passwordConfirmation=\"ngModel\"/>\n      </label>\n    </p>\n  <div style=\"color: red;\" *ngIf=\"!passwordConfirmation.valid && (passwordConfirmation.dirty || passwordConfirmation.touched)\">\n    <p *ngIf=\"passwordConfirmation.errors.required\">Password Confirmation is Required</p> \n    <p *ngIf=\"passwordConfirmation.errors.pattern\">Password Confirmation must match with Password</p> \n  </div>\n    <input type=\"submit\" value=\"Register\" [disabled] = \"password.invalid || lastName.invalid || firstName.invalid || passwordConfirmation.invalid || email.invalid || username.invalid\">\n  </form>\n</fieldset>\n\n\n\n\n"
 
 /***/ }),
 
@@ -1840,7 +2058,7 @@ RegistrationComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/registration/registration.component.html"),
         styles: [__webpack_require__("../../../../../src/app/registration/registration.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], RegistrationComponent);
 
 var _a, _b;
@@ -1931,7 +2149,7 @@ SearchManagerComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/search-manager/search-manager.component.html"),
         styles: [__webpack_require__("../../../../../src/app/search-manager/search-manager.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object])
 ], SearchManagerComponent);
 
 var _a, _b;
@@ -2112,7 +2330,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/search-manager/search-rooms/search-rooms.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Search User Results</h1>\n<table>\n  <tr>\n    <th>Title</th>\n    <th>Owner</th>\n  </tr>\n  <tr *ngFor=\"let room of showSearchResultRooms\">\n      <td><a [routerLink]=\"['/home/room', room.roomId]\">{{room.title}}</a>\n      </td>\n      <td><a [routerLink]=\"['/home/users', room._owner.userId]\">{{room._owner.username}}</a>\n      </td>\n  </tr>\n</table>"
+module.exports = "<h1>Search User Results</h1>\n<table>\n  <tr>\n    <th>Title</th>\n    <th>Owner</th>\n  </tr>\n  <tr *ngFor=\"let room of showSearchResultRooms\">\n      <td><a [routerLink]=\"['/home/room', room.roomId]\">{{room.title}}</a>\n      </td>\n      <td><a [routerLink]=\"['/home/users', room._owner.userId]\">{{room._owner.username}}</a>\n      </td>\n  </tr>\n</table>\n\n\n\n\n<div class=\"mb20\">\n\t\t<h2 class=\"lead\"><strong class=\"text-danger\">{{showSearchResultUsers.length}}</strong> results were found for the search for <strong class=\"text-danger\">{{searchVal}}</strong></h2>\t\t\t\t\t\t\t\t\n</div>\n\n    <section class=\"col-xs-12 col-sm-6 col-md-12\">\n<div *ngFor=\"let user of showSearchResultRooms\">\n\t\t<article class=\"search-result row\">\n\t\t\t<div *ngIf=\"user && user._id != currentUser._id\" class=\"col-xs-12 col-sm-12 col-md-3\">\n\t\t\t\t<a [routerLink]=\"['/home/users', user.userId]\" title=\"Lorem ipsum\" class=\"thumbnail\">{{user.title[0]}}</a>\n\t\t\t</div>\n\t\t\t<div *ngIf=\"user && user._id == currentUser._id\" class=\"col-xs-12 col-sm-12 col-md-3\">\n\t\t\t\t<a [routerLink]=\"['/home/profile/current']\" title=\"Lorem ipsum\" class=\"thumbnail\"><img class=\"img-fluid\" style=\"max-width:43%\" src=\"{{user.profileImageUrl}}\" alt=\"Lorem ipsum\" /></a>\n\t\t\t</div>\n\t\t\t<div class=\"col-xs-12 col-sm-12 col-md-2\">\n\t\t\t\t<ul class=\"meta-search\">\n\t\t\t\t\t<li *ngIf=\"user.received_invites.includes(currentUser._id)\"><i class=\"glyphicon glyphicon-ok-circle\"></i> <span>Invite Sent</span></li>\n\t\t\t\t\t<li *ngIf=\"isFriendOfCurrentUser(user.friends)\"><i class=\"glyphicon glyphicon-tags\"></i> <span>Friend</span></li>\n\t\t\t\t\t<li *ngIf=\"!user.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(user.friends) && user._id != currentUser._id\"><i class=\"glyphicon glyphicon-share-alt\"></i> <button class=\"btn btn-link\" (click)=\"sendInvite(user.userId)\">Send Invite</button></li>\n\t\t\t\t\t<li><i class=\"glyphicon glyphicon-eye-open\"></i> <span>Username: {{user.username}}</span></li>\n\t\t\t\t\t<li><i class=\"glyphicon glyphicon-info-sign\"></i> <span>Name: {{user.firstName}} {{user.lastName}}</span></li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t\t<div *ngIf=\"user && user._id != currentUser._id\" class=\"col-xs-12 col-sm-12 col-md-7 excerpet\">\n\t\t\t\t<h3>Description</h3>\n\t\t\t\t<p>{{user.description}}</p>\t\t\t\t\t\t\n                <span class=\"plus\"  ><a style=\"color: white;\" [routerLink]=\"['/home/users', user.userId]\" title=\"Lorem ipsum\"><i class=\"glyphicon glyphicon-plus\"></i>  See More</a></span>\n\t\t\t</div>\n\t\t\t<div *ngIf=\"user && user._id == currentUser._id\" class=\"col-xs-12 col-sm-12 col-md-7 excerpet\">\n\t\t\t\t<h3>Description</h3>\n\t\t\t\t<p>{{user.description}}</p>\t\t\t\t\t\t\n                <span class=\"plus\"  ><a style=\"color: white;\" [routerLink]=\"['/home/profile/current']\" title=\"Lorem ipsum\"><i class=\"glyphicon glyphicon-plus\"></i>  See More</a></span>\n\t\t\t</div>\n\t\t\t<span class=\"clearfix borda\"></span>\n\t\t</article>\t\n</div>"
 
 /***/ }),
 
@@ -2192,7 +2410,7 @@ SearchRoomsComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/search-manager/search-rooms/search-rooms.component.html"),
         styles: [__webpack_require__("../../../../../src/app/search-manager/search-rooms/search-rooms.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
 ], SearchRoomsComponent);
 
 var _a, _b, _c, _d;
@@ -2205,10 +2423,10 @@ var _a, _b, _c, _d;
 
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
 // imports
-
+exports.push([module.i, "@import url(http://fonts.googleapis.com/css?family=Roboto:300,400,500,700);", ""]);
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".container { margin-top: 20px; }\n.mb20 { margin-bottom: 20px; } \n\nhgroup { padding-left: 15px; border-bottom: 1px solid #ccc; }\nhgroup h1 { font: 500 normal 1.625em \"Roboto\",Arial,Verdana,sans-serif; color: #2a3644; margin-top: 0; line-height: 1.15; }\nhgroup h2.lead { font: normal normal 1.125em \"Roboto\",Arial,Verdana,sans-serif; color: #2a3644; margin: 0; padding-bottom: 10px; }\n\n.search-result .thumbnail { border-radius: 0 !important; }\n.search-result:first-child { margin-top: 0 !important; }\n.search-result { margin-top: 20px; }\n.search-result .col-md-2 { border-right: 1px dotted #ccc; min-height: 140px; }\n.search-result ul { padding-left: 0 !important; list-style: none;  }\n.search-result ul li { font: 400 normal .85em \"Roboto\",Arial,Verdana,sans-serif;  line-height: 30px; }\n.search-result ul li i { padding-right: 5px; }\n.search-result .col-md-7 { position: relative; }\n.search-result h3 { font: 500 normal 1.375em \"Roboto\",Arial,Verdana,sans-serif; margin-top: 0 !important; margin-bottom: 10px !important; }\n.search-result h3 > a, .search-result i { color: #248dc1 !important; }\n.search-result p { font: normal normal 1.125em \"Roboto\",Arial,Verdana,sans-serif; } \n.search-result span.plus { position: absolute; right: 0; top: 126px; }\n.search-result span.plus a { background-color: #248dc1; padding: 5px 5px 3px 5px; }\n.search-result span.plus a:hover { background-color: #414141; }\n.search-result span.plus a i { color: #fff !important; }\n.search-result span.border { display: block; width: 97%; margin: 0 15px; border-bottom: 1px dotted #ccc; }", ""]);
 
 // exports
 
@@ -2221,7 +2439,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/search-manager/search-users/search-users.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Search User Results</h1>\n<table>\n  <tr>\n    <th>Username</th>\n    <th>Actions</th>\n  </tr>\n  <tr *ngFor=\"let user of showSearchResultUsers\">\n      <td *ngIf=\"user && user._id != currentUser._id\">{{user.username}}</td>\n      <td *ngIf=\"user && user._id != currentUser._id\">\n        <a [routerLink]=\"['/home/users', user.userId]\">Show Profile</a>\n        <button *ngIf=\"!user.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(user.friends)\" (click)=\"sendInvite(user.userId)\">Send Invite</button>\n        <span *ngIf=\"user.received_invites.includes(currentUser._id)\">Invite Sent</span>\n        <span *ngIf=\"isFriendOfCurrentUser(user.friends)\">Friend</span>\n      </td>\n  </tr>\n</table>"
+module.exports = "\n\n    <div class=\"mb20\">\n\t\t<h2 class=\"lead\"><strong class=\"text-danger\">{{showSearchResultUsers.length}}</strong> results were found for the search for <strong class=\"text-danger\">{{searchVal}}</strong></h2>\t\t\t\t\t\t\t\t\n\t</div>\n\n    <section class=\"col-xs-12 col-sm-6 col-md-12\">\n<div *ngFor=\"let user of showSearchResultUsers\">\n\t\t<article class=\"search-result row\">\n\t\t\t<div *ngIf=\"user && user._id != currentUser._id\" class=\"col-xs-12 col-sm-12 col-md-3\">\n\t\t\t\t<a [routerLink]=\"['/home/users', user.userId]\" title=\"Lorem ipsum\" class=\"thumbnail\"><img class=\"img-fluid\" style=\"max-width:43%\" src=\"{{user.profileImageUrl}}\" alt=\"Lorem ipsum\" /></a>\n\t\t\t</div>\n\t\t\t<div *ngIf=\"user && user._id == currentUser._id\" class=\"col-xs-12 col-sm-12 col-md-3\">\n\t\t\t\t<a [routerLink]=\"['/home/profile/current']\" title=\"Lorem ipsum\" class=\"thumbnail\"><img class=\"img-fluid\" style=\"max-width:43%\" src=\"{{user.profileImageUrl}}\" alt=\"Lorem ipsum\" /></a>\n\t\t\t</div>\n\t\t\t<div class=\"col-xs-12 col-sm-12 col-md-2\">\n\t\t\t\t<ul class=\"meta-search\">\n\t\t\t\t\t<li *ngIf=\"user.received_invites.includes(currentUser._id)\"><i class=\"glyphicon glyphicon-ok-circle\"></i> <span>Invite Sent</span></li>\n\t\t\t\t\t<li *ngIf=\"isFriendOfCurrentUser(user.friends)\"><i class=\"glyphicon glyphicon-tags\"></i> <span>Friend</span></li>\n\t\t\t\t\t<li *ngIf=\"!user.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(user.friends) && user._id != currentUser._id\"><i class=\"glyphicon glyphicon-share-alt\"></i> <button class=\"btn btn-link\" (click)=\"sendInvite(user.userId)\">Send Invite</button></li>\n\t\t\t\t\t<li><i class=\"glyphicon glyphicon-eye-open\"></i> <span>Username: {{user.username}}</span></li>\n\t\t\t\t\t<li><i class=\"glyphicon glyphicon-info-sign\"></i> <span>Name: {{user.firstName}} {{user.lastName}}</span></li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t\t<div *ngIf=\"user && user._id != currentUser._id\" class=\"col-xs-12 col-sm-12 col-md-7 excerpet\">\n\t\t\t\t<h3>Description</h3>\n\t\t\t\t<p>{{user.description}}</p>\t\t\t\t\t\t\n                <span class=\"plus\"  ><a style=\"color: white;\" [routerLink]=\"['/home/users', user.userId]\" title=\"Lorem ipsum\"><i class=\"glyphicon glyphicon-plus\"></i>  See More</a></span>\n\t\t\t</div>\n\t\t\t<div *ngIf=\"user && user._id == currentUser._id\" class=\"col-xs-12 col-sm-12 col-md-7 excerpet\">\n\t\t\t\t<h3>Description</h3>\n\t\t\t\t<p>{{user.description}}</p>\t\t\t\t\t\t\n                <span class=\"plus\"  ><a style=\"color: white;\" [routerLink]=\"['/home/profile/current']\" title=\"Lorem ipsum\"><i class=\"glyphicon glyphicon-plus\"></i>  See More</a></span>\n\t\t\t</div>\n\t\t\t<span class=\"clearfix borda\"></span>\n\t\t</article>\t\n</div>\n\n\t</section>"
 
 /***/ }),
 
@@ -2356,7 +2574,7 @@ SearchUsersComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.html"),
         styles: [__webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
 ], SearchUsersComponent);
 
 var _a, _b, _c, _d;
@@ -2370,8 +2588,10 @@ var _a, _b, _c, _d;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__ = __webpack_require__("../../../../rxjs/BehaviorSubject.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__ = __webpack_require__("../../../../rxjs/Subject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__ = __webpack_require__("../../../../rxjs/BehaviorSubject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2383,16 +2603,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var SearchService = (function () {
     function SearchService() {
         // Observable string sources
-        this.searchValueSource = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["BehaviorSubject"]('');
-        this.searchValueMusicSource = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["BehaviorSubject"]('');
-        this.searchRoomSource = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["BehaviorSubject"]('');
+        this.searchValueSource = new __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__["BehaviorSubject"]('');
+        this.searchValueMusicSource = new __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__["BehaviorSubject"]('');
+        this.searchRoomSource = new __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__["BehaviorSubject"]('');
+        this.editUserEventSource = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
         // Observable string streams
         this.searchValue$ = this.searchValueSource.asObservable();
         this.searchRoom$ = this.searchRoomSource.asObservable();
         this.searchValueMusic$ = this.searchValueMusicSource.asObservable();
+        this.editUserEvent$ = this.editUserEventSource.asObservable();
     }
     // Service message commands
     SearchService.prototype.searchUsers = function (searchVal) {
@@ -2404,6 +2627,9 @@ var SearchService = (function () {
     SearchService.prototype.searchMusic = function (searchVal) {
         this.searchValueMusicSource.next(searchVal);
     };
+    SearchService.prototype.editUserEvent = function (event) {
+        this.editUserEventSource.next(event);
+    };
     return SearchService;
 }());
 SearchService = __decorate([
@@ -2412,139 +2638,6 @@ SearchService = __decorate([
 ], SearchService);
 
 //# sourceMappingURL=search.service.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/session-handler/session-handler.component.css":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ "../../../../../src/app/session-handler/session-handler.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<p>\n  session-handler works!\n</p>\n"
-
-/***/ }),
-
-/***/ "../../../../../src/app/session-handler/session-handler.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SessionHandlerComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__ = __webpack_require__("../../../../ts-md5/dist/md5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__ = __webpack_require__("../../../../../src/app/last-fm-api.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-var SessionHandlerComponent = (function () {
-    function SessionHandlerComponent(_route, _lastfmApiService, _apiCallService, _md5) {
-        var _this = this;
-        this._route = _route;
-        this._lastfmApiService = _lastfmApiService;
-        this._apiCallService = _apiCallService;
-        this._md5 = _md5;
-        this.subscription = this._route.events.subscribe(function (data) {
-            if (data instanceof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* NavigationEnd */]) {
-                var params = new __WEBPACK_IMPORTED_MODULE_5__angular_http__["c" /* URLSearchParams */](data.url.split('?')[1]);
-                _this.authToken = params.get('token');
-                console.log(_this.authToken);
-                _this.apiSig = _this.hashIntoApiSig(_this.authToken);
-                console.log(_this.apiSig);
-                _this.fetchLastFmSessionToken(_this.authToken, _this.apiSig);
-                console.log(_this.lastFmSessionToken);
-                _this._route.navigate(['/home']);
-            }
-        });
-    }
-    SessionHandlerComponent.prototype.ngOnInit = function () {
-    };
-    SessionHandlerComponent.prototype.ngOnDestroy = function () {
-        this.subscription.unsubscribe();
-    };
-    SessionHandlerComponent.prototype.hashIntoApiSig = function (token) {
-        var apikey = 'c595e718d23c51ef68c0d547f1511fe7';
-        var apisecret = 'e66072ab2029e8df10acdf1845093b59';
-        var hash = this._md5.appendStr('api_key' + apikey + 'methodauth.getSessiontoken' + token + apisecret).end();
-        return hash;
-    };
-    SessionHandlerComponent.prototype.fetchLastFmSessionToken = function (authToken, apiSig) {
-        var _this = this;
-        this._lastfmApiService.getAuthSession(authToken, apiSig)
-            .then(function (data) {
-            console.log('then response fetchLastFmSessionToken');
-            console.log(data);
-            _this.lastFmSessionToken = data.session.key;
-            _this.lastFmSessionSig = _this.hashIntoApiSig(_this.lastFmSessionToken);
-            _this.saveLastFmSessionTokenAndSigToUserInSession(_this.lastFmSessionToken, _this.lastFmSessionSig);
-        })
-            .catch(function (error) {
-            console.log(error);
-        });
-    };
-    SessionHandlerComponent.prototype.saveLastFmSessionTokenAndSigToUserInSession = function (lastFmSessionT, lastFMSessionS) {
-        var _this = this;
-        var lastFmSessionData = { lastFmSession: lastFmSessionT, lastFmSessionSig: lastFMSessionS };
-        this._apiCallService.saveLastFmSessionTokenAndSigToUserInSession(lastFmSessionData)
-            .then(function (data) {
-            console.log('then response saveLastFmSessionTokenAndSigToUserInSession');
-            console.log(data);
-            if (data) {
-                _this._route.navigate(['home']);
-            }
-            else {
-                console.log('error adding token to currentUser');
-                _this._apiCallService.logoutUser();
-                _this._route.navigate(['']);
-            }
-        })
-            .catch(function (error) {
-            console.log(error);
-        });
-    };
-    return SessionHandlerComponent;
-}());
-SessionHandlerComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
-        selector: 'app-session-handler',
-        template: __webpack_require__("../../../../../src/app/session-handler/session-handler.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/session-handler/session-handler.component.css")]
-    }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__["a" /* LastFmApiService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__last_fm_api_service__["a" /* LastFmApiService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_call_service__["a" /* ApiCallService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__["Md5"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0_ts_md5_dist_md5__["Md5"]) === "function" && _d || Object])
-], SessionHandlerComponent);
-
-var _a, _b, _c, _d;
-//# sourceMappingURL=session-handler.component.js.map
 
 /***/ }),
 

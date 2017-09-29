@@ -1,35 +1,30 @@
-<p>You now in dashboard</p>
 
 <!-- <router-outlet></router-outlet> -->
 <!-- <a [routerLink]="['room']">qqqq</a> -->
-<fieldset class="wrapper">
-    <legend>Dashboard Page</legend>
-    <fieldset class="joined inblock">
-        <legend>Joined Rooms</legend>
-        <a [routerLink]='["room","new"]' >Create Room</a>
-        <div *ngFor="let room of currentUser.joinedRooms">
-            <a [routerLink]="['room', room.roomId]">{{room.title}}</a>
+<div *ngIf="currentUser">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+            <li class="active"><a [routerLink]='["room","new"]'>Friends Online</a></li>
+            <li *ngFor="let friend of onlineFriends">
+                <a [routerLink]="['home','users', friend.userId]">{{friend.username}}</a>
+            </li>
+            </ul>
+            <ul class="nav nav-sidebar">
+            <li class="active"><a [routerLink]='["room","new"]'>+ Create Room</a></li>
+            <li *ngFor="let room of currentUser.joinedRooms">
+                <a [routerLink]="['room', room.roomId]">{{room.title}}</a>
+            </li>
+            </ul>
         </div>
-    </fieldset>
-    <fieldset class="main inblock">
-        <legend>Main View</legend>
-        <fieldset class="router">
-            <legend>Router-Outlet</legend>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+           
             <router-outlet></router-outlet>
-        </fieldset>
-    <fieldset class="active-music">
-        <legend>Active MusicRoom/Player present if active room is minimized</legend>
-    </fieldset>
-    </fieldset>
-    <fieldset class="secondary inblock">
-        <legend>Secondary View</legend>
-        <fieldset class="online subcomponents">
-            <legend>See who's online</legend>
-        </fieldset>
-        <fieldset class="favorites subcomponents">
-            <legend>Current User's Favorite Songs</legend>
-        </fieldset>
-    </fieldset>
 
-
-</fieldset>
+        </div>
+        </div>
+    </div>
+</div>

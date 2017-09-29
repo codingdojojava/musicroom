@@ -1,3 +1,4 @@
+import { ChatService } from './../chat.service';
 import { AppComponent } from './../app.component';
 import { Router } from '@angular/router';
 import { ApiCallService } from './../api-call.service';
@@ -11,41 +12,54 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
   user = new User();
+  currentUser: User;
   incorrectLogin = false;
   // currentUser;
-  constructor(private _apicallService: ApiCallService, private _router: Router, private _appComponent: AppComponent) { }
+  constructor(private _apicallService: ApiCallService, 
+              private _router: Router, 
+              private _appComponent: AppComponent,
+              private _chatService: ChatService) { }
 
   ngOnInit() {
   }
 
   loginUser() {
-    // console.log('login User');
-    // console.log(this.user);
     this._apicallService.loginUser(this.user)
       .then((data) => {
-        // console.log('success logging in user');
-        // console.log(data);
         if (!data) {
           this.incorrectLogin = true;
           this.user = new User();
         } else {
-          // this.currentUser = data;
           this.incorrectLogin = false;
           this._appComponent.getCurrentUserInSession();
-          // console.log(this.currentUser);
-          // if (!this.currentUser.lastfmSessionToken && !this.currentUser.lastfmSessionSig) {
-          //   window.location.href = 'http://www.last.fm/api/auth/?api_key=c595e718d23c51ef68c0d547f1511fe7&cb=http://localhost:8000/session/';
-          // } else {
-            // add a test if session token is valid later
-            // ---------------
-          this._router.navigate(['home']);
+          this.getCurrentUserInSession();
+          console.log(this.currentUser);
+          this._router.navigate(['home', 'profile', 'current']);
           // }
         }
       })
       .catch((error) => {
-        // console.log('error logging in user');
-        // console.log(error);
+        console.log(error);
       });
   }
 
+
+  getCurrentUserInSession() {
+    this._apicallService.getCurrentUserInSession()
+      .then((data) => {
+        if (data) {
+          this.currentUser = data;
+          this.emitLoginEvent(this.currentUser);
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  emitLoginEvent(friendsData) {
+    console.log('emitLoginEvent');
+    this._chatService.loginEvent(friendsData);
+  }
 }
