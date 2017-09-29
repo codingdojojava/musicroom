@@ -1,0 +1,35 @@
+#newroomform{
+    width: 350px;
+    /* height: 600px; */
+    /* margin-left:550px; */
+    /* background-color:rgba(255,255,255,.3); */
+    padding:25px;
+    vertical-align: top;
+    border: 1px solid #428bca;
+
+}
+
+
+.newroom1a{
+    width: 100%;
+}
+
+.newroom2{
+    margin-top: 20px;
+    
+}
+.newroom2a{
+    width: 100%;
+}
+.newroom3a{
+    width: 100%;
+}
+.newroom4a{
+    width: 100%;
+}
+
+.newroombtn{
+    margin-top: 15px;
+    background-color: #428bca;
+    width:100px;
+}

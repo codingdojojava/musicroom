@@ -73,12 +73,25 @@ video{
 
 #myCarousel{
     padding-top:15px;
+    width: 530px;
     height: 530px;
-    border: 1px solid grey;
+    border: 1px solid #428bca;
     margin-top:250px;
 }
 
 /* Carousel */
 .img-main-carousel{
-    max-width: 500px;
+    min-width: 500px;
+}
+
+#myCarousel2{
+    vertical-align: top;
+    position: absolute;
+    top: 0%;
+    left: -20%;
+    height: 1080px;
+    width: 100%;
+    overflow: hidden;
+    width: 300px;
+
 }
