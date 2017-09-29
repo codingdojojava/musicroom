@@ -41,9 +41,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var ApiCallService = (function () {
     function ApiCallService(_http) {
         this._http = _http;
+        this.defaultPicUrl = 'http://style.anu.edu.au/_anu/4/images/placeholders/person.png';
     }
     ApiCallService.prototype.registerAUser = function (userData) {
         // console.log('service sending user data for registration');
+        if (userData.profileImageUrl === '') {
+            userData.profileImageUrl = this.defaultPicUrl;
+        }
         return this._http.post('/api/users/register', userData)
             .map(function (response) { return response.json(); })
             .toPromise();
@@ -83,6 +87,12 @@ var ApiCallService = (function () {
     };
     ApiCallService.prototype.joinRoom = function (id, pw) {
         return this._http.post('/api/rooms/' + id + '/join', pw).map(function (data) { return data.json(); }).toPromise();
+    };
+    ApiCallService.prototype.leaveRoom = function (id) {
+        return this._http.get('/api/rooms/' + id + '/leave').map(function (data) { return data.json(); }).toPromise();
+    };
+    ApiCallService.prototype.deleteRoom = function (id) {
+        return this._http.get('/api/rooms/' + id + '/delete').map(function (data) { return data.json(); }).toPromise();
     };
     ApiCallService.prototype.getAllUsers = function () {
         // console.log('service getting all users');
@@ -131,6 +141,11 @@ var ApiCallService = (function () {
             .map(function (response) { return response.json(); })
             .toPromise();
     };
+    ApiCallService.prototype.getOnlineFriends = function () {
+        return this._http.get('/api/users/online_friends')
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
     return ApiCallService;
 }());
 ApiCallService = __decorate([
@@ -149,23 +164,22 @@ var _a;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__search_manager_search_rooms_search_rooms_component__ = __webpack_require__("../../../../../src/app/search-manager/search-rooms/search-rooms.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__session_handler_session_handler_component__ = __webpack_require__("../../../../../src/app/session-handler/session-handler.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__new_room_new_room_component__ = __webpack_require__("../../../../../src/app/new-room/new-room.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__dashboard_room_room_component__ = __webpack_require__("../../../../../src/app/dashboard/room/room.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__new_room_new_room_component__ = __webpack_require__("../../../../../src/app/new-room/new-room.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dashboard_room_room_component__ = __webpack_require__("../../../../../src/app/dashboard/room/room.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__search_manager_search_users_search_users_component__ = __webpack_require__("../../../../../src/app/search-manager/search-users/search-users.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__search_manager_search_music_search_music_component__ = __webpack_require__("../../../../../src/app/search-manager/search-music/search-music.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__profile_current_profile_current_profile_component__ = __webpack_require__("../../../../../src/app/profile/current-profile/current-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__profile_edit_profile_edit_profile_component__ = __webpack_require__("../../../../../src/app/profile/edit-profile/edit-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__other_user_profile_other_user_profile_component__ = __webpack_require__("../../../../../src/app/other-user-profile/other-user-profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__search_manager_search_manager_component__ = __webpack_require__("../../../../../src/app/search-manager/search-manager.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__logout_logout_component__ = __webpack_require__("../../../../../src/app/logout/logout.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__registration_registration_component__ = __webpack_require__("../../../../../src/app/registration/registration.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/dashboard/dashboard.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__index_index_component__ = __webpack_require__("../../../../../src/app/index/index.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -189,27 +203,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-
 var routes = [
-    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_15__index_index_component__["a" /* IndexComponent */] },
-    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_12__login_login_component__["a" /* LoginComponent */] },
-    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_11__registration_registration_component__["a" /* RegistrationComponent */] },
-    { path: 'logout', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_10__logout_logout_component__["a" /* LogoutComponent */] },
-    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_14__dashboard_dashboard_component__["a" /* DashboardComponent */], children: [
-            { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_13__profile_profile_component__["a" /* ProfileComponent */], children: [
-                    { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_7__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
-                    { path: 'current', component: __WEBPACK_IMPORTED_MODULE_6__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
+    { path: '', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_14__index_index_component__["a" /* IndexComponent */] },
+    { path: 'login', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_11__login_login_component__["a" /* LoginComponent */] },
+    { path: 'register', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_10__registration_registration_component__["a" /* RegistrationComponent */] },
+    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_13__dashboard_dashboard_component__["a" /* DashboardComponent */], children: [
+            { path: 'logout', component: __WEBPACK_IMPORTED_MODULE_9__logout_logout_component__["a" /* LogoutComponent */] },
+            { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_12__profile_profile_component__["a" /* ProfileComponent */], children: [
+                    { path: 'edit', component: __WEBPACK_IMPORTED_MODULE_6__profile_edit_profile_edit_profile_component__["a" /* EditProfileComponent */] },
+                    { path: 'current', component: __WEBPACK_IMPORTED_MODULE_5__profile_current_profile_current_profile_component__["a" /* CurrentProfileComponent */] }
                 ] },
-            { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_9__search_manager_search_manager_component__["a" /* SearchManagerComponent */], children: [
-                    { path: 'music', component: __WEBPACK_IMPORTED_MODULE_5__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */] },
-                    { path: 'users', component: __WEBPACK_IMPORTED_MODULE_4__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */] },
+            { path: 'search/results', component: __WEBPACK_IMPORTED_MODULE_8__search_manager_search_manager_component__["a" /* SearchManagerComponent */], children: [
+                    { path: 'music', component: __WEBPACK_IMPORTED_MODULE_4__search_manager_search_music_search_music_component__["a" /* SearchMusicComponent */] },
+                    { path: 'users', component: __WEBPACK_IMPORTED_MODULE_3__search_manager_search_users_search_users_component__["a" /* SearchUsersComponent */] },
                     { path: 'rooms', component: __WEBPACK_IMPORTED_MODULE_0__search_manager_search_rooms_search_rooms_component__["a" /* SearchRoomsComponent */] }
                 ] },
-            { path: 'users/:id', component: __WEBPACK_IMPORTED_MODULE_8__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] },
-            { path: 'room/new', component: __WEBPACK_IMPORTED_MODULE_2__new_room_new_room_component__["a" /* NewRoomComponent */] },
-            { path: 'room/:id', component: __WEBPACK_IMPORTED_MODULE_3__dashboard_room_room_component__["a" /* RoomComponent */] },
-        ] },
-    { path: 'session', pathMatch: 'full', component: __WEBPACK_IMPORTED_MODULE_1__session_handler_session_handler_component__["a" /* SessionHandlerComponent */] }
+            { path: 'users/:id', component: __WEBPACK_IMPORTED_MODULE_7__other_user_profile_other_user_profile_component__["a" /* OtherUserProfileComponent */] },
+            { path: 'room/new', component: __WEBPACK_IMPORTED_MODULE_1__new_room_new_room_component__["a" /* NewRoomComponent */] },
+            { path: 'room/:id', component: __WEBPACK_IMPORTED_MODULE_2__dashboard_room_room_component__["a" /* RoomComponent */] },
+            { path: 'room/:id1/users/:id2', redirectTo: "/home/users/:id2" },
+        ] }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -217,9 +230,9 @@ var AppRoutingModule = (function () {
     return AppRoutingModule;
 }());
 AppRoutingModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_16__angular_core__["M" /* NgModule */])({
-        imports: [__WEBPACK_IMPORTED_MODULE_17__angular_router__["d" /* RouterModule */].forRoot(routes)],
-        exports: [__WEBPACK_IMPORTED_MODULE_17__angular_router__["d" /* RouterModule */]]
+    Object(__WEBPACK_IMPORTED_MODULE_15__angular_core__["M" /* NgModule */])({
+        imports: [__WEBPACK_IMPORTED_MODULE_16__angular_router__["d" /* RouterModule */].forRoot(routes)],
+        exports: [__WEBPACK_IMPORTED_MODULE_16__angular_router__["d" /* RouterModule */]]
     })
 ], AppRoutingModule);
 
@@ -293,57 +306,44 @@ var AppComponent = (function () {
         this.searchMode = 'users';
         this.getCurrentUserInSession();
     }
-    // sendMsg(msg){
-    //    this.chatService.sendMessage(msg);
-    // }
+    AppComponent.prototype.ngAfterViewInit = function () {
+    };
     AppComponent.prototype.searchUsers = function () {
-        // console.log('hello');
         this._searchService.searchUsers(this.searchVal);
     };
     AppComponent.prototype.searchRooms = function () {
-        // console.log('hello');
         this._searchService.searchRooms(this.searchVal3);
     };
     AppComponent.prototype.searchMusic = function () {
         // console.log('hello');
         if (!this.isInMusicBrowser) {
-            console.log('not in music browser so redirecting');
             this._route.navigate(['home', 'search', 'results', 'music', { q: this.searchVal2 }]);
             this.searchVal2 = '';
         }
         else {
-            console.log('in music browser so just updating search results');
             this._searchService.searchMusic(this.searchVal2);
             this.searchVal2 = '';
         }
     };
     AppComponent.prototype.redirectToSearchPageWithSearchVal = function () {
-        // console.log('redirecting to Search page with keyword SearchVal');
-        // console.log(this.searchVal);
         this._route.navigate(['home', 'search', 'results', 'users', { q: this.searchVal }]);
     };
     AppComponent.prototype.redirectToSearchRoomPageWithSearchVal3 = function () {
-        // console.log('redirecting to Search page with keyword SearchVal');
-        // console.log(this.searchVal);
         this._route.navigate(['home', 'search', 'results', 'rooms', { q: this.searchVal3 }]);
     };
     AppComponent.prototype.getCurrentUserInSession = function () {
         var _this = this;
         this._apicallService.getCurrentUserInSession()
             .then(function (data) {
-            // console.log(data);
             if (data) {
-                // console.log('success getting current user');
                 _this.currentUser = data;
             }
             else {
-                // console.log('user not in session');
                 _this.currentUser = false;
             }
         })
             .catch(function (error) {
-            // console.log('error getting current user');
-            // console.log(error);
+            console.log(error);
         });
     };
     AppComponent.prototype.setIsInMusicBrowser = function () {
@@ -353,6 +353,27 @@ var AppComponent = (function () {
         else {
             this.isInMusicBrowser = true;
         }
+    };
+    AppComponent.prototype.refreshUserSession = function () {
+        var _this = this;
+        this._apicallService.getCurrentUserInSession()
+            .then(function (data) {
+            if (data) {
+                _this.currentUser = data;
+            }
+            else {
+                _this.currentUser = false;
+            }
+        })
+            .catch(function (error) {
+            console.log(error);
+        });
+    };
+    AppComponent.prototype.ngOnDestroy = function () {
+        // this._apicallService.logoutUser()
+        //   .then(data => {
+        //     console.log(data);
+        //   });
     };
     return AppComponent;
 }());
@@ -501,11 +522,12 @@ AppModule = __decorate([
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChatService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ng_socket_io__ = __webpack_require__("../../../../ng-socket-io/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ng_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_ng_socket_io__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ng_socket_io__ = __webpack_require__("../../../../ng-socket-io/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ng_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_ng_socket_io__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -518,9 +540,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var ChatService = (function () {
-    function ChatService(socket) {
+    function ChatService(socket, _apiCallService) {
         this.socket = socket;
+        this._apiCallService = _apiCallService;
     }
     ChatService.prototype.getMessage = function (id) {
         return this.socket
@@ -535,14 +559,37 @@ var ChatService = (function () {
         this.socket
             .emit("msg", id);
     };
+    ChatService.prototype.loginEvent = function (currentUser) {
+        console.log('loginEvent Triggered: Sending currentuser data to server event name: login');
+        this.socket.emit('login', currentUser);
+    };
+    ChatService.prototype.getLoginEvent = function (id) {
+        return this.socket
+            .fromEvent("online" + id)
+            .map(function (data) {
+            console.log('got login event');
+            return true;
+        });
+    };
+    ChatService.prototype.logoutEvent = function (currentUser) {
+        console.log('logoutEvent triggered: Sending currentuser data to server event name: logout');
+        this.socket.emit('logout', currentUser);
+    };
+    ChatService.prototype.getLogoutEvent = function (currentUserid) {
+        return this.socket.fromEvent("offline" + currentUserid)
+            .map(function (data) {
+            console.log("GOT LOGOUT EVENT");
+            return true;
+        });
+    };
     return ChatService;
 }());
 ChatService = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ng_socket_io__["Socket"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ng_socket_io__["Socket"]) === "function" && _a || Object])
+    Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2_ng_socket_io__["Socket"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ng_socket_io__["Socket"]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__api_call_service__["a" /* ApiCallService */]) === "function" && _b || Object])
 ], ChatService);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=chat.service.js.map
 
 /***/ }),
@@ -1143,7 +1190,7 @@ var Room = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return User; });
 var User = (function () {
-    function User(_id, userId, username, email, firstName, lastName, password, description, profileImageUrl, isLoggedIn, favoriteSongs, joinedRooms, ownedRooms, friends, received_invites, sent_invites, created_at, updated_at) {
+    function User(_id, userId, username, email, firstName, lastName, password, description, profileImageUrl, isLoggedIn, onlineFriends, favoriteSongs, joinedRooms, ownedRooms, friends, received_invites, sent_invites, created_at, updated_at) {
         if (_id === void 0) { _id = null; }
         if (userId === void 0) { userId = null; }
         if (username === void 0) { username = ''; }
@@ -1154,6 +1201,7 @@ var User = (function () {
         if (description === void 0) { description = ''; }
         if (profileImageUrl === void 0) { profileImageUrl = ''; }
         if (isLoggedIn === void 0) { isLoggedIn = false; }
+        if (onlineFriends === void 0) { onlineFriends = []; }
         if (favoriteSongs === void 0) { favoriteSongs = []; }
         if (joinedRooms === void 0) { joinedRooms = []; }
         if (ownedRooms === void 0) { ownedRooms = []; }
@@ -1172,6 +1220,7 @@ var User = (function () {
         this.description = description;
         this.profileImageUrl = profileImageUrl;
         this.isLoggedIn = isLoggedIn;
+        this.onlineFriends = onlineFriends;
         this.favoriteSongs = favoriteSongs;
         this.joinedRooms = joinedRooms;
         this.ownedRooms = ownedRooms;
@@ -2377,8 +2426,10 @@ var _a, _b, _c, _d;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__ = __webpack_require__("../../../../rxjs/BehaviorSubject.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__ = __webpack_require__("../../../../rxjs/Subject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__ = __webpack_require__("../../../../rxjs/BehaviorSubject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2390,16 +2441,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var SearchService = (function () {
     function SearchService() {
         // Observable string sources
-        this.searchValueSource = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["BehaviorSubject"]('');
-        this.searchValueMusicSource = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["BehaviorSubject"]('');
-        this.searchRoomSource = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["BehaviorSubject"]('');
+        this.searchValueSource = new __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__["BehaviorSubject"]('');
+        this.searchValueMusicSource = new __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__["BehaviorSubject"]('');
+        this.searchRoomSource = new __WEBPACK_IMPORTED_MODULE_2_rxjs_BehaviorSubject__["BehaviorSubject"]('');
+        this.editUserEventSource = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
         // Observable string streams
         this.searchValue$ = this.searchValueSource.asObservable();
         this.searchRoom$ = this.searchRoomSource.asObservable();
         this.searchValueMusic$ = this.searchValueMusicSource.asObservable();
+        this.editUserEvent$ = this.editUserEventSource.asObservable();
     }
     // Service message commands
     SearchService.prototype.searchUsers = function (searchVal) {
@@ -2410,6 +2464,9 @@ var SearchService = (function () {
     };
     SearchService.prototype.searchMusic = function (searchVal) {
         this.searchValueMusicSource.next(searchVal);
+    };
+    SearchService.prototype.editUserEvent = function (event) {
+        this.editUserEventSource.next(event);
     };
     return SearchService;
 }());
