@@ -1,25 +1,66 @@
-<fieldset>
-  <legend>Login</legend>
-<div style="color: red;" *ngIf="incorrectLogin">
-  <p>Invalid Login Credentials. Please try again.</p> 
+
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  
+    <div class="header">
+    <nav class="navbar navbar-default navbar-inverse" role="navigation" style="vertical-align: top; margin-bottom: 0; height: 60px; border-radius:0;">
+      <div class="container-fluid">
+  
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" *ngIf="!currentUser" [routerLink]="['/']" style="padding-top:19px; color:white;">CHATTERBOX</a>
+        </div>
+  
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a *ngIf="!currentUser" [routerLink]="['/']" style="padding-top:19px;">Home</a></li>
+            <li><a *ngIf="!currentUser" [routerLink]="['/register']" style="padding-top:19px;"><b>Register</b> <span class="caret"></span></a></li>
+            <li><p class="navbar-text" style="padding-top:4px;">Already have an account?</p></li>
+            <li><a *ngIf="!currentUser" [routerLink]="['/login']" style="padding-top:19px;"><b>Login</b> <span class="caret"></span></a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    </div>
+
+<div class="wrap">
+<div class="container-fluid" id="loginform" class="col-sm-4 col-sm-offset-5">
+  <div class="row">
+      <div class="col-sm-1"></div>
+        <!-- <div class="col-sm-12 col-md-12 col-lg-11"> -->
+        <section class="col-sm-12 align-right" style="margin-top: 20px;">
+       
+          <h3>Login</h3>
+          <div style="color: red;" *ngIf="incorrectLogin">
+            <p class="login1b">** Invalid Login Credentials. Please try again **</p> 
+          </div>
+
+          <div class="container-fluid"></div>
+          <form id="" (submit)="loginUser(); form.reset()" #form="ngForm">
+
+              <label for="username" class="login1">Username: </label>
+              <input class="login1a" type="text" name="username" required [(ngModel)] = "user.username" #username="ngModel"/>
+              <div style="color: red;" *ngIf="!username.valid && (username.dirty || username.touched)">
+                <p class="login1b" *ngIf="username.errors.required">** Username is Required **</p> 
+              </div>
+            <p>
+              <label for="password" class="login2">Password: </label>
+              <input class="login2a" type="password" name="password" required [(ngModel)] = "user.password" #password="ngModel" />
+            </p>
+              <div style="color: red;" *ngIf="!password.valid && (password.dirty || password.touched)">
+                <p class="login2b" *ngIf="password.errors.required">** Password is Required **</p> 
+              </div>
+            <input class="loginbtn" type="submit" value="Login" [disabled] = "password.invalid || username.invalid" />
+          </form>
+        </section>
+      <!-- </div> -->
+  </div>
 </div>
-<form (submit)="loginUser(); form.reset()" #form="ngForm">
-  <p>
-    <label>Username: 
-      <input type="text" name="username" required [(ngModel)] = "user.username" #username="ngModel"/>
-    </label>
-  </p>
-    <div style="color: red;" *ngIf="!username.valid && (username.dirty || username.touched)">
-      <p *ngIf="username.errors.required">Username is Required</p> 
-    </div>
-  <p>
-    <label>Password: 
-      <input type="password" name="password" required [(ngModel)] = "user.password" #password="ngModel" />
-    </label>
-  </p>
-    <div style="color: red;" *ngIf="!password.valid && (password.dirty || password.touched)">
-      <p *ngIf="password.errors.required">Password is Required</p> 
-    </div>
-  <input type="submit" value="Login" [disabled] = "password.invalid || username.invalid" />
-</form>
-</fieldset>
+</div>
+
