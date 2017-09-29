@@ -1,19 +1,22 @@
 import { DashboardComponent } from './../dashboard.component';
 import { ChatService } from './../../chat.service';
 import { ApiCallService } from './../../api-call.service';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css']
 })
 export class RoomComponent implements OnInit {
+  @ViewChild('scroll') private scroller: ElementRef
   room;
   message = "";
   userInRoom = false;
   roomPW="";
-  constructor(private _route: ActivatedRoute, private apiService: ApiCallService, private chatService: ChatService, private _dashboardComp: DashboardComponent) {
+  isOwner = false;
+  arrow="v";
+  constructor(private _route: ActivatedRoute, private apiService: ApiCallService, private chatService: ChatService, private _dashboardComp: DashboardComponent, private router: Router) {
    }
 
   ngOnInit() {
@@ -34,6 +37,16 @@ export class RoomComponent implements OnInit {
         });
       })
     })
+  }
+
+  ngAfterViewChecked() {        
+    this.scrollToBottom();        
+  } 
+
+  scrollToBottom(): void {
+      try {
+          this.scroller.nativeElement.scrollTop = this.scroller.nativeElement.scrollHeight;
+      } catch(err) { }                 
   }
 
   refreshRoom(){
@@ -60,12 +73,17 @@ export class RoomComponent implements OnInit {
     this.apiService.getCurrentUserInSession().then(result=>{
       console.log("RESULT");
       console.log(result);
-      console.log(this.room._roomMembers[0]);
+      console.log(this.room._roomMembers);
       console.log(this.room._owner);
-      if(this.room._roomMembers.includes(result._id) || this.room._owner == result._id)
+      this.userInRoom = false;
+      for(var i = 0; i < this.room._roomMembers.length; i++){
+        if(this.room._roomMembers[i]._id == result._id)
+          this.userInRoom = true;
+      }
+      if(this.room._owner._id == result._id){
         this.userInRoom = true;
-      else
-        this.userInRoom = false;
+        this.isOwner = true;
+      }
       console.log(this.userInRoom);
     })
   }
@@ -73,8 +91,35 @@ export class RoomComponent implements OnInit {
   joinRoom(){
     var self = this;
     this.apiService.joinRoom(this.room.roomId, this.roomPW).then(function(result){
+      self.message = "joined the room.";
+      self.sendMessage();
       self.refreshRoom();
       self._dashboardComp.getCurrentUserInSession();
     });
+  }
+
+  leaveRoom(){
+    var self = this;
+    this.apiService.leaveRoom(this.room.roomId).then(function(result){
+      self.message = "left the room.";
+      self.sendMessage();
+      self.refreshRoom();
+      self._dashboardComp.getCurrentUserInSession();
+    });
+  }
+
+  deleteRoom(){
+    var self = this;
+    this.apiService.deleteRoom(this.room.roomId).then(function(result){
+      self._dashboardComp.getCurrentUserInSession();
+      self.router.navigate(['/home']);
+    });
+  }
+
+  changeArrow(){
+    if(this.arrow == "^")
+      this.arrow="v";
+    else
+      this.arrow="^";
   }
 }

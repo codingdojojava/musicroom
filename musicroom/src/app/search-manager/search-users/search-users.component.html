@@ -1,16 +1,39 @@
-<h1>Search User Results</h1>
-<table>
-  <tr>
-    <th>Username</th>
-    <th>Actions</th>
-  </tr>
-  <tr *ngFor="let user of showSearchResultUsers">
-      <td *ngIf="user && user._id != currentUser._id">{{user.username}}</td>
-      <td *ngIf="user && user._id != currentUser._id">
-        <a [routerLink]="['/home/users', user.userId]">Show Profile</a>
-        <button *ngIf="!user.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(user.friends)" (click)="sendInvite(user.userId)">Send Invite</button>
-        <span *ngIf="user.received_invites.includes(currentUser._id)">Invite Sent</span>
-        <span *ngIf="isFriendOfCurrentUser(user.friends)">Friend</span>
-      </td>
-  </tr>
-</table>
+
+
+    <div class="mb20">
+		<h2 class="lead"><strong class="text-danger">{{showSearchResultUsers.length}}</strong> results were found for the search for <strong class="text-danger">{{searchVal}}</strong></h2>								
+	</div>
+
+    <section class="col-xs-12 col-sm-6 col-md-12">
+<div *ngFor="let user of showSearchResultUsers">
+		<article class="search-result row">
+			<div *ngIf="user && user._id != currentUser._id" class="col-xs-12 col-sm-12 col-md-3">
+				<a [routerLink]="['/home/users', user.userId]" title="Lorem ipsum" class="thumbnail"><img class="img-fluid" style="max-width:43%" src="{{user.profileImageUrl}}" alt="Lorem ipsum" /></a>
+			</div>
+			<div *ngIf="user && user._id == currentUser._id" class="col-xs-12 col-sm-12 col-md-3">
+				<a [routerLink]="['/home/profile/current']" title="Lorem ipsum" class="thumbnail"><img class="img-fluid" style="max-width:43%" src="{{user.profileImageUrl}}" alt="Lorem ipsum" /></a>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-2">
+				<ul class="meta-search">
+					<li *ngIf="user.received_invites.includes(currentUser._id)"><i class="glyphicon glyphicon-ok-circle"></i> <span>Invite Sent</span></li>
+					<li *ngIf="isFriendOfCurrentUser(user.friends)"><i class="glyphicon glyphicon-tags"></i> <span>Friend</span></li>
+					<li *ngIf="!user.received_invites.includes(currentUser._id) && !isFriendOfCurrentUser(user.friends) && user._id != currentUser._id"><i class="glyphicon glyphicon-share-alt"></i> <button class="btn btn-link" (click)="sendInvite(user.userId)">Send Invite</button></li>
+					<li><i class="glyphicon glyphicon-eye-open"></i> <span>Username: {{user.username}}</span></li>
+					<li><i class="glyphicon glyphicon-info-sign"></i> <span>Name: {{user.firstName}} {{user.lastName}}</span></li>
+				</ul>
+			</div>
+			<div *ngIf="user && user._id != currentUser._id" class="col-xs-12 col-sm-12 col-md-7 excerpet">
+				<h3>Description</h3>
+				<p>{{user.description}}</p>						
+                <span class="plus"  ><a style="color: white;" [routerLink]="['/home/users', user.userId]" title="Lorem ipsum"><i class="glyphicon glyphicon-plus"></i>  See More</a></span>
+			</div>
+			<div *ngIf="user && user._id == currentUser._id" class="col-xs-12 col-sm-12 col-md-7 excerpet">
+				<h3>Description</h3>
+				<p>{{user.description}}</p>						
+                <span class="plus"  ><a style="color: white;" [routerLink]="['/home/profile/current']" title="Lorem ipsum"><i class="glyphicon glyphicon-plus"></i>  See More</a></span>
+			</div>
+			<span class="clearfix borda"></span>
+		</article>	
+</div>
+
+	</section>

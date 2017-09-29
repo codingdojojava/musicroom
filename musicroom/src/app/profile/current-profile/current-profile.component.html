@@ -1,5 +1,6 @@
 <div *ngIf="currentUser">
-  <a [routerLink]="['/home/profile/edit']">Edit Profile</a>
+  <p class="btn btn-link" style="margin-left: -13px;"><a [routerLink]="['/home/profile/edit']">Edit Profile</a></p>
+  
   <p>Username: {{currentUser.username}}</p>
   <p>Email: {{currentUser.email}}</p>
   <p>First Name: {{currentUser.firstName}}</p>

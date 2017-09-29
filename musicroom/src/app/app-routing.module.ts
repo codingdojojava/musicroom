@@ -1,5 +1,4 @@
 import { SearchRoomsComponent } from './search-manager/search-rooms/search-rooms.component';
-import { SessionHandlerComponent } from './session-handler/session-handler.component';
 import { NewRoomComponent } from './new-room/new-room.component';
 import { RoomComponent } from './dashboard/room/room.component';
 import { SearchUsersComponent } from './search-manager/search-users/search-users.component';
@@ -21,8 +20,8 @@ const routes: Routes = [
   { path: '', pathMatch: 'full', component: IndexComponent },
   { path: 'login', pathMatch: 'full', component: LoginComponent },
   { path: 'register', pathMatch: 'full', component: RegistrationComponent },
-  { path: 'logout', pathMatch: 'full', component: LogoutComponent },
   { path: 'home', component: DashboardComponent, children: [
+    { path: 'logout', component: LogoutComponent },
     { path: 'profile', component: ProfileComponent, children: [
           {path: 'edit', component: EditProfileComponent},
           {path: 'current', component: CurrentProfileComponent}
@@ -35,9 +34,8 @@ const routes: Routes = [
     { path: 'users/:id', component: OtherUserProfileComponent },
     {path: 'room/new', component: NewRoomComponent},
     {path: 'room/:id', component: RoomComponent},
-  ] },
-  { path: 'session', pathMatch: 'full', component: SessionHandlerComponent }
-
+    {path: 'room/:id1/users/:id2', redirectTo:"/home/users/:id2"},
+  ] }
 ];
 
 @NgModule({

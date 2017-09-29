@@ -34,6 +34,8 @@ export class CurrentProfileComponent implements OnInit {
       });
   }
 
+
+
   ngOnInit() {
   }
 

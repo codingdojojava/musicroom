@@ -1322,6 +1322,21 @@ Socket.prototype.open = function () {
  *
  * @api private
  */
+Socket.prototype.open = function () {
+  var transport;
+  if (this.rememberUpgrade && Socket.priorWebsocketSuccess && this.transports.indexOf('websocket') !== -1) {
+    transport = 'websocket';
+  } else if (0 === this.transports.length) {
+    // Emit error on next tick so it can be listened to
+    var self = this;
+    setTimeout(function () {
+      self.emit('error', 'No transports available');
+    }, 0);
+    return;
+  } else {
+    transport = this.transports[0];
+  }
+  this.readyState = 'opening';
 
 Socket.prototype.setTransport = function (transport) {
   debug('setting transport %s', transport.name);
@@ -1601,404 +1616,6 @@ Socket.prototype.ping = function () {
     self.emit('ping');
   });
 };
-
-/**
- * Called on `drain` event
- *
- * @api private
- */
-
-Socket.prototype.onDrain = function () {
-  this.writeBuffer.splice(0, this.prevBufferLen);
-
-  // setting prevBufferLen = 0 is very important
-  // for example, when upgrading, upgrade packet is sent over,
-  // and a nonzero prevBufferLen could cause problems on `drain`
-  this.prevBufferLen = 0;
-
-  if (0 === this.writeBuffer.length) {
-    this.emit('drain');
-  } else {
-    this.flush();
-  }
-};
-
-/**
- * Flush write buffers.
- *
- * @api private
- */
-
-Socket.prototype.flush = function () {
-  if ('closed' !== this.readyState && this.transport.writable &&
-    !this.upgrading && this.writeBuffer.length) {
-    debug('flushing %d packets in socket', this.writeBuffer.length);
-    this.transport.send(this.writeBuffer);
-    // keep track of current length of writeBuffer
-    // splice writeBuffer and callbackBuffer on `drain`
-    this.prevBufferLen = this.writeBuffer.length;
-    this.emit('flush');
-  }
-};
-
-/**
- * Sends a message.
- *
- * @param {String} message.
- * @param {Function} callback function.
- * @param {Object} options.
- * @return {Socket} for chaining.
- * @api public
- */
-
-Socket.prototype.write =
-Socket.prototype.send = function (msg, options, fn) {
-  this.sendPacket('message', msg, options, fn);
-  return this;
-};
-
-/**
- * Sends a packet.
- *
- * @param {String} packet type.
- * @param {String} data.
- * @param {Object} options.
- * @param {Function} callback function.
- * @api private
- */
-
-Socket.prototype.sendPacket = function (type, data, options, fn) {
-  if ('function' === typeof data) {
-    fn = data;
-    data = undefined;
-  }
-
-  if ('function' === typeof options) {
-    fn = options;
-    options = null;
-  }
-
-  if ('closing' === this.readyState || 'closed' === this.readyState) {
-    return;
-  }
-
-  options = options || {};
-  options.compress = false !== options.compress;
-
-  var packet = {
-    type: type,
-    data: data,
-    options: options
-  };
-  this.emit('packetCreate', packet);
-  this.writeBuffer.push(packet);
-  if (fn) this.once('flush', fn);
-  this.flush();
-};
-
-/**
- * Closes the connection.
- *
- * @api private
- */
-
-Socket.prototype.close = function () {
-  if ('opening' === this.readyState || 'open' === this.readyState) {
-    this.readyState = 'closing';
-
-    var self = this;
-
-    if (this.writeBuffer.length) {
-      this.once('drain', function () {
-        if (this.upgrading) {
-          waitForUpgrade();
-        } else {
-          close();
-        }
-      });
-    } else if (this.upgrading) {
-      waitForUpgrade();
-    } else {
-      close();
-    }
-  }
-
-  function close () {
-    self.onClose('forced close');
-    debug('socket closing - telling transport to close');
-    self.transport.close();
-  }
-
-  function cleanupAndClose () {
-    self.removeListener('upgrade', cleanupAndClose);
-    self.removeListener('upgradeError', cleanupAndClose);
-    close();
-  }
-
-  function waitForUpgrade () {
-    // wait for upgrade to finish since we can't send packets while pausing a transport
-    self.once('upgrade', cleanupAndClose);
-    self.once('upgradeError', cleanupAndClose);
-  }
-
-  return this;
-};
-
-/**
- * Called upon transport error
- *
- * @api private
- */
-
-Socket.prototype.onError = function (err) {
-  debug('socket error %j', err);
-  Socket.priorWebsocketSuccess = false;
-  this.emit('error', err);
-  this.onClose('transport error', err);
-};
-
-/**
- * Called upon transport close.
- *
- * @api private
- */
-
-Socket.prototype.onClose = function (reason, desc) {
-  if ('opening' === this.readyState || 'open' === this.readyState || 'closing' === this.readyState) {
-    debug('socket close with reason: "%s"', reason);
-    var self = this;
-
-    // clear timers
-    clearTimeout(this.pingIntervalTimer);
-    clearTimeout(this.pingTimeoutTimer);
-
-    // stop event from firing again for transport
-    this.transport.removeAllListeners('close');
-
-    // ensure transport won't stay open
-    this.transport.close();
-
-    // ignore further transport communication
-    this.transport.removeAllListeners();
-
-    // set ready state
-    this.readyState = 'closed';
-
-    // clear session id
-    this.id = null;
-
-    // emit close event
-    this.emit('close', reason, desc);
-
-    // clean buffers after, so users can still
-    // grab the buffers on `close` event
-    self.writeBuffer = [];
-    self.prevBufferLen = 0;
-  }
-};
-
-/**
- * Filters upgrades, returning only those matching client transports.
- *
- * @param {Array} server upgrades
- * @api private
- *
- */
-
-Socket.prototype.filterUpgrades = function (upgrades) {
-  var filteredUpgrades = [];
-  for (var i = 0, j = upgrades.length; i < j; i++) {
-    if (~index(this.transports, upgrades[i])) filteredUpgrades.push(upgrades[i]);
-  }
-  return filteredUpgrades;
-};
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__("../../../../webpack/buildin/global.js")))
-
-/***/ }),
-
-/***/ "../../../../engine.io-client/lib/transport.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * Module dependencies.
- */
-
-var parser = __webpack_require__("../../../../engine.io-parser/lib/browser.js");
-var Emitter = __webpack_require__("../../../../component-emitter/index.js");
-
-/**
- * Module exports.
- */
-
-module.exports = Transport;
-
-/**
- * Transport abstract constructor.
- *
- * @param {Object} options.
- * @api private
- */
-
-function Transport (opts) {
-  this.path = opts.path;
-  this.hostname = opts.hostname;
-  this.port = opts.port;
-  this.secure = opts.secure;
-  this.query = opts.query;
-  this.timestampParam = opts.timestampParam;
-  this.timestampRequests = opts.timestampRequests;
-  this.readyState = '';
-  this.agent = opts.agent || false;
-  this.socket = opts.socket;
-  this.enablesXDR = opts.enablesXDR;
-
-  // SSL options for Node.js client
-  this.pfx = opts.pfx;
-  this.key = opts.key;
-  this.passphrase = opts.passphrase;
-  this.cert = opts.cert;
-  this.ca = opts.ca;
-  this.ciphers = opts.ciphers;
-  this.rejectUnauthorized = opts.rejectUnauthorized;
-  this.forceNode = opts.forceNode;
-
-  // other options for Node.js client
-  this.extraHeaders = opts.extraHeaders;
-  this.localAddress = opts.localAddress;
-}
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Transport.prototype);
-
-/**
- * Emits an error.
- *
- * @param {String} str
- * @return {Transport} for chaining
- * @api public
- */
-
-Transport.prototype.onError = function (msg, desc) {
-  var err = new Error(msg);
-  err.type = 'TransportError';
-  err.description = desc;
-  this.emit('error', err);
-  return this;
-};
-
-/**
- * Opens the transport.
- *
- * @api public
- */
-
-Transport.prototype.open = function () {
-  if ('closed' === this.readyState || '' === this.readyState) {
-    this.readyState = 'opening';
-    this.doOpen();
-  }
-
-  return this;
-};
-
-/**
- * Closes the transport.
- *
- * @api private
- */
-
-Transport.prototype.close = function () {
-  if ('opening' === this.readyState || 'open' === this.readyState) {
-    this.doClose();
-    this.onClose();
-  }
-
-  return this;
-};
-
-/**
- * Sends multiple packets.
- *
- * @param {Array} packets
- * @api private
- */
-
-Transport.prototype.send = function (packets) {
-  if ('open' === this.readyState) {
-    this.write(packets);
-  } else {
-    throw new Error('Transport not open');
-  }
-};
-
-/**
- * Called upon open
- *
- * @api private
- */
-
-Transport.prototype.onOpen = function () {
-  this.readyState = 'open';
-  this.writable = true;
-  this.emit('open');
-};
-
-/**
- * Called with data.
- *
- * @param {String} data
- * @api private
- */
-
-Transport.prototype.onData = function (data) {
-  var packet = parser.decodePacket(data, this.socket.binaryType);
-  this.onPacket(packet);
-};
-
-/**
- * Called with a decoded packet.
- */
-
-Transport.prototype.onPacket = function (packet) {
-  this.emit('packet', packet);
-};
-
-/**
- * Called upon close.
- *
- * @api private
- */
-
-Transport.prototype.onClose = function () {
-  this.readyState = 'closed';
-  this.emit('close');
-};
-
-
-/***/ }),
-
-/***/ "../../../../engine.io-client/lib/transports/index.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global) {/**
- * Module dependencies
- */
-
-var XMLHttpRequest = __webpack_require__("../../../../engine.io-client/lib/xmlhttprequest.js");
-var XHR = __webpack_require__("../../../../engine.io-client/lib/transports/polling-xhr.js");
-var JSONP = __webpack_require__("../../../../engine.io-client/lib/transports/polling-jsonp.js");
-var websocket = __webpack_require__("../../../../engine.io-client/lib/transports/websocket.js");
-
-/**
- * Export transports.
- */
-
-exports.polling = polling;
-exports.websocket = websocket;
 
 /**
  * Polling transport polymorphic constructor.
@@ -2281,18 +1898,15 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
 
 /***/ }),
 
-/***/ "../../../../engine.io-client/lib/transports/polling-xhr.js":
+/***/ "../../../../engine.io-client/lib/transport.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * Module requirements.
  */
 
-var XMLHttpRequest = __webpack_require__("../../../../engine.io-client/lib/xmlhttprequest.js");
-var Polling = __webpack_require__("../../../../engine.io-client/lib/transports/polling.js");
+var parser = __webpack_require__("../../../../engine.io-parser/lib/browser.js");
 var Emitter = __webpack_require__("../../../../component-emitter/index.js");
-var inherit = __webpack_require__("../../../../component-inherit/index.js");
-var debug = __webpack_require__("../../../../debug/src/browser.js")('engine.io-client:polling-xhr');
 
 /**
  * Module exports.
@@ -2436,20 +2050,16 @@ function Request (opts) {
   this.enablesXDR = opts.enablesXDR;
   this.requestTimeout = opts.requestTimeout;
 
-  // SSL options for Node.js client
-  this.pfx = opts.pfx;
-  this.key = opts.key;
-  this.passphrase = opts.passphrase;
-  this.cert = opts.cert;
-  this.ca = opts.ca;
-  this.ciphers = opts.ciphers;
-  this.rejectUnauthorized = opts.rejectUnauthorized;
+/***/ "../../../../engine.io-client/lib/transports/index.js":
+/***/ (function(module, exports, __webpack_require__) {
 
   // other options for Node.js client
   this.extraHeaders = opts.extraHeaders;
 
-  this.create();
-}
+var XMLHttpRequest = __webpack_require__("../../../../engine.io-client/lib/xmlhttprequest.js");
+var XHR = __webpack_require__("../../../../engine.io-client/lib/transports/polling-xhr.js");
+var JSONP = __webpack_require__("../../../../engine.io-client/lib/transports/polling-jsonp.js");
+var websocket = __webpack_require__("../../../../engine.io-client/lib/transports/websocket.js");
 
 /**
  * Mix in `Emitter`.
@@ -2506,45 +2116,15 @@ Request.prototype.create = function () {
       xhr.setRequestHeader('Accept', '*/*');
     } catch (e) {}
 
-    // ie6 check
-    if ('withCredentials' in xhr) {
-      xhr.withCredentials = true;
-    }
+/***/ "../../../../engine.io-client/lib/transports/polling-jsonp.js":
+/***/ (function(module, exports, __webpack_require__) {
 
     if (this.requestTimeout) {
       xhr.timeout = this.requestTimeout;
     }
 
-    if (this.hasXDR()) {
-      xhr.onload = function () {
-        self.onLoad();
-      };
-      xhr.onerror = function () {
-        self.onError(xhr.responseText);
-      };
-    } else {
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 2) {
-          var contentType;
-          try {
-            contentType = xhr.getResponseHeader('Content-Type');
-          } catch (e) {}
-          if (contentType === 'application/octet-stream') {
-            xhr.responseType = 'arraybuffer';
-          }
-        }
-        if (4 !== xhr.readyState) return;
-        if (200 === xhr.status || 1223 === xhr.status) {
-          self.onLoad();
-        } else {
-          // make sure the `error` event handler that's user-set
-          // does not throw in the same tick and gets caught here
-          setTimeout(function () {
-            self.onError(xhr.status);
-          }, 0);
-        }
-      };
-    }
+var Polling = __webpack_require__("../../../../engine.io-client/lib/transports/polling.js");
+var inherit = __webpack_require__("../../../../component-inherit/index.js");
 
     debug('xhr data %s', this.data);
     xhr.send(this.data);
@@ -2702,16 +2282,16 @@ function unloadHandler () {
 
 /***/ }),
 
-/***/ "../../../../engine.io-client/lib/transports/polling.js":
+/***/ "../../../../engine.io-client/lib/transports/polling-xhr.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * Module dependencies.
  */
 
-var Transport = __webpack_require__("../../../../engine.io-client/lib/transport.js");
-var parseqs = __webpack_require__("../../../../parseqs/index.js");
-var parser = __webpack_require__("../../../../engine.io-parser/lib/browser.js");
+var XMLHttpRequest = __webpack_require__("../../../../engine.io-client/lib/xmlhttprequest.js");
+var Polling = __webpack_require__("../../../../engine.io-client/lib/transports/polling.js");
+var Emitter = __webpack_require__("../../../../component-emitter/index.js");
 var inherit = __webpack_require__("../../../../component-inherit/index.js");
 var yeast = __webpack_require__("../../../../yeast/index.js");
 var debug = __webpack_require__("../../../../debug/src/browser.js")('engine.io-client:polling');
@@ -2876,6 +2456,300 @@ Polling.prototype.onData = function (data) {
 
 Polling.prototype.doClose = function () {
   var self = this;
+
+  function close () {
+    debug('writing close packet');
+    self.write([{ type: 'close' }]);
+  }
+
+  if ('open' === this.readyState) {
+    debug('transport open - closing');
+    close();
+  } else {
+    // in case we're trying to close while
+    // handshaking is in progress (GH-164)
+    debug('transport not open - deferring close');
+    this.once('open', close);
+  }
+};
+
+/**
+ * Writes a packets payload.
+ *
+ * @param {Array} data packets
+ * @param {Function} drain callback
+ * @api private
+ */
+
+Polling.prototype.write = function (packets) {
+  var self = this;
+  this.writable = false;
+  var callbackfn = function () {
+    self.writable = true;
+    self.emit('drain');
+  };
+
+  parser.encodePayload(packets, this.supportsBinary, function (data) {
+    self.doWrite(data, callbackfn);
+  });
+};
+
+/**
+ * Generates uri for connection.
+ *
+ * @api private
+ */
+
+Polling.prototype.uri = function () {
+  var query = this.query || {};
+  var schema = this.secure ? 'https' : 'http';
+  var port = '';
+
+  // cache busting is forced
+  if (false !== this.timestampRequests) {
+    query[this.timestampParam] = yeast();
+  }
+
+  if (!this.supportsBinary && !query.sid) {
+    query.b64 = 1;
+  }
+
+  query = parseqs.encode(query);
+
+  // avoid port if default for schema
+  if (this.port && (('https' === schema && Number(this.port) !== 443) ||
+     ('http' === schema && Number(this.port) !== 80))) {
+    port = ':' + this.port;
+  }
+
+  // prepend ? to query
+  if (query.length) {
+    query = '?' + query;
+  }
+
+  var ipv6 = this.hostname.indexOf(':') !== -1;
+  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
+};
+
+
+/***/ }),
+
+/***/ "../../../../engine.io-client/lib/transports/websocket.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+Request.prototype.hasXDR = function () {
+  return 'undefined' !== typeof global.XDomainRequest && !this.xs && this.enablesXDR;
+};
+
+/**
+ * Aborts the request.
+ *
+ * @api public
+ */
+
+Request.prototype.abort = function () {
+  this.cleanup();
+};
+
+/**
+ * Aborts pending requests when unloading the window. This is needed to prevent
+ * memory leaks (e.g. when using IE) and to ensure that no spurious error is
+ * emitted.
+ */
+
+Request.requestsCount = 0;
+Request.requests = {};
+
+if (global.document) {
+  if (global.attachEvent) {
+    global.attachEvent('onunload', unloadHandler);
+  } else if (global.addEventListener) {
+    global.addEventListener('beforeunload', unloadHandler, false);
+  }
+}
+
+function unloadHandler () {
+  for (var i in Request.requests) {
+    if (Request.requests.hasOwnProperty(i)) {
+      Request.requests[i].abort();
+    }
+  }
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__("../../../../webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "../../../../engine.io-client/lib/transports/polling.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * Module dependencies.
+ */
+
+var Transport = __webpack_require__("../../../../engine.io-client/lib/transport.js");
+var parseqs = __webpack_require__("../../../../parseqs/index.js");
+var parser = __webpack_require__("../../../../engine.io-parser/lib/browser.js");
+var inherit = __webpack_require__("../../../../component-inherit/index.js");
+var yeast = __webpack_require__("../../../../yeast/index.js");
+var debug = __webpack_require__("../../../../debug/src/browser.js")('engine.io-client:websocket');
+var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
+var NodeWebSocket;
+if (typeof window === 'undefined') {
+  try {
+    NodeWebSocket = __webpack_require__(1);
+  } catch (e) { }
+}
+
+/**
+ * Get either the `WebSocket` or `MozWebSocket` globals
+ * in the browser or try to resolve WebSocket-compatible
+ * interface exposed by `ws` for Node-like environment.
+ */
+
+var WebSocket = BrowserWebSocket;
+if (!WebSocket && typeof window === 'undefined') {
+  WebSocket = NodeWebSocket;
+}
+
+/**
+ * Module exports.
+ */
+
+var hasXHR2 = (function () {
+  var XMLHttpRequest = __webpack_require__("../../../../engine.io-client/lib/xmlhttprequest.js");
+  var xhr = new XMLHttpRequest({ xdomain: false });
+  return null != xhr.responseType;
+})();
+
+/**
+ * WebSocket transport constructor.
+ *
+ * @api {Object} connection options
+ * @api public
+ */
+
+function WS (opts) {
+  var forceBase64 = (opts && opts.forceBase64);
+  if (forceBase64) {
+    this.supportsBinary = false;
+  }
+  this.perMessageDeflate = opts.perMessageDeflate;
+  this.usingBrowserWebSocket = BrowserWebSocket && !opts.forceNode;
+  this.protocols = opts.protocols;
+  if (!this.usingBrowserWebSocket) {
+    WebSocket = NodeWebSocket;
+  }
+  Transport.call(this, opts);
+}
+
+/**
+ * Inherits from Transport.
+ */
+
+inherit(WS, Transport);
+
+/**
+ * Transport name.
+ *
+ * @api public
+ */
+
+WS.prototype.name = 'websocket';
+
+/*
+ * WebSockets support binary
+ */
+
+WS.prototype.supportsBinary = true;
+
+/**
+ * Opens socket.
+ *
+ * @api private
+ */
+
+WS.prototype.doOpen = function () {
+  if (!this.check()) {
+    // let probe timeout
+    return;
+  }
+
+  var uri = this.uri();
+  var protocols = this.protocols;
+  var opts = {
+    agent: this.agent,
+    perMessageDeflate: this.perMessageDeflate
+  };
+
+  // SSL options for Node.js client
+  opts.pfx = this.pfx;
+  opts.key = this.key;
+  opts.passphrase = this.passphrase;
+  opts.cert = this.cert;
+  opts.ca = this.ca;
+  opts.ciphers = this.ciphers;
+  opts.rejectUnauthorized = this.rejectUnauthorized;
+  if (this.extraHeaders) {
+    opts.headers = this.extraHeaders;
+  }
+  if (this.localAddress) {
+    opts.localAddress = this.localAddress;
+  }
+
+  try {
+    this.ws = this.usingBrowserWebSocket ? (protocols ? new WebSocket(uri, protocols) : new WebSocket(uri)) : new WebSocket(uri, protocols, opts);
+  } catch (err) {
+    return this.emit('error', err);
+  }
+
+  if (this.ws.binaryType === undefined) {
+    this.supportsBinary = false;
+  }
+
+  if (this.ws.supports && this.ws.supports.binary) {
+    this.supportsBinary = true;
+    this.ws.binaryType = 'nodebuffer';
+  } else {
+    this.ws.binaryType = 'arraybuffer';
+  }
+
+  this.addEventListeners();
+};
+
+/**
+ * Adds event listeners to the socket
+ *
+ * @api private
+ */
+
+WS.prototype.addEventListeners = function () {
+  var self = this;
+
+  this.ws.onopen = function () {
+    self.onOpen();
+  };
+  this.ws.onclose = function () {
+    self.onClose();
+  };
+  this.ws.onmessage = function (ev) {
+    self.onData(ev.data);
+  };
+  this.ws.onerror = function (e) {
+    self.onError('websocket error', e);
+  };
+};
+
+/**
+ * Writes data to socket.
+ *
+ * @param {Array} array of packets.
+ * @api private
+ */
+
+WS.prototype.write = function (packets) {
+  var self = this;
+  this.writable = false;
 
   function close () {
     debug('writing close packet');
@@ -4639,2150 +4513,6 @@ var _a;
 
 ;
 //# sourceMappingURL=socketIoConfig.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/carousel/carousel.component.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export Direction */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CarouselComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__("../../../../ngx-bootstrap/utils/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__carousel_config__ = __webpack_require__("../../../../ngx-bootstrap/carousel/carousel.config.js");
-// todo: add animation
-/***
- * pause (not yet supported) (?string='hover') - event group name which pauses the cycling of the carousel, if hover pauses on mouseenter and resumes on mouseleave
- keyboard (not yet supported) (?boolean=true) - if false carousel will not react to keyboard events
- note: swiping not yet supported
- */
-/****
- * Problems:
- * 1) if we set an active slide via model changes, .active class remains on a current slide.
- * 2) if we have only one slide, we shouldn't show prev/next nav buttons
- * 3) if first or last slide is active and noWrap is true, there should be "disabled" class on the nav buttons.
- * 4) default interval should be equal 5000
- */
-
-
-
-var Direction;
-(function (Direction) {
-    Direction[Direction["UNKNOWN"] = 0] = "UNKNOWN";
-    Direction[Direction["NEXT"] = 1] = "NEXT";
-    Direction[Direction["PREV"] = 2] = "PREV";
-})(Direction || (Direction = {}));
-/**
- * Base element to create carousel
- */
-var CarouselComponent = (function () {
-    function CarouselComponent(config, ngZone) {
-        this.ngZone = ngZone;
-        /** Will be emitted when active slide has been changed. Part of two-way-bindable [(activeSlide)] property */
-        this.activeSlideChange = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */](false);
-        this._slides = new __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* LinkedList */]();
-        this.destroyed = false;
-        Object.assign(this, config);
-    }
-    Object.defineProperty(CarouselComponent.prototype, "activeSlide", {
-        get: function () {
-            return this._currentActiveSlide;
-        },
-        /** Index of currently displayed slide(started for 0) */
-        set: function (index) {
-            if (this._slides.length && index !== this._currentActiveSlide) {
-                this._select(index);
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CarouselComponent.prototype, "interval", {
-        /**
-         * Delay of item cycling in milliseconds. If false, carousel won't cycle automatically.
-         */
-        get: function () {
-            return this._interval;
-        },
-        set: function (value) {
-            this._interval = value;
-            this.restartTimer();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CarouselComponent.prototype, "slides", {
-        get: function () {
-            return this._slides.toArray();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CarouselComponent.prototype, "isBs4", {
-        get: function () {
-            return !Object(__WEBPACK_IMPORTED_MODULE_1__utils__["b" /* isBs3 */])();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    CarouselComponent.prototype.ngOnDestroy = function () {
-        this.destroyed = true;
-    };
-    /**
-     * Adds new slide. If this slide is first in collection - set it as active and starts auto changing
-     * @param slide
-     */
-    CarouselComponent.prototype.addSlide = function (slide) {
-        this._slides.add(slide);
-        if (this._slides.length === 1) {
-            this._currentActiveSlide = void 0;
-            this.activeSlide = 0;
-            this.play();
-        }
-    };
-    /**
-     * Removes specified slide. If this slide is active - will roll to another slide
-     * @param slide
-     */
-    CarouselComponent.prototype.removeSlide = function (slide) {
-        var _this = this;
-        var remIndex = this._slides.indexOf(slide);
-        if (this._currentActiveSlide === remIndex) {
-            // removing of active slide
-            var nextSlideIndex_1 = void 0;
-            if (this._slides.length > 1) {
-                // if this slide last - will roll to first slide, if noWrap flag is FALSE or to previous, if noWrap is TRUE
-                // in case, if this slide in middle of collection, index of next slide is same to removed
-                nextSlideIndex_1 = !this.isLast(remIndex) ? remIndex :
-                    this.noWrap ? remIndex - 1 : 0;
-            }
-            this._slides.remove(remIndex);
-            // prevents exception with changing some value after checking
-            setTimeout(function () {
-                _this._select(nextSlideIndex_1);
-            }, 0);
-        }
-        else {
-            this._slides.remove(remIndex);
-            var currentSlideIndex_1 = this.getCurrentSlideIndex();
-            setTimeout(function () {
-                // after removing, need to actualize index of current active slide
-                _this._currentActiveSlide = currentSlideIndex_1;
-                _this.activeSlideChange.emit(_this._currentActiveSlide);
-            }, 0);
-        }
-    };
-    /**
-     * Rolling to next slide
-     * @param force: {boolean} if true - will ignore noWrap flag
-     */
-    CarouselComponent.prototype.nextSlide = function (force) {
-        if (force === void 0) { force = false; }
-        this.activeSlide = this.findNextSlideIndex(Direction.NEXT, force);
-    };
-    /**
-     * Rolling to previous slide
-     * @param force: {boolean} if true - will ignore noWrap flag
-     */
-    CarouselComponent.prototype.previousSlide = function (force) {
-        if (force === void 0) { force = false; }
-        this.activeSlide = this.findNextSlideIndex(Direction.PREV, force);
-    };
-    /**
-     * Rolling to specified slide
-     * @param index: {number} index of slide, which must be shown
-     */
-    CarouselComponent.prototype.selectSlide = function (index) {
-        this.activeSlide = index;
-    };
-    /**
-     * Starts a auto changing of slides
-     */
-    CarouselComponent.prototype.play = function () {
-        if (!this.isPlaying) {
-            this.isPlaying = true;
-            this.restartTimer();
-        }
-    };
-    /**
-     * Stops a auto changing of slides
-     */
-    CarouselComponent.prototype.pause = function () {
-        if (!this.noPause) {
-            this.isPlaying = false;
-            this.resetTimer();
-        }
-    };
-    /**
-     * Finds and returns index of currently displayed slide
-     * @returns {number}
-     */
-    CarouselComponent.prototype.getCurrentSlideIndex = function () {
-        return this._slides.findIndex(function (slide) { return slide.active; });
-    };
-    /**
-     * Defines, whether the specified index is last in collection
-     * @param index
-     * @returns {boolean}
-     */
-    CarouselComponent.prototype.isLast = function (index) {
-        return index + 1 >= this._slides.length;
-    };
-    /**
-     * Defines next slide index, depending of direction
-     * @param direction: Direction(UNKNOWN|PREV|NEXT)
-     * @param force: {boolean} if TRUE - will ignore noWrap flag, else will return undefined if next slide require wrapping
-     * @returns {any}
-     */
-    CarouselComponent.prototype.findNextSlideIndex = function (direction, force) {
-        var nextSlideIndex = 0;
-        if (!force && (this.isLast(this.activeSlide) && direction !== Direction.PREV && this.noWrap)) {
-            return void 0;
-        }
-        switch (direction) {
-            case Direction.NEXT:
-                // if this is last slide, not force, looping is disabled and need to going forward - select current slide, as a next
-                nextSlideIndex = (!this.isLast(this._currentActiveSlide)) ? this._currentActiveSlide + 1 :
-                    (!force && this.noWrap) ? this._currentActiveSlide : 0;
-                break;
-            case Direction.PREV:
-                // if this is first slide, not force, looping is disabled and need to going backward - select current slide, as a next
-                nextSlideIndex = (this._currentActiveSlide > 0) ? this._currentActiveSlide - 1 :
-                    (!force && this.noWrap) ? this._currentActiveSlide : this._slides.length - 1;
-                break;
-            default:
-                throw new Error('Unknown direction');
-        }
-        return nextSlideIndex;
-    };
-    /**
-     * Sets a slide, which specified through index, as active
-     * @param index
-     * @private
-     */
-    CarouselComponent.prototype._select = function (index) {
-        if (isNaN(index)) {
-            this.pause();
-            return;
-        }
-        var currentSlide = this._slides.get(this._currentActiveSlide);
-        if (currentSlide) {
-            currentSlide.active = false;
-        }
-        var nextSlide = this._slides.get(index);
-        if (nextSlide) {
-            this._currentActiveSlide = index;
-            nextSlide.active = true;
-            this.activeSlide = index;
-            this.activeSlideChange.emit(index);
-        }
-    };
-    /**
-     * Starts loop of auto changing of slides
-     */
-    CarouselComponent.prototype.restartTimer = function () {
-        var _this = this;
-        this.resetTimer();
-        var interval = +this.interval;
-        if (!isNaN(interval) && interval > 0) {
-            this.currentInterval = this.ngZone.runOutsideAngular(function () {
-                return setInterval(function () {
-                    var nInterval = +_this.interval;
-                    _this.ngZone.run(function () {
-                        if (_this.isPlaying && !isNaN(_this.interval) && nInterval > 0 && _this.slides.length) {
-                            _this.nextSlide();
-                        }
-                        else {
-                            _this.pause();
-                        }
-                    });
-                }, interval);
-            });
-        }
-    };
-    /**
-     * Stops loop of auto changing of slides
-     */
-    CarouselComponent.prototype.resetTimer = function () {
-        if (this.currentInterval) {
-            clearInterval(this.currentInterval);
-            this.currentInterval = void 0;
-        }
-    };
-    CarouselComponent.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */], args: [{
-                    selector: 'carousel',
-                    template: "\n    <div (mouseenter)=\"pause()\" (mouseleave)=\"play()\" (mouseup)=\"play()\" class=\"carousel slide\">\n      <ol class=\"carousel-indicators\" *ngIf=\"slides.length > 1\">\n         <li *ngFor=\"let slidez of slides; let i = index;\" [class.active]=\"slidez.active === true\" (click)=\"selectSlide(i)\"></li>\n      </ol>\n      <div class=\"carousel-inner\"><ng-content></ng-content></div>\n      <a class=\"left carousel-control carousel-control-prev\" [class.disabled]=\"activeSlide === 0 && noWrap\" (click)=\"previousSlide()\" *ngIf=\"slides.length > 1\">\n        <span class=\"icon-prev carousel-control-prev-icon\" aria-hidden=\"true\"></span>\n        <span *ngIf=\"isBs4\" class=\"sr-only\">Previous</span>\n      </a>\n      <a class=\"right carousel-control carousel-control-next\" (click)=\"nextSlide()\"  [class.disabled]=\"isLast(activeSlide) && noWrap\" *ngIf=\"slides.length > 1\">\n        <span class=\"icon-next carousel-control-next-icon\" aria-hidden=\"true\"></span>\n        <span class=\"sr-only\">Next</span>\n      </a>\n    </div>\n  "
-                },] },
-    ];
-    /** @nocollapse */
-    CarouselComponent.ctorParameters = function () { return [
-        { type: __WEBPACK_IMPORTED_MODULE_2__carousel_config__["a" /* CarouselConfig */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* NgZone */], },
-    ]; };
-    CarouselComponent.propDecorators = {
-        'noWrap': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'noPause': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'activeSlideChange': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["T" /* Output */] },],
-        'activeSlide': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'interval': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-    };
-    return CarouselComponent;
-}());
-
-//# sourceMappingURL=carousel.component.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/carousel/carousel.config.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CarouselConfig; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-
-var CarouselConfig = (function () {
-    function CarouselConfig() {
-        /** Default interval of auto changing of slides */
-        this.interval = 5000;
-        /** Is loop of auto changing of slides can be paused */
-        this.noPause = false;
-        /** Is slides can wrap from the last to the first slide */
-        this.noWrap = false;
-    }
-    CarouselConfig.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */] },
-    ];
-    /** @nocollapse */
-    CarouselConfig.ctorParameters = function () { return []; };
-    return CarouselConfig;
-}());
-
-//# sourceMappingURL=carousel.config.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/carousel/carousel.module.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CarouselModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__carousel_component__ = __webpack_require__("../../../../ngx-bootstrap/carousel/carousel.component.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__slide_component__ = __webpack_require__("../../../../ngx-bootstrap/carousel/slide.component.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__carousel_config__ = __webpack_require__("../../../../ngx-bootstrap/carousel/carousel.config.js");
-
-
-
-
-
-var CarouselModule = (function () {
-    function CarouselModule() {
-    }
-    CarouselModule.forRoot = function () {
-        return { ngModule: CarouselModule, providers: [] };
-    };
-    CarouselModule.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["M" /* NgModule */], args: [{
-                    imports: [__WEBPACK_IMPORTED_MODULE_0__angular_common__["b" /* CommonModule */]],
-                    declarations: [__WEBPACK_IMPORTED_MODULE_3__slide_component__["a" /* SlideComponent */], __WEBPACK_IMPORTED_MODULE_2__carousel_component__["a" /* CarouselComponent */]],
-                    exports: [__WEBPACK_IMPORTED_MODULE_3__slide_component__["a" /* SlideComponent */], __WEBPACK_IMPORTED_MODULE_2__carousel_component__["a" /* CarouselComponent */]],
-                    providers: [__WEBPACK_IMPORTED_MODULE_4__carousel_config__["a" /* CarouselConfig */]]
-                },] },
-    ];
-    /** @nocollapse */
-    CarouselModule.ctorParameters = function () { return []; };
-    return CarouselModule;
-}());
-
-//# sourceMappingURL=carousel.module.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/carousel/index.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__carousel_component__ = __webpack_require__("../../../../ngx-bootstrap/carousel/carousel.component.js");
-/* unused harmony reexport CarouselComponent */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__carousel_module__ = __webpack_require__("../../../../ngx-bootstrap/carousel/carousel.module.js");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__carousel_module__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__slide_component__ = __webpack_require__("../../../../ngx-bootstrap/carousel/slide.component.js");
-/* unused harmony reexport SlideComponent */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__carousel_config__ = __webpack_require__("../../../../ngx-bootstrap/carousel/carousel.config.js");
-/* unused harmony reexport CarouselConfig */
-
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/carousel/slide.component.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SlideComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__carousel_component__ = __webpack_require__("../../../../ngx-bootstrap/carousel/carousel.component.js");
-
-
-var SlideComponent = (function () {
-    function SlideComponent(carousel) {
-        /** Wraps element by appropriate CSS classes */
-        this.addClass = true;
-        this.carousel = carousel;
-    }
-    /** Fires changes in container collection after adding a new slide instance */
-    SlideComponent.prototype.ngOnInit = function () {
-        this.carousel.addSlide(this);
-    };
-    /** Fires changes in container collection after removing of this slide instance */
-    SlideComponent.prototype.ngOnDestroy = function () {
-        this.carousel.removeSlide(this);
-    };
-    SlideComponent.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */], args: [{
-                    selector: 'slide',
-                    template: "\n    <div [class.active]=\"active\" class=\"item\">\n      <ng-content></ng-content>\n    </div>\n  "
-                },] },
-    ];
-    /** @nocollapse */
-    SlideComponent.ctorParameters = function () { return [
-        { type: __WEBPACK_IMPORTED_MODULE_1__carousel_component__["a" /* CarouselComponent */], },
-    ]; };
-    SlideComponent.propDecorators = {
-        'active': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* HostBinding */], args: ['class.active',] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'addClass': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* HostBinding */], args: ['class.item',] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* HostBinding */], args: ['class.carousel-item',] },],
-    };
-    return SlideComponent;
-}());
-
-//# sourceMappingURL=slide.component.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/component-loader/component-loader.class.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ComponentLoader; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_triggers__ = __webpack_require__("../../../../ngx-bootstrap/utils/triggers.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__content_ref_class__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/content-ref.class.js");
-// todo: add delay support
-// todo: merge events onShow, onShown, etc...
-// todo: add global positioning configuration?
-
-
-
-var ComponentLoader = (function () {
-    /**
-     * Do not use this directly, it should be instanced via
-     * `ComponentLoadFactory.attach`
-     * @internal
-     */
-    // tslint:disable-next-line
-    function ComponentLoader(_viewContainerRef, _renderer, _elementRef, _injector, _componentFactoryResolver, _ngZone, _applicationRef, _posService) {
-        this._viewContainerRef = _viewContainerRef;
-        this._renderer = _renderer;
-        this._elementRef = _elementRef;
-        this._injector = _injector;
-        this._componentFactoryResolver = _componentFactoryResolver;
-        this._ngZone = _ngZone;
-        this._applicationRef = _applicationRef;
-        this._posService = _posService;
-        this.onBeforeShow = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-        this.onShown = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-        this.onBeforeHide = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-        this.onHidden = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-        this._providers = [];
-        this._listenOpts = {};
-        this._globalListener = Function.prototype;
-    }
-    Object.defineProperty(ComponentLoader.prototype, "isShown", {
-        get: function () {
-            return !!this._componentRef;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ;
-    ComponentLoader.prototype.attach = function (compType) {
-        this._componentFactory = this._componentFactoryResolver
-            .resolveComponentFactory(compType);
-        return this;
-    };
-    // todo: add behaviour: to target element, `body`, custom element
-    ComponentLoader.prototype.to = function (container) {
-        this.container = container || this.container;
-        return this;
-    };
-    ComponentLoader.prototype.position = function (opts) {
-        this.attachment = opts.attachment || this.attachment;
-        this._elementRef = opts.target || this._elementRef;
-        return this;
-    };
-    ComponentLoader.prototype.provide = function (provider) {
-        this._providers.push(provider);
-        return this;
-    };
-    // todo: appendChild to element or document.querySelector(this.container)
-    ComponentLoader.prototype.show = function (opts) {
-        if (opts === void 0) { opts = {}; }
-        this._subscribePositioning();
-        this._innerComponent = null;
-        if (!this._componentRef) {
-            this.onBeforeShow.emit();
-            this._contentRef = this._getContentRef(opts.content, opts.context);
-            var injector = __WEBPACK_IMPORTED_MODULE_0__angular_core__["_0" /* ReflectiveInjector */].resolveAndCreate(this._providers, this._injector);
-            this._componentRef = this._componentFactory.create(injector, this._contentRef.nodes);
-            this._applicationRef.attachView(this._componentRef.hostView);
-            // this._componentRef = this._viewContainerRef
-            //   .createComponent(this._componentFactory, 0, injector, this._contentRef.nodes);
-            this.instance = this._componentRef.instance;
-            Object.assign(this._componentRef.instance, opts);
-            if (this.container instanceof __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* ElementRef */]) {
-                this.container.nativeElement
-                    .appendChild(this._componentRef.location.nativeElement);
-            }
-            if (this.container === 'body' && typeof document !== 'undefined') {
-                document.querySelector(this.container)
-                    .appendChild(this._componentRef.location.nativeElement);
-            }
-            if (!this.container && this._elementRef && this._elementRef.nativeElement.parentElement) {
-                this._elementRef.nativeElement.parentElement
-                    .appendChild(this._componentRef.location.nativeElement);
-            }
-            // we need to manually invoke change detection since events registered
-            // via
-            // Renderer::listen() are not picked up by change detection with the
-            // OnPush strategy
-            if (this._contentRef.componentRef) {
-                this._innerComponent = this._contentRef.componentRef.instance;
-                this._contentRef.componentRef.changeDetectorRef.markForCheck();
-                this._contentRef.componentRef.changeDetectorRef.detectChanges();
-            }
-            this._componentRef.changeDetectorRef.markForCheck();
-            this._componentRef.changeDetectorRef.detectChanges();
-            this.onShown.emit(this._componentRef.instance);
-        }
-        this._registerOutsideClick();
-        return this._componentRef;
-    };
-    ComponentLoader.prototype.hide = function () {
-        if (!this._componentRef) {
-            return this;
-        }
-        this.onBeforeHide.emit(this._componentRef.instance);
-        var componentEl = this._componentRef.location.nativeElement;
-        componentEl.parentNode.removeChild(componentEl);
-        if (this._contentRef.componentRef) {
-            this._contentRef.componentRef.destroy();
-        }
-        this._componentRef.destroy();
-        if (this._viewContainerRef && this._contentRef.viewRef) {
-            this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._contentRef.viewRef));
-        }
-        // this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._componentRef.hostView));
-        //
-        // if (this._contentRef.viewRef && this._viewContainerRef.indexOf(this._contentRef.viewRef) !== -1) {
-        //   this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._contentRef.viewRef));
-        // }
-        this._contentRef = null;
-        this._componentRef = null;
-        this._removeGlobalListener();
-        this.onHidden.emit();
-        return this;
-    };
-    ComponentLoader.prototype.toggle = function () {
-        if (this.isShown) {
-            this.hide();
-            return;
-        }
-        this.show();
-    };
-    ComponentLoader.prototype.dispose = function () {
-        if (this.isShown) {
-            this.hide();
-        }
-        this._unsubscribePositioning();
-        if (this._unregisterListenersFn) {
-            this._unregisterListenersFn();
-        }
-    };
-    ComponentLoader.prototype.listen = function (listenOpts) {
-        var _this = this;
-        this.triggers = listenOpts.triggers || this.triggers;
-        this._listenOpts.outsideClick = listenOpts.outsideClick;
-        listenOpts.target = listenOpts.target || this._elementRef.nativeElement;
-        var hide = this._listenOpts.hide = function () { return listenOpts.hide ? listenOpts.hide() : _this.hide(); };
-        var show = this._listenOpts.show = function (registerHide) {
-            listenOpts.show ? listenOpts.show(registerHide) : _this.show(registerHide);
-            registerHide();
-        };
-        var toggle = function (registerHide) {
-            _this.isShown ? hide() : show(registerHide);
-        };
-        this._unregisterListenersFn = Object(__WEBPACK_IMPORTED_MODULE_1__utils_triggers__["a" /* listenToTriggersV2 */])(this._renderer, {
-            target: listenOpts.target,
-            triggers: listenOpts.triggers,
-            show: show, hide: hide, toggle: toggle
-        });
-        return this;
-    };
-    ComponentLoader.prototype._removeGlobalListener = function () {
-        if (this._globalListener) {
-            this._globalListener();
-            this._globalListener = null;
-        }
-    };
-    ComponentLoader.prototype.attachInline = function (vRef, template) {
-        this._inlineViewRef = vRef.createEmbeddedView(template);
-        return this;
-    };
-    ComponentLoader.prototype._registerOutsideClick = function () {
-        var _this = this;
-        if (!this._componentRef || !this._componentRef.location) {
-            return;
-        }
-        // why: should run after first event bubble
-        if (this._listenOpts.outsideClick) {
-            var target_1 = this._componentRef.location.nativeElement;
-            setTimeout(function () {
-                _this._globalListener = Object(__WEBPACK_IMPORTED_MODULE_1__utils_triggers__["b" /* registerOutsideClick */])(_this._renderer, {
-                    targets: [target_1, _this._elementRef.nativeElement],
-                    outsideClick: _this._listenOpts.outsideClick,
-                    hide: function () { return _this._listenOpts.hide(); }
-                });
-            });
-        }
-    };
-    ComponentLoader.prototype.getInnerComponent = function () {
-        return this._innerComponent;
-    };
-    ComponentLoader.prototype._subscribePositioning = function () {
-        var _this = this;
-        if (this._zoneSubscription || !this.attachment) {
-            return;
-        }
-        this._zoneSubscription = this._ngZone
-            .onStable.subscribe(function () {
-            if (!_this._componentRef) {
-                return;
-            }
-            _this._posService.position({
-                element: _this._componentRef.location,
-                target: _this._elementRef,
-                attachment: _this.attachment,
-                appendToBody: _this.container === 'body'
-            });
-        });
-    };
-    ComponentLoader.prototype._unsubscribePositioning = function () {
-        if (!this._zoneSubscription) {
-            return;
-        }
-        this._zoneSubscription.unsubscribe();
-        this._zoneSubscription = null;
-    };
-    ComponentLoader.prototype._getContentRef = function (content, context) {
-        if (!content) {
-            return new __WEBPACK_IMPORTED_MODULE_2__content_ref_class__["a" /* ContentRef */]([]);
-        }
-        if (content instanceof __WEBPACK_IMPORTED_MODULE_0__angular_core__["_12" /* TemplateRef */]) {
-            if (this._viewContainerRef) {
-                var viewRef_1 = this._viewContainerRef.createEmbeddedView(content, context);
-                viewRef_1.markForCheck();
-                return new __WEBPACK_IMPORTED_MODULE_2__content_ref_class__["a" /* ContentRef */]([viewRef_1.rootNodes], viewRef_1);
-            }
-            var viewRef = content.createEmbeddedView({});
-            this._applicationRef.attachView(viewRef);
-            return new __WEBPACK_IMPORTED_MODULE_2__content_ref_class__["a" /* ContentRef */]([viewRef.rootNodes], viewRef);
-        }
-        if (typeof content === 'function') {
-            var contentCmptFactory = this._componentFactoryResolver.resolveComponentFactory(content);
-            var modalContentInjector = __WEBPACK_IMPORTED_MODULE_0__angular_core__["_0" /* ReflectiveInjector */].resolveAndCreate(this._providers.concat([content]), this._injector);
-            var componentRef = contentCmptFactory.create(modalContentInjector);
-            this._applicationRef.attachView(componentRef.hostView);
-            return new __WEBPACK_IMPORTED_MODULE_2__content_ref_class__["a" /* ContentRef */]([[componentRef.location.nativeElement]], componentRef.hostView, componentRef);
-        }
-        return new __WEBPACK_IMPORTED_MODULE_2__content_ref_class__["a" /* ContentRef */]([[this._renderer.createText(null, "" + content)]]);
-    };
-    return ComponentLoader;
-}());
-
-//# sourceMappingURL=component-loader.class.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/component-loader/component-loader.factory.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ComponentLoaderFactory; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__component_loader_class__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/component-loader.class.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__positioning__ = __webpack_require__("../../../../ngx-bootstrap/positioning/index.js");
-
-
-
-var ComponentLoaderFactory = (function () {
-    function ComponentLoaderFactory(_componentFactoryResolver, _ngZone, _injector, _posService, _applicationRef) {
-        this._componentFactoryResolver = _componentFactoryResolver;
-        this._ngZone = _ngZone;
-        this._injector = _injector;
-        this._posService = _posService;
-        this._applicationRef = _applicationRef;
-    }
-    /**
-     *
-     * @param _elementRef
-     * @param _viewContainerRef
-     * @param _renderer
-     * @returns {ComponentLoader}
-     */
-    ComponentLoaderFactory.prototype.createLoader = function (_elementRef, _viewContainerRef, _renderer) {
-        return new __WEBPACK_IMPORTED_MODULE_1__component_loader_class__["a" /* ComponentLoader */](_viewContainerRef, _renderer, _elementRef, this._injector, this._componentFactoryResolver, this._ngZone, this._applicationRef, this._posService);
-    };
-    ComponentLoaderFactory.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */] },
-    ];
-    /** @nocollapse */
-    ComponentLoaderFactory.ctorParameters = function () { return [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* ComponentFactoryResolver */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* NgZone */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* Injector */], },
-        { type: __WEBPACK_IMPORTED_MODULE_2__positioning__["a" /* PositioningService */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["g" /* ApplicationRef */], },
-    ]; };
-    return ComponentLoaderFactory;
-}());
-
-//# sourceMappingURL=component-loader.factory.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/component-loader/content-ref.class.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ContentRef; });
-/**
- * @copyright Valor Software
- * @copyright Angular ng-bootstrap team
- */
-var ContentRef = (function () {
-    function ContentRef(nodes, viewRef, componentRef) {
-        this.nodes = nodes;
-        this.viewRef = viewRef;
-        this.componentRef = componentRef;
-    }
-    return ContentRef;
-}());
-
-//# sourceMappingURL=content-ref.class.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/component-loader/index.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__component_loader_class__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/component-loader.class.js");
-/* unused harmony reexport ComponentLoader */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__component_loader_factory__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/component-loader.factory.js");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__component_loader_factory__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__content_ref_class__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/content-ref.class.js");
-/* unused harmony reexport ContentRef */
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/dropdown/bs-dropdown-container.component.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BsDropdownContainerComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__bs_dropdown_state__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.state.js");
-
-
-var BsDropdownContainerComponent = (function () {
-    function BsDropdownContainerComponent(_state, cd, _renderer, _element) {
-        var _this = this;
-        this._state = _state;
-        this.cd = cd;
-        this._renderer = _renderer;
-        this.isOpen = false;
-        this._subscription = _state.isOpenChange.subscribe(function (value) {
-            _this.isOpen = value;
-            var dropdown = _element.nativeElement.querySelector('.dropdown-menu');
-            if (dropdown) {
-                _this._renderer.setElementClass(dropdown, 'show', true);
-                if (dropdown.classList.contains('dropdown-menu-right')) {
-                    _this._renderer.setElementStyle(dropdown, 'left', 'auto');
-                    _this._renderer.setElementStyle(dropdown, 'right', '0');
-                }
-                if (_this.direction === 'up') {
-                    _this._renderer.setElementStyle(dropdown, 'top', 'auto');
-                    _this._renderer.setElementStyle(dropdown, 'transform', 'translateY(-101%)');
-                }
-            }
-            _this.cd.markForCheck();
-            _this.cd.detectChanges();
-        });
-    }
-    Object.defineProperty(BsDropdownContainerComponent.prototype, "direction", {
-        get: function () {
-            return this._state.direction;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    BsDropdownContainerComponent.prototype.ngOnDestroy = function () {
-        this._subscription.unsubscribe();
-    };
-    BsDropdownContainerComponent.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */], args: [{
-                    selector: 'bs-dropdown-container',
-                    changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* ChangeDetectionStrategy */].OnPush,
-                    host: {
-                        style: 'display:block;position: absolute;'
-                    },
-                    template: "\n    <div [class.dropup]=\"direction === 'up'\"\n         [class.dropdown]=\"direction === 'down'\"\n         [class.show]=\"isOpen\"\n         [class.open]=\"isOpen\"><ng-content></ng-content></div>\n  "
-                },] },
-    ];
-    /** @nocollapse */
-    BsDropdownContainerComponent.ctorParameters = function () { return [
-        { type: __WEBPACK_IMPORTED_MODULE_1__bs_dropdown_state__["a" /* BsDropdownState */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ChangeDetectorRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_1" /* Renderer */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* ElementRef */], },
-    ]; };
-    return BsDropdownContainerComponent;
-}());
-
-//# sourceMappingURL=bs-dropdown-container.component.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/dropdown/bs-dropdown-menu.directive.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BsDropdownMenuDirective; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__bs_dropdown_state__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.state.js");
-
-
-var BsDropdownMenuDirective = (function () {
-    function BsDropdownMenuDirective(_state, _viewContainer, _templateRef) {
-        _state.resolveDropdownMenu({
-            templateRef: _templateRef,
-            viewContainer: _viewContainer
-        });
-    }
-    BsDropdownMenuDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* Directive */], args: [{
-                    selector: '[bsDropdownMenu],[dropdownMenu]',
-                    exportAs: 'bs-dropdown-menu'
-                },] },
-    ];
-    /** @nocollapse */
-    BsDropdownMenuDirective.ctorParameters = function () { return [
-        { type: __WEBPACK_IMPORTED_MODULE_1__bs_dropdown_state__["a" /* BsDropdownState */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_18" /* ViewContainerRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_12" /* TemplateRef */], },
-    ]; };
-    return BsDropdownMenuDirective;
-}());
-
-//# sourceMappingURL=bs-dropdown-menu.directive.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/dropdown/bs-dropdown-toggle.directive.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BsDropdownToggleDirective; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__bs_dropdown_state__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.state.js");
-
-
-var BsDropdownToggleDirective = (function () {
-    function BsDropdownToggleDirective(_state, _element) {
-        var _this = this;
-        this._state = _state;
-        this._element = _element;
-        this.isDisabled = null;
-        this._subscriptions = [];
-        // sync is open value with state
-        this._subscriptions.push(this._state
-            .isOpenChange.subscribe(function (value) { return _this.isOpen = value; }));
-        // populate disabled state
-        this._subscriptions.push(this._state
-            .isDisabledChange
-            .subscribe(function (value) { return _this.isDisabled = value || null; }));
-    }
-    BsDropdownToggleDirective.prototype.onClick = function () {
-        if (this.isDisabled) {
-            return;
-        }
-        this._state.toggleClick.emit();
-    };
-    BsDropdownToggleDirective.prototype.onDocumentClick = function (event) {
-        if (this._state.autoClose && event.button !== 2 &&
-            !this._element.nativeElement.contains(event.target)) {
-            this._state.toggleClick.emit(false);
-        }
-    };
-    BsDropdownToggleDirective.prototype.onEsc = function () {
-        if (this._state.autoClose) {
-            this._state.toggleClick.emit(false);
-        }
-    };
-    BsDropdownToggleDirective.prototype.ngOnDestroy = function () {
-        for (var _i = 0, _a = this._subscriptions; _i < _a.length; _i++) {
-            var sub = _a[_i];
-            sub.unsubscribe();
-        }
-    };
-    BsDropdownToggleDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* Directive */], args: [{
-                    selector: '[bsDropdownToggle],[dropdownToggle]',
-                    exportAs: 'bs-dropdown-toggle',
-                    host: {
-                        '[attr.aria-haspopup]': 'true'
-                    }
-                },] },
-    ];
-    /** @nocollapse */
-    BsDropdownToggleDirective.ctorParameters = function () { return [
-        { type: __WEBPACK_IMPORTED_MODULE_1__bs_dropdown_state__["a" /* BsDropdownState */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* ElementRef */], },
-    ]; };
-    BsDropdownToggleDirective.propDecorators = {
-        'isDisabled': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* HostBinding */], args: ['attr.disabled',] },],
-        'isOpen': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* HostBinding */], args: ['attr.aria-expanded',] },],
-        'onClick': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* HostListener */], args: ['click',] },],
-        'onDocumentClick': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* HostListener */], args: ['document:click', ['$event'],] },],
-        'onEsc': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* HostListener */], args: ['keyup.esc',] },],
-    };
-    return BsDropdownToggleDirective;
-}());
-
-//# sourceMappingURL=bs-dropdown-toggle.directive.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/dropdown/bs-dropdown.config.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BsDropdownConfig; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-
-/** Default dropdown configuration */
-var BsDropdownConfig = (function () {
-    function BsDropdownConfig() {
-        /** default dropdown auto closing behavior */
-        this.autoClose = true;
-    }
-    BsDropdownConfig.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */] },
-    ];
-    /** @nocollapse */
-    BsDropdownConfig.ctorParameters = function () { return []; };
-    return BsDropdownConfig;
-}());
-
-//# sourceMappingURL=bs-dropdown.config.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/dropdown/bs-dropdown.directive.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BsDropdownDirective; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_filter__ = __webpack_require__("../../../../rxjs/add/operator/filter.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_filter___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_filter__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__component_loader__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__bs_dropdown_config__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.config.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__bs_dropdown_container_component__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown-container.component.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__bs_dropdown_state__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.state.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_ng2_bootstrap_config__ = __webpack_require__("../../../../ngx-bootstrap/utils/ng2-bootstrap-config.js");
-
-
-
-
-
-
-
-var BsDropdownDirective = (function () {
-    function BsDropdownDirective(_elementRef, _renderer, _viewContainerRef, _cis, _config, _state) {
-        this._elementRef = _elementRef;
-        this._renderer = _renderer;
-        this._viewContainerRef = _viewContainerRef;
-        this._cis = _cis;
-        this._config = _config;
-        this._state = _state;
-        // todo: move to component loader
-        this._isInlineOpen = false;
-        this._subscriptions = [];
-        this._isInited = false;
-        // create dropdown component loader
-        this._dropdown = this._cis
-            .createLoader(this._elementRef, this._viewContainerRef, this._renderer)
-            .provide({ provide: __WEBPACK_IMPORTED_MODULE_5__bs_dropdown_state__["a" /* BsDropdownState */], useValue: this._state });
-        this.onShown = this._dropdown.onShown;
-        this.onHidden = this._dropdown.onHidden;
-        this.isOpenChange = this._state.isOpenChange;
-        // set initial dropdown state from config
-        this._state.autoClose = this._config.autoClose;
-    }
-    Object.defineProperty(BsDropdownDirective.prototype, "autoClose", {
-        get: function () {
-            return this._state.autoClose;
-        },
-        /**
-         * Indicates that dropdown will be closed on item or document click,
-         * and after pressing ESC
-         */
-        set: function (value) {
-            if (typeof value === 'boolean') {
-                this._state.autoClose = value;
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ;
-    Object.defineProperty(BsDropdownDirective.prototype, "isDisabled", {
-        get: function () { return this._isDisabled; },
-        /**
-         * Disables dropdown toggle and hides dropdown menu if opened
-         */
-        set: function (value) {
-            this._isDisabled = value;
-            this._state.isDisabledChange.emit(value);
-            if (value) {
-                this.hide();
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BsDropdownDirective.prototype, "isOpen", {
-        /**
-         * Returns whether or not the popover is currently being shown
-         */
-        get: function () {
-            if (this._showInline) {
-                return this._isInlineOpen;
-            }
-            return this._dropdown.isShown;
-        },
-        set: function (value) {
-            if (value) {
-                this.show();
-            }
-            else {
-                this.hide();
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BsDropdownDirective.prototype, "isBs4", {
-        get: function () {
-            return !Object(__WEBPACK_IMPORTED_MODULE_6__utils_ng2_bootstrap_config__["a" /* isBs3 */])();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BsDropdownDirective.prototype, "_showInline", {
-        get: function () {
-            return !this.container;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ;
-    BsDropdownDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        // fix: seems there are an issue with `routerLinkActive`
-        // which result in duplicated call ngOnInit without call to ngOnDestroy
-        // read more: https://github.com/valor-software/ngx-bootstrap/issues/1885
-        if (this._isInited) {
-            return;
-        }
-        this._isInited = true;
-        // attach DOM listeners
-        this._dropdown.listen({
-            triggers: this.triggers,
-            show: function () { return _this.show(); }
-        });
-        // toggle visibility on toggle element click
-        this._subscriptions.push(this._state
-            .toggleClick.subscribe(function (value) { return _this.toggle(value); }));
-        // hide dropdown if set disabled while opened
-        this._subscriptions.push(this._state
-            .isDisabledChange
-            .filter(function (value) { return value === true; })
-            .subscribe(function (value) { return _this.hide(); }));
-    };
-    /**
-     * Opens an element’s popover. This is considered a “manual” triggering of
-     * the popover.
-     */
-    BsDropdownDirective.prototype.show = function () {
-        var _this = this;
-        if (this.isOpen || this.isDisabled) {
-            return;
-        }
-        if (this._showInline) {
-            if (!this._inlinedMenu) {
-                this._state.dropdownMenu
-                    .then(function (dropdownMenu) {
-                    _this._dropdown.attachInline(dropdownMenu.viewContainer, dropdownMenu.templateRef);
-                    _this._inlinedMenu = _this._dropdown._inlineViewRef;
-                    _this.addBs4Polyfills();
-                });
-            }
-            this.addBs4Polyfills();
-            this._isInlineOpen = true;
-            this.onShown.emit(true);
-            this._state.isOpenChange.emit(true);
-            return;
-        }
-        this._state.dropdownMenu
-            .then(function (dropdownMenu) {
-            // check direction in which dropdown should be opened
-            var _dropup = _this.dropup === true ||
-                (typeof _this.dropup !== 'undefined' && _this.dropup !== false);
-            _this._state.direction = _dropup ? 'up' : 'down';
-            var _placement = _this.placement ||
-                (_dropup ? 'top left' : 'bottom left');
-            // show dropdown
-            _this._dropdown
-                .attach(__WEBPACK_IMPORTED_MODULE_4__bs_dropdown_container_component__["a" /* BsDropdownContainerComponent */])
-                .to(_this.container)
-                .position({ attachment: _placement })
-                .show({
-                content: dropdownMenu.templateRef,
-                placement: _placement
-            });
-            _this._state.isOpenChange.emit(true);
-        });
-    };
-    /**
-     * Closes an element’s popover. This is considered a “manual” triggering of
-     * the popover.
-     */
-    BsDropdownDirective.prototype.hide = function () {
-        if (!this.isOpen) {
-            return;
-        }
-        if (this._showInline) {
-            this.removeShowClass();
-            this._isInlineOpen = false;
-            this.onHidden.emit(true);
-        }
-        else {
-            this._dropdown.hide();
-        }
-        this._state.isOpenChange.emit(false);
-    };
-    /**
-     * Toggles an element’s popover. This is considered a “manual” triggering of
-     * the popover.
-     */
-    BsDropdownDirective.prototype.toggle = function (value) {
-        if (this.isOpen || value === false) {
-            return this.hide();
-        }
-        return this.show();
-    };
-    BsDropdownDirective.prototype.ngOnDestroy = function () {
-        // clean up subscriptions and destroy dropdown
-        for (var _i = 0, _a = this._subscriptions; _i < _a.length; _i++) {
-            var sub = _a[_i];
-            sub.unsubscribe();
-        }
-        this._dropdown.dispose();
-    };
-    BsDropdownDirective.prototype.addBs4Polyfills = function () {
-        if (!Object(__WEBPACK_IMPORTED_MODULE_6__utils_ng2_bootstrap_config__["a" /* isBs3 */])()) {
-            this.addShowClass();
-            this.checkRightAlignment();
-            this.checkDropup();
-        }
-    };
-    BsDropdownDirective.prototype.addShowClass = function () {
-        if (this._inlinedMenu && this._inlinedMenu.rootNodes[0]) {
-            this._renderer.setElementClass(this._inlinedMenu.rootNodes[0], 'show', true);
-        }
-    };
-    BsDropdownDirective.prototype.removeShowClass = function () {
-        if (this._inlinedMenu && this._inlinedMenu.rootNodes[0]) {
-            this._renderer.setElementClass(this._inlinedMenu.rootNodes[0], 'show', false);
-        }
-    };
-    BsDropdownDirective.prototype.checkRightAlignment = function () {
-        if (this._inlinedMenu && this._inlinedMenu.rootNodes[0]) {
-            var isRightAligned = this._inlinedMenu.rootNodes[0].classList.contains('dropdown-menu-right');
-            this._renderer.setElementStyle(this._inlinedMenu.rootNodes[0], 'left', isRightAligned ? 'auto' : '0');
-            this._renderer.setElementStyle(this._inlinedMenu.rootNodes[0], 'right', isRightAligned ? '0' : 'auto');
-        }
-    };
-    BsDropdownDirective.prototype.checkDropup = function () {
-        if (this._inlinedMenu && this._inlinedMenu.rootNodes[0]) {
-            // a little hack to not break support of bootstrap 4 beta
-            var top_1 = getComputedStyle(this._inlinedMenu.rootNodes[0])['top'];
-            var topAuto = top_1 === 'auto' || top_1 === '100%';
-            this._renderer.setElementStyle(this._inlinedMenu.rootNodes[0], 'top', this.dropup ? 'auto' : '100%');
-            this._renderer.setElementStyle(this._inlinedMenu.rootNodes[0], 'transform', this.dropup && !topAuto ? 'translateY(-101%)' : 'translateY(0)');
-        }
-    };
-    BsDropdownDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* Directive */], args: [{
-                    selector: '[bsDropdown],[dropdown]',
-                    exportAs: 'bs-dropdown',
-                    providers: [__WEBPACK_IMPORTED_MODULE_5__bs_dropdown_state__["a" /* BsDropdownState */]],
-                    host: {
-                        '[class.dropup]': 'dropup',
-                        '[class.open]': 'isOpen',
-                        '[class.show]': 'isOpen && isBs4'
-                    }
-                },] },
-    ];
-    /** @nocollapse */
-    BsDropdownDirective.ctorParameters = function () { return [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_1" /* Renderer */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_18" /* ViewContainerRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_2__component_loader__["a" /* ComponentLoaderFactory */], },
-        { type: __WEBPACK_IMPORTED_MODULE_3__bs_dropdown_config__["a" /* BsDropdownConfig */], },
-        { type: __WEBPACK_IMPORTED_MODULE_5__bs_dropdown_state__["a" /* BsDropdownState */], },
-    ]; };
-    BsDropdownDirective.propDecorators = {
-        'placement': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'triggers': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'container': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'dropup': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'autoClose': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'isDisabled': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'isOpen': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* Input */] },],
-        'isOpenChange': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["T" /* Output */] },],
-        'onShown': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["T" /* Output */] },],
-        'onHidden': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["T" /* Output */] },],
-    };
-    return BsDropdownDirective;
-}());
-
-//# sourceMappingURL=bs-dropdown.directive.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/dropdown/bs-dropdown.module.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BsDropdownModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__component_loader__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__positioning__ = __webpack_require__("../../../../ngx-bootstrap/positioning/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__bs_dropdown_container_component__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown-container.component.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__bs_dropdown_menu_directive__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown-menu.directive.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__bs_dropdown_toggle_directive__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown-toggle.directive.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__bs_dropdown_config__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.config.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__bs_dropdown_directive__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.directive.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__bs_dropdown_state__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.state.js");
-
-
-
-
-
-
-
-
-
-var BsDropdownModule = (function () {
-    function BsDropdownModule() {
-    }
-    BsDropdownModule.forRoot = function (config) {
-        return {
-            ngModule: BsDropdownModule, providers: [
-                __WEBPACK_IMPORTED_MODULE_1__component_loader__["a" /* ComponentLoaderFactory */],
-                __WEBPACK_IMPORTED_MODULE_2__positioning__["a" /* PositioningService */],
-                __WEBPACK_IMPORTED_MODULE_8__bs_dropdown_state__["a" /* BsDropdownState */],
-                { provide: __WEBPACK_IMPORTED_MODULE_6__bs_dropdown_config__["a" /* BsDropdownConfig */], useValue: config ? config : { autoClose: true } }
-            ]
-        };
-    };
-    ;
-    BsDropdownModule.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["M" /* NgModule */], args: [{
-                    declarations: [
-                        __WEBPACK_IMPORTED_MODULE_4__bs_dropdown_menu_directive__["a" /* BsDropdownMenuDirective */],
-                        __WEBPACK_IMPORTED_MODULE_5__bs_dropdown_toggle_directive__["a" /* BsDropdownToggleDirective */],
-                        __WEBPACK_IMPORTED_MODULE_3__bs_dropdown_container_component__["a" /* BsDropdownContainerComponent */],
-                        __WEBPACK_IMPORTED_MODULE_7__bs_dropdown_directive__["a" /* BsDropdownDirective */]
-                    ],
-                    exports: [
-                        __WEBPACK_IMPORTED_MODULE_4__bs_dropdown_menu_directive__["a" /* BsDropdownMenuDirective */],
-                        __WEBPACK_IMPORTED_MODULE_5__bs_dropdown_toggle_directive__["a" /* BsDropdownToggleDirective */],
-                        __WEBPACK_IMPORTED_MODULE_7__bs_dropdown_directive__["a" /* BsDropdownDirective */]
-                    ],
-                    entryComponents: [__WEBPACK_IMPORTED_MODULE_3__bs_dropdown_container_component__["a" /* BsDropdownContainerComponent */]]
-                },] },
-    ];
-    /** @nocollapse */
-    BsDropdownModule.ctorParameters = function () { return []; };
-    return BsDropdownModule;
-}());
-
-//# sourceMappingURL=bs-dropdown.module.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/dropdown/bs-dropdown.state.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BsDropdownState; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-
-var BsDropdownState = (function () {
-    function BsDropdownState() {
-        var _this = this;
-        this.direction = 'down';
-        this.isOpenChange = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-        this.isDisabledChange = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-        this.toggleClick = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* EventEmitter */]();
-        this.dropdownMenu = new Promise(function (resolve) {
-            _this.resolveDropdownMenu = resolve;
-        });
-    }
-    BsDropdownState.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */] },
-    ];
-    /** @nocollapse */
-    BsDropdownState.ctorParameters = function () { return []; };
-    return BsDropdownState;
-}());
-
-//# sourceMappingURL=bs-dropdown.state.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/dropdown/index.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bs_dropdown_directive__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.directive.js");
-/* unused harmony reexport BsDropdownDirective */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__bs_dropdown_menu_directive__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown-menu.directive.js");
-/* unused harmony reexport BsDropdownMenuDirective */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bs_dropdown_toggle_directive__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown-toggle.directive.js");
-/* unused harmony reexport BsDropdownToggleDirective */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__bs_dropdown_container_component__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown-container.component.js");
-/* unused harmony reexport BsDropdownContainerComponent */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__bs_dropdown_state__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.state.js");
-/* unused harmony reexport BsDropdownState */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__bs_dropdown_config__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.config.js");
-/* unused harmony reexport BsDropdownConfig */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__bs_dropdown_module__ = __webpack_require__("../../../../ngx-bootstrap/dropdown/bs-dropdown.module.js");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_6__bs_dropdown_module__["a"]; });
-
-
-
-
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/positioning/index.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ng_positioning__ = __webpack_require__("../../../../ngx-bootstrap/positioning/ng-positioning.js");
-/* unused harmony reexport positionElements */
-/* unused harmony reexport Positioning */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__positioning_service__ = __webpack_require__("../../../../ngx-bootstrap/positioning/positioning.service.js");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__positioning_service__["a"]; });
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/positioning/ng-positioning.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export Positioning */
-/* harmony export (immutable) */ __webpack_exports__["a"] = positionElements;
-/**
- * @copyright Valor Software
- * @copyright Angular ng-bootstrap team
- */
-// previous version:
-// https://github.com/angular-ui/bootstrap/blob/07c31d0731f7cb068a1932b8e01d2312b796b4ec/src/position/position.js
-// tslint:disable
-var Positioning = (function () {
-    function Positioning() {
-    }
-    Positioning.prototype.position = function (element, round) {
-        if (round === void 0) { round = true; }
-        var elPosition;
-        var parentOffset = { width: 0, height: 0, top: 0, bottom: 0, left: 0, right: 0 };
-        if (this.getStyle(element, 'position') === 'fixed') {
-            var bcRect = element.getBoundingClientRect();
-            elPosition = {
-                width: bcRect.width,
-                height: bcRect.height,
-                top: bcRect.top,
-                bottom: bcRect.bottom,
-                left: bcRect.left,
-                right: bcRect.right
-            };
-        }
-        else {
-            var offsetParentEl = this.offsetParent(element);
-            elPosition = this.offset(element, false);
-            if (offsetParentEl !== document.documentElement) {
-                parentOffset = this.offset(offsetParentEl, false);
-            }
-            parentOffset.top += offsetParentEl.clientTop;
-            parentOffset.left += offsetParentEl.clientLeft;
-        }
-        elPosition.top -= parentOffset.top;
-        elPosition.bottom -= parentOffset.top;
-        elPosition.left -= parentOffset.left;
-        elPosition.right -= parentOffset.left;
-        if (round) {
-            elPosition.top = Math.round(elPosition.top);
-            elPosition.bottom = Math.round(elPosition.bottom);
-            elPosition.left = Math.round(elPosition.left);
-            elPosition.right = Math.round(elPosition.right);
-        }
-        return elPosition;
-    };
-    Positioning.prototype.offset = function (element, round) {
-        if (round === void 0) { round = true; }
-        var elBcr = element.getBoundingClientRect();
-        var viewportOffset = {
-            top: window.pageYOffset - document.documentElement.clientTop,
-            left: window.pageXOffset - document.documentElement.clientLeft
-        };
-        var elOffset = {
-            height: elBcr.height || element.offsetHeight,
-            width: elBcr.width || element.offsetWidth,
-            top: elBcr.top + viewportOffset.top,
-            bottom: elBcr.bottom + viewportOffset.top,
-            left: elBcr.left + viewportOffset.left,
-            right: elBcr.right + viewportOffset.left
-        };
-        if (round) {
-            elOffset.height = Math.round(elOffset.height);
-            elOffset.width = Math.round(elOffset.width);
-            elOffset.top = Math.round(elOffset.top);
-            elOffset.bottom = Math.round(elOffset.bottom);
-            elOffset.left = Math.round(elOffset.left);
-            elOffset.right = Math.round(elOffset.right);
-        }
-        return elOffset;
-    };
-    Positioning.prototype.positionElements = function (hostElement, targetElement, placement, appendToBody) {
-        var hostElPosition = appendToBody ? this.offset(hostElement, false) : this.position(hostElement, false);
-        var targetElStyles = this.getAllStyles(targetElement);
-        var shiftWidth = {
-            left: hostElPosition.left,
-            center: hostElPosition.left + hostElPosition.width / 2 - targetElement.offsetWidth / 2,
-            right: hostElPosition.left + hostElPosition.width
-        };
-        var shiftHeight = {
-            top: hostElPosition.top,
-            center: hostElPosition.top + hostElPosition.height / 2 - targetElement.offsetHeight / 2,
-            bottom: hostElPosition.top + hostElPosition.height
-        };
-        var targetElBCR = targetElement.getBoundingClientRect();
-        var placementPrimary = placement.split(' ')[0] || 'top';
-        var placementSecondary = placement.split(' ')[1] || 'center';
-        var targetElPosition = {
-            height: targetElBCR.height || targetElement.offsetHeight,
-            width: targetElBCR.width || targetElement.offsetWidth,
-            top: 0,
-            bottom: targetElBCR.height || targetElement.offsetHeight,
-            left: 0,
-            right: targetElBCR.width || targetElement.offsetWidth
-        };
-        if (placementPrimary === "auto") {
-            var newPlacementPrimary = this.autoPosition(targetElPosition, hostElPosition, targetElement, placementSecondary);
-            if (!newPlacementPrimary)
-                newPlacementPrimary = this.autoPosition(targetElPosition, hostElPosition, targetElement);
-            if (newPlacementPrimary)
-                placementPrimary = newPlacementPrimary;
-            targetElement.classList.add(placementPrimary);
-        }
-        switch (placementPrimary) {
-            case 'top':
-                targetElPosition.top = hostElPosition.top - (targetElement.offsetHeight + parseFloat(targetElStyles.marginBottom));
-                targetElPosition.bottom += hostElPosition.top - targetElement.offsetHeight;
-                targetElPosition.left = shiftWidth[placementSecondary];
-                targetElPosition.right += shiftWidth[placementSecondary];
-                break;
-            case 'bottom':
-                targetElPosition.top = shiftHeight[placementPrimary];
-                targetElPosition.bottom += shiftHeight[placementPrimary];
-                targetElPosition.left = shiftWidth[placementSecondary];
-                targetElPosition.right += shiftWidth[placementSecondary];
-                break;
-            case 'left':
-                targetElPosition.top = shiftHeight[placementSecondary];
-                targetElPosition.bottom += shiftHeight[placementSecondary];
-                targetElPosition.left = hostElPosition.left - (targetElement.offsetWidth + parseFloat(targetElStyles.marginRight));
-                targetElPosition.right += hostElPosition.left - targetElement.offsetWidth;
-                break;
-            case 'right':
-                targetElPosition.top = shiftHeight[placementSecondary];
-                targetElPosition.bottom += shiftHeight[placementSecondary];
-                targetElPosition.left = shiftWidth[placementPrimary];
-                targetElPosition.right += shiftWidth[placementPrimary];
-                break;
-        }
-        targetElPosition.top = Math.round(targetElPosition.top);
-        targetElPosition.bottom = Math.round(targetElPosition.bottom);
-        targetElPosition.left = Math.round(targetElPosition.left);
-        targetElPosition.right = Math.round(targetElPosition.right);
-        return targetElPosition;
-    };
-    Positioning.prototype.autoPosition = function (targetElPosition, hostElPosition, targetElement, preferredPosition) {
-        if ((!preferredPosition || preferredPosition === "right") && targetElPosition.left + hostElPosition.left - targetElement.offsetWidth < 0) {
-            return "right";
-        }
-        else if ((!preferredPosition || preferredPosition === "top") && targetElPosition.bottom + hostElPosition.bottom + targetElement.offsetHeight > window.innerHeight) {
-            return "top";
-        }
-        else if ((!preferredPosition || preferredPosition === "bottom") && targetElPosition.top + hostElPosition.top - targetElement.offsetHeight < 0) {
-            return "bottom";
-        }
-        else if ((!preferredPosition || preferredPosition === "left") && targetElPosition.right + hostElPosition.right + targetElement.offsetWidth > window.innerWidth) {
-            return "left";
-        }
-        return null;
-    };
-    Positioning.prototype.getAllStyles = function (element) { return window.getComputedStyle(element); };
-    Positioning.prototype.getStyle = function (element, prop) { return this.getAllStyles(element)[prop]; };
-    Positioning.prototype.isStaticPositioned = function (element) {
-        return (this.getStyle(element, 'position') || 'static') === 'static';
-    };
-    Positioning.prototype.offsetParent = function (element) {
-        var offsetParentEl = element.offsetParent || document.documentElement;
-        while (offsetParentEl && offsetParentEl !== document.documentElement && this.isStaticPositioned(offsetParentEl)) {
-            offsetParentEl = offsetParentEl.offsetParent;
-        }
-        return offsetParentEl || document.documentElement;
-    };
-    return Positioning;
-}());
-
-var positionService = new Positioning();
-function positionElements(hostElement, targetElement, placement, appendToBody) {
-    var pos = positionService.positionElements(hostElement, targetElement, placement, appendToBody);
-    targetElement.style.top = pos.top + "px";
-    targetElement.style.left = pos.left + "px";
-}
-//# sourceMappingURL=ng-positioning.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/positioning/positioning.service.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PositioningService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ng_positioning__ = __webpack_require__("../../../../ngx-bootstrap/positioning/ng-positioning.js");
-
-
-var PositioningService = (function () {
-    function PositioningService() {
-    }
-    PositioningService.prototype.position = function (options) {
-        var element = options.element, target = options.target, attachment = options.attachment, appendToBody = options.appendToBody;
-        Object(__WEBPACK_IMPORTED_MODULE_1__ng_positioning__["a" /* positionElements */])(this._getHtmlElement(target), this._getHtmlElement(element), attachment, appendToBody);
-    };
-    PositioningService.prototype._getHtmlElement = function (element) {
-        // it means that we got a selector
-        if (typeof element === 'string') {
-            return document.querySelector(element);
-        }
-        if (element instanceof __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* ElementRef */]) {
-            return element.nativeElement;
-        }
-        return element;
-    };
-    PositioningService.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */] },
-    ];
-    /** @nocollapse */
-    PositioningService.ctorParameters = function () { return []; };
-    return PositioningService;
-}());
-
-//# sourceMappingURL=positioning.service.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/utils/decorators.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export OnChange */
-/*tslint:disable:no-invalid-this */
-function OnChange(defaultValue) {
-    var sufix = 'Change';
-    return function OnChangeHandler(target, propertyKey) {
-        var _key = " __" + propertyKey + "Value";
-        Object.defineProperty(target, propertyKey, {
-            get: function () { return this[_key]; },
-            set: function (value) {
-                var prevValue = this[_key];
-                this[_key] = value;
-                if (prevValue !== value && this[propertyKey + sufix]) {
-                    this[propertyKey + sufix].emit(value);
-                }
-            }
-        });
-    };
-}
-/* tslint:enable */
-//# sourceMappingURL=decorators.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/utils/facade/browser.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return win; });
-/* unused harmony export document */
-/* unused harmony export location */
-/* unused harmony export gc */
-/* unused harmony export performance */
-/* unused harmony export Event */
-/* unused harmony export MouseEvent */
-/* unused harmony export KeyboardEvent */
-/* unused harmony export EventTarget */
-/* unused harmony export History */
-/* unused harmony export Location */
-/* unused harmony export EventListener */
-/*tslint:disable */
-/**
- * @license
- * Copyright Google Inc. All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
-/**
- * JS version of browser APIs. This library can only run in the browser.
- */
-var win = typeof window !== 'undefined' && window || {};
-
-var document = win.document;
-var location = win.location;
-var gc = win['gc'] ? function () { return win['gc'](); } : function () { return null; };
-var performance = win['performance'] ? win['performance'] : null;
-var Event = win['Event'];
-var MouseEvent = win['MouseEvent'];
-var KeyboardEvent = win['KeyboardEvent'];
-var EventTarget = win['EventTarget'];
-var History = win['History'];
-var Location = win['Location'];
-var EventListener = win['EventListener'];
-//# sourceMappingURL=browser.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/utils/index.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__decorators__ = __webpack_require__("../../../../ngx-bootstrap/utils/decorators.js");
-/* unused harmony reexport OnChange */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__linked_list_class__ = __webpack_require__("../../../../ngx-bootstrap/utils/linked-list.class.js");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__linked_list_class__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ng2_bootstrap_config__ = __webpack_require__("../../../../ngx-bootstrap/utils/ng2-bootstrap-config.js");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__ng2_bootstrap_config__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__trigger_class__ = __webpack_require__("../../../../ngx-bootstrap/utils/trigger.class.js");
-/* unused harmony reexport Trigger */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_class__ = __webpack_require__("../../../../ngx-bootstrap/utils/utils.class.js");
-/* unused harmony reexport Utils */
-
-
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/utils/linked-list.class.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LinkedList; });
-var LinkedList = (function () {
-    function LinkedList() {
-        this.length = 0;
-        this.asArray = [];
-        // Array methods overriding END
-    }
-    LinkedList.prototype.getNode = function (position) {
-        if (this.length === 0 || position < 0 || position >= this.length) {
-            throw new Error('Position is out of the list');
-        }
-        var current = this.head;
-        for (var index = 0; index < position; index++) {
-            current = current.next;
-        }
-        return current;
-    };
-    LinkedList.prototype.createInternalArrayRepresentation = function () {
-        var outArray = [];
-        var current = this.head;
-        while (current) {
-            outArray.push(current.value);
-            current = current.next;
-        }
-        this.asArray = outArray;
-    };
-    LinkedList.prototype.get = function (position) {
-        if (this.length === 0 || position < 0 || position >= this.length) {
-            return void 0;
-        }
-        var current = this.head;
-        for (var index = 0; index < position; index++) {
-            current = current.next;
-        }
-        return current.value;
-    };
-    LinkedList.prototype.add = function (value, position) {
-        if (position === void 0) { position = this.length; }
-        if (position < 0 || position > this.length) {
-            throw new Error('Position is out of the list');
-        }
-        var node = {
-            value: value,
-            next: undefined,
-            previous: undefined
-        };
-        if (this.length === 0) {
-            this.head = node;
-            this.tail = node;
-            this.current = node;
-        }
-        else {
-            if (position === 0) {
-                // first node
-                node.next = this.head;
-                this.head.previous = node;
-                this.head = node;
-            }
-            else if (position === this.length) {
-                // last node
-                this.tail.next = node;
-                node.previous = this.tail;
-                this.tail = node;
-            }
-            else {
-                // node in middle
-                var currentPreviousNode = this.getNode(position - 1);
-                var currentNextNode = currentPreviousNode.next;
-                currentPreviousNode.next = node;
-                currentNextNode.previous = node;
-                node.previous = currentPreviousNode;
-                node.next = currentNextNode;
-            }
-        }
-        this.length++;
-        this.createInternalArrayRepresentation();
-    };
-    LinkedList.prototype.remove = function (position) {
-        if (position === void 0) { position = 0; }
-        if (this.length === 0 || position < 0 || position >= this.length) {
-            throw new Error('Position is out of the list');
-        }
-        if (position === 0) {
-            // first node
-            this.head = this.head.next;
-            if (this.head) {
-                // there is no second node
-                this.head.previous = undefined;
-            }
-            else {
-                // there is no second node
-                this.tail = undefined;
-            }
-        }
-        else if (position === this.length - 1) {
-            // last node
-            this.tail = this.tail.previous;
-            this.tail.next = undefined;
-        }
-        else {
-            // middle node
-            var removedNode = this.getNode(position);
-            removedNode.next.previous = removedNode.previous;
-            removedNode.previous.next = removedNode.next;
-        }
-        this.length--;
-        this.createInternalArrayRepresentation();
-    };
-    LinkedList.prototype.set = function (position, value) {
-        if (this.length === 0 || position < 0 || position >= this.length) {
-            throw new Error('Position is out of the list');
-        }
-        var node = this.getNode(position);
-        node.value = value;
-        this.createInternalArrayRepresentation();
-    };
-    LinkedList.prototype.toArray = function () {
-        return this.asArray;
-    };
-    LinkedList.prototype.findAll = function (fn) {
-        var current = this.head;
-        var result = [];
-        for (var index = 0; index < this.length; index++) {
-            if (fn(current.value, index)) {
-                result.push({ index: index, value: current.value });
-            }
-            current = current.next;
-        }
-        return result;
-    };
-    // Array methods overriding start
-    LinkedList.prototype.push = function () {
-        var _this = this;
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        args.forEach(function (arg) {
-            _this.add(arg);
-        });
-        return this.length;
-    };
-    LinkedList.prototype.pop = function () {
-        if (this.length === 0) {
-            return undefined;
-        }
-        var last = this.tail;
-        this.remove(this.length - 1);
-        return last.value;
-    };
-    LinkedList.prototype.unshift = function () {
-        var _this = this;
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        args.reverse();
-        args.forEach(function (arg) {
-            _this.add(arg, 0);
-        });
-        return this.length;
-    };
-    LinkedList.prototype.shift = function () {
-        if (this.length === 0) {
-            return undefined;
-        }
-        var lastItem = this.head.value;
-        this.remove();
-        return lastItem;
-    };
-    LinkedList.prototype.forEach = function (fn) {
-        var current = this.head;
-        for (var index = 0; index < this.length; index++) {
-            fn(current.value, index);
-            current = current.next;
-        }
-    };
-    LinkedList.prototype.indexOf = function (value) {
-        var current = this.head;
-        var position = 0;
-        for (var index = 0; index < this.length; index++) {
-            if (current.value === value) {
-                position = index;
-                break;
-            }
-            current = current.next;
-        }
-        return position;
-    };
-    LinkedList.prototype.some = function (fn) {
-        var current = this.head;
-        var result = false;
-        while (current && !result) {
-            if (fn(current.value)) {
-                result = true;
-                break;
-            }
-            current = current.next;
-        }
-        return result;
-    };
-    LinkedList.prototype.every = function (fn) {
-        var current = this.head;
-        var result = true;
-        while (current && result) {
-            if (!fn(current.value)) {
-                result = false;
-            }
-            current = current.next;
-        }
-        return result;
-    };
-    LinkedList.prototype.toString = function () {
-        return '[Linked List]';
-    };
-    LinkedList.prototype.find = function (fn) {
-        var current = this.head;
-        var result;
-        for (var index = 0; index < this.length; index++) {
-            if (fn(current.value, index)) {
-                result = current.value;
-                break;
-            }
-            current = current.next;
-        }
-        return result;
-    };
-    LinkedList.prototype.findIndex = function (fn) {
-        var current = this.head;
-        var result;
-        for (var index = 0; index < this.length; index++) {
-            if (fn(current.value, index)) {
-                result = index;
-                break;
-            }
-            current = current.next;
-        }
-        return result;
-    };
-    return LinkedList;
-}());
-
-//# sourceMappingURL=linked-list.class.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/utils/ng2-bootstrap-config.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = isBs3;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__facade_browser__ = __webpack_require__("../../../../ngx-bootstrap/utils/facade/browser.js");
-
-var guessedVersion;
-function _guessBsVersion() {
-    if (typeof document === 'undefined') {
-        return null;
-    }
-    var spanEl = document.createElement('span');
-    spanEl.innerText = 'test bs version';
-    document.body.appendChild(spanEl);
-    spanEl.classList.add('d-none');
-    var rect = spanEl.getBoundingClientRect();
-    document.body.removeChild(spanEl);
-    if (!rect) {
-        return 'bs3';
-    }
-    return rect.top === 0 ? 'bs4' : 'bs3';
-}
-// todo: in ngx-bootstrap, bs4 will became a default one
-function isBs3() {
-    if (typeof __WEBPACK_IMPORTED_MODULE_0__facade_browser__["a" /* window */] === 'undefined') {
-        return true;
-    }
-    if (typeof __WEBPACK_IMPORTED_MODULE_0__facade_browser__["a" /* window */].__theme === 'undefined') {
-        if (guessedVersion) {
-            return guessedVersion === 'bs3';
-        }
-        guessedVersion = _guessBsVersion();
-        return guessedVersion === 'bs3';
-    }
-    return __WEBPACK_IMPORTED_MODULE_0__facade_browser__["a" /* window */].__theme !== 'bs4';
-}
-//# sourceMappingURL=ng2-bootstrap-config.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/utils/trigger.class.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Trigger; });
-/**
- * @copyright Valor Software
- * @copyright Angular ng-bootstrap team
- */
-var Trigger = (function () {
-    function Trigger(open, close) {
-        this.open = open;
-        this.close = close || open;
-    }
-    Trigger.prototype.isManual = function () { return this.open === 'manual' || this.close === 'manual'; };
-    return Trigger;
-}());
-
-//# sourceMappingURL=trigger.class.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/utils/triggers.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export parseTriggers */
-/* unused harmony export listenToTriggers */
-/* harmony export (immutable) */ __webpack_exports__["a"] = listenToTriggersV2;
-/* harmony export (immutable) */ __webpack_exports__["b"] = registerOutsideClick;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__trigger_class__ = __webpack_require__("../../../../ngx-bootstrap/utils/trigger.class.js");
-
-var DEFAULT_ALIASES = {
-    hover: ['mouseover', 'mouseout'],
-    focus: ['focusin', 'focusout']
-};
-function parseTriggers(triggers, aliases) {
-    if (aliases === void 0) { aliases = DEFAULT_ALIASES; }
-    var trimmedTriggers = (triggers || '').trim();
-    if (trimmedTriggers.length === 0) {
-        return [];
-    }
-    var parsedTriggers = trimmedTriggers.split(/\s+/)
-        .map(function (trigger) { return trigger.split(':'); })
-        .map(function (triggerPair) {
-        var alias = aliases[triggerPair[0]] || triggerPair;
-        return new __WEBPACK_IMPORTED_MODULE_0__trigger_class__["a" /* Trigger */](alias[0], alias[1]);
-    });
-    var manualTriggers = parsedTriggers
-        .filter(function (triggerPair) { return triggerPair.isManual(); });
-    if (manualTriggers.length > 1) {
-        throw 'Triggers parse error: only one manual trigger is allowed';
-    }
-    if (manualTriggers.length === 1 && parsedTriggers.length > 1) {
-        throw 'Triggers parse error: manual trigger can\'t be mixed with other triggers';
-    }
-    return parsedTriggers;
-}
-function listenToTriggers(renderer, target, triggers, showFn, hideFn, toggleFn) {
-    var parsedTriggers = parseTriggers(triggers);
-    var listeners = [];
-    if (parsedTriggers.length === 1 && parsedTriggers[0].isManual()) {
-        return Function.prototype;
-    }
-    parsedTriggers.forEach(function (trigger) {
-        if (trigger.open === trigger.close) {
-            listeners.push(renderer.listen(target, trigger.open, toggleFn));
-            return;
-        }
-        listeners.push(renderer.listen(target, trigger.open, showFn), renderer.listen(target, trigger.close, hideFn));
-    });
-    return function () { listeners.forEach(function (unsubscribeFn) { return unsubscribeFn(); }); };
-}
-function listenToTriggersV2(renderer, options) {
-    var parsedTriggers = parseTriggers(options.triggers);
-    var target = options.target;
-    // do nothing
-    if (parsedTriggers.length === 1 && parsedTriggers[0].isManual()) {
-        return Function.prototype;
-    }
-    // all listeners
-    var listeners = [];
-    // lazy listeners registration
-    var _registerHide = [];
-    var registerHide = function () {
-        // add hide listeners to unregister array
-        _registerHide.forEach(function (fn) { return listeners.push(fn()); });
-        // register hide events only once
-        _registerHide.length = 0;
-    };
-    // register open\close\toggle listeners
-    parsedTriggers.forEach(function (trigger) {
-        var useToggle = trigger.open === trigger.close;
-        var showFn = useToggle ? options.toggle : options.show;
-        if (!useToggle) {
-            _registerHide.push(function () { return renderer.listen(target, trigger.close, options.hide); });
-        }
-        listeners.push(renderer.listen(target, trigger.open, function () { return showFn(registerHide); }));
-    });
-    return function () {
-        listeners.forEach(function (unsubscribeFn) { return unsubscribeFn(); });
-    };
-}
-function registerOutsideClick(renderer, options) {
-    if (!options.outsideClick) {
-        return Function.prototype;
-    }
-    return renderer.listenGlobal('document', 'click', function (event) {
-        if (options.target && options.target.contains(event.target)) {
-            return;
-        }
-        if (options.targets && options.targets.some(function (target) { return target.contains(event.target); })) {
-            return;
-        }
-        options.hide();
-    });
-}
-//# sourceMappingURL=triggers.js.map
-
-/***/ }),
-
-/***/ "../../../../ngx-bootstrap/utils/utils.class.js":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export Utils */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__facade_browser__ = __webpack_require__("../../../../ngx-bootstrap/utils/facade/browser.js");
-
-var Utils = (function () {
-    function Utils() {
-    }
-    Utils.reflow = function (element) {
-        (function (bs) { return bs; })(element.offsetHeight);
-    };
-    // source: https://github.com/jquery/jquery/blob/master/src/css/var/getStyles.js
-    Utils.getStyles = function (elem) {
-        // Support: IE <=11 only, Firefox <=30 (#15098, #14150)
-        // IE throws on elements created in popups
-        // FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
-        var view = elem.ownerDocument.defaultView;
-        if (!view || !view.opener) {
-            view = __WEBPACK_IMPORTED_MODULE_0__facade_browser__["a" /* window */];
-        }
-        return view.getComputedStyle(elem);
-    };
-    return Utils;
-}());
-
-//# sourceMappingURL=utils.class.js.map
 
 /***/ }),
 
@@ -17260,6 +14990,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+var async_1 = __webpack_require__("../../../../rxjs/scheduler/async.js");
+var isDate_1 = __webpack_require__("../../../../rxjs/util/isDate.js");
 var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
 /* tslint:enable:max-line-length */
 /**
@@ -17458,6 +15190,7 @@ var ElementAtSubscriber = (function (_super) {
             this.destination.next(x);
             this.destination.complete();
         }
+        this.values.push(value);
     };
     ElementAtSubscriber.prototype._complete = function () {
         var destination = this.destination;
@@ -17570,6 +15303,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
 var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
+var Set_1 = __webpack_require__("../../../../rxjs/util/Set.js");
 /**
  * Converts a higher-order Observable into a first-order Observable by dropping
  * inner Observables while the previous inner Observable has not yet completed.
@@ -18339,6 +16073,7 @@ var FirstOperator = (function () {
     };
     return FirstOperator;
 }());
+exports.ExpandOperator = ExpandOperator;
 /**
  * We need this JSDoc comment for affecting ESDoc.
  * @ignore
@@ -18370,9 +16105,16 @@ var FirstSubscriber = (function (_super) {
         try {
             result = this.predicate(value, index, this.source);
         }
-        catch (err) {
-            this.destination.error(err);
-            return;
+    };
+    ExpandSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
+        this._next(innerValue);
+    };
+    ExpandSubscriber.prototype.notifyComplete = function (innerSub) {
+        var buffer = this.buffer;
+        this.remove(innerSub);
+        this.active--;
+        if (buffer && buffer.length > 0) {
+            this._next(buffer.shift());
         }
         if (result) {
             this._emit(value, index);
@@ -18788,6 +16530,7 @@ var IsEmptyOperator = (function () {
     };
     return IsEmptyOperator;
 }());
+exports.FindValueOperator = FindValueOperator;
 /**
  * We need this JSDoc comment for affecting ESDoc.
  * @ignore
@@ -20449,6 +18192,7 @@ var PairwiseOperator = (function () {
     };
     return PairwiseOperator;
 }());
+exports.MergeScanOperator = MergeScanOperator;
 /**
  * We need this JSDoc comment for affecting ESDoc.
  * @ignore
@@ -20993,9 +18737,30 @@ var RepeatOperator = (function () {
     return RepeatOperator;
 }());
 /**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
+ * Maps each source value (an object) to its specified nested property.
+ *
+ * <span class="informal">Like {@link map}, but meant only for picking one of
+ * the nested properties of every emitted object.</span>
+ *
+ * <img src="./img/pluck.png" width="100%">
+ *
+ * Given a list of strings describing a path to an object property, retrieves
+ * the value of a specified nested property from all values in the source
+ * Observable. If a property can't be resolved, it will return `undefined` for
+ * that value.
+ *
+ * @example <caption>Map every click to the tagName of the clicked target element</caption>
+ * var clicks = Rx.Observable.fromEvent(document, 'click');
+ * var tagNames = clicks.pluck('target', 'tagName');
+ * tagNames.subscribe(x => console.log(x));
+ *
+ * @see {@link map}
+ *
+ * @param {...string} properties The nested properties to pluck from each source
+ * value (an object).
+ * @return {Observable} A new Observable of property values from the source values.
+ * @method pluck
+ * @owner Observable
  */
 var RepeatSubscriber = (function (_super) {
     __extends(RepeatSubscriber, _super);
@@ -21015,6 +18780,7 @@ var RepeatSubscriber = (function (_super) {
             }
             source.subscribe(this._unsubscribeAndRecycle());
         }
+        return currentProp;
     };
     return RepeatSubscriber;
 }(Subscriber_1.Subscriber));
@@ -21147,7 +18913,11 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
+var isArray_1 = __webpack_require__("../../../../rxjs/util/isArray.js");
+var ArrayObservable_1 = __webpack_require__("../../../../rxjs/observable/ArrayObservable.js");
+var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
+var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
+/* tslint:enable:max-line-length */
 /**
  * Returns an Observable that mirrors the source Observable with the exception of an `error`. If the source Observable
  * calls `error`, this method will resubscribe to the source Observable for a maximum of `count` resubscriptions (given
@@ -21179,6 +18949,7 @@ var RetryOperator = (function () {
     };
     return RetryOperator;
 }());
+exports.RaceOperator = RaceOperator;
 /**
  * We need this JSDoc comment for affecting ESDoc.
  * @ignore
@@ -21252,6 +19023,7 @@ var RetryWhenOperator = (function () {
     };
     return RetryWhenOperator;
 }());
+exports.ReduceOperator = ReduceOperator;
 /**
  * We need this JSDoc comment for affecting ESDoc.
  * @ignore
@@ -22492,7 +20264,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
 var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/* tslint:enable:max-line-length */
 /**
  * Projects each source value to an Observable which is merged in the output
  * Observable, emitting values only from the most recently projected Observable.
@@ -23587,7 +21358,7 @@ var TimeoutOperator = (function () {
     return TimeoutOperator;
 }());
 /**
- * We need this JSDoc comment for affecting ESDoc.
+ * We need this JSDoc comment for affecting ESDoc
  * @ignore
  * @extends {Ignored}
  */
@@ -24412,6 +22183,25 @@ var WindowToggleOperator = (function () {
     };
     return WindowToggleOperator;
 }());
+var CountedSubject = (function (_super) {
+    __extends(CountedSubject, _super);
+    function CountedSubject() {
+        _super.apply(this, arguments);
+        this._numberOfNextedValues = 0;
+    }
+    CountedSubject.prototype.next = function (value) {
+        this._numberOfNextedValues++;
+        _super.prototype.next.call(this, value);
+    };
+    Object.defineProperty(CountedSubject.prototype, "numberOfNextedValues", {
+        get: function () {
+            return this._numberOfNextedValues;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return CountedSubject;
+}(Subject_1.Subject));
 /**
  * We need this JSDoc comment for affecting ESDoc.
  * @ignore
@@ -24672,6 +22462,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
+var tryCatch_1 = __webpack_require__("../../../../rxjs/util/tryCatch.js");
+var errorObject_1 = __webpack_require__("../../../../rxjs/util/errorObject.js");
 var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
 var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
 /* tslint:enable:max-line-length */
@@ -25477,6 +23270,12 @@ var AsyncAction = (function (_super) {
             // ```
             this.id = this.recycleAsyncId(this.scheduler, this.id, null);
         }
+        // Push the action to the end of the scheduler queue.
+        scheduler.actions.push(this);
+        // If a microtask has already been scheduled, don't schedule another
+        // one. If a microtask hasn't been scheduled yet, schedule one now. Return
+        // the current scheduled microtask id.
+        return scheduler.scheduled || (scheduler.scheduled = Immediate_1.Immediate.setImmediate(scheduler.flush.bind(scheduler, null)));
     };
     AsyncAction.prototype._execute = function (state, delay) {
         var errored = false;
@@ -26152,9 +23951,46 @@ var Subscription_1 = __webpack_require__("../../../../rxjs/Subscription.js");
 var SubscriptionLoggable_1 = __webpack_require__("../../../../rxjs/testing/SubscriptionLoggable.js");
 var applyMixins_1 = __webpack_require__("../../../../rxjs/util/applyMixins.js");
 /**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
+ *
+ * Async Scheduler
+ *
+ * <span class="informal">Schedule task as if you used setTimeout(task, duration)</span>
+ *
+ * `async` scheduler schedules tasks asynchronously, by putting them on the JavaScript
+ * event loop queue. It is best used to delay tasks in time or to schedule tasks repeating
+ * in intervals.
+ *
+ * If you just want to "defer" task, that is to perform it right after currently
+ * executing synchronous code ends (commonly achieved by `setTimeout(deferredTask, 0)`),
+ * better choice will be the {@link asap} scheduler.
+ *
+ * @example <caption>Use async scheduler to delay task</caption>
+ * const task = () => console.log('it works!');
+ *
+ * Rx.Scheduler.async.schedule(task, 2000);
+ *
+ * // After 2 seconds logs:
+ * // "it works!"
+ *
+ *
+ * @example <caption>Use async scheduler to repeat task in intervals</caption>
+ * function task(state) {
+ *   console.log(state);
+ *   this.schedule(state + 1, 1000); // `this` references currently executing Action,
+ *                                   // which we reschedule with new state and delay
+ * }
+ *
+ * Rx.Scheduler.async.schedule(task, 3000, 0);
+ *
+ * // Logs:
+ * // 0 after 3s
+ * // 1 after 4s
+ * // 2 after 5s
+ * // 3 after 6s
+ *
+ * @static true
+ * @name async
+ * @owner Scheduler
  */
 var HotObservable = (function (_super) {
     __extends(HotObservable, _super);
@@ -27497,7 +25333,11 @@ exports.Manager = __webpack_require__("../../../../socket.io-client/lib/manager.
 exports.Socket = __webpack_require__("../../../../socket.io-client/lib/socket.js");
 
 
-/***/ }),
+/**
+ * Protocol version.
+ *
+ * @api public
+ */
 
 /***/ "../../../../socket.io-client/lib/manager.js":
 /***/ (function(module, exports, __webpack_require__) {
@@ -28077,7 +25917,8 @@ Manager.prototype.onreconnect = function () {
 };
 
 
-/***/ }),
+Manager.prototype.onclose = function (reason) {
+  debug('onclose');
 
 /***/ "../../../../socket.io-client/lib/on.js":
 /***/ (function(module, exports) {
@@ -28108,7 +25949,8 @@ function on (obj, ev, fn) {
 }
 
 
-/***/ }),
+Manager.prototype.reconnect = function () {
+  if (this.reconnecting || this.skipReconnect) return this;
 
 /***/ "../../../../socket.io-client/lib/socket.js":
 /***/ (function(module, exports, __webpack_require__) {
@@ -28533,7 +26375,12 @@ Socket.prototype.compress = function (compress) {
 };
 
 
-/***/ }),
+Socket.prototype.emitBuffered = function () {
+  var i;
+  for (i = 0; i < this.receiveBuffer.length; i++) {
+    emit.apply(this, this.receiveBuffer[i]);
+  }
+  this.receiveBuffer = [];
 
 /***/ "../../../../socket.io-client/lib/url.js":
 /***/ (function(module, exports, __webpack_require__) {
@@ -29212,415 +27059,6 @@ function toArray(list, index) {
     return array
 }
 
-
-/***/ }),
-
-/***/ "../../../../ts-md5/dist/md5.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-/*
-
-TypeScript Md5
-==============
-
-Based on work by
-* Joseph Myers: http://www.myersdaily.org/joseph/javascript/md5-text.html
-* André Cruz: https://github.com/satazor/SparkMD5
-* Raymond Hill: https://github.com/gorhill/yamd5.js
-
-Effectively a TypeScrypt re-write of Raymond Hill JS Library
-
-The MIT License (MIT)
-
-Copyright (C) 2014 Raymond Hill
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-                    Version 2, December 2004
-
- Copyright (C) 2015 André Cruz <amdfcruz@gmail.com>
-
- Everyone is permitted to copy and distribute verbatim or modified
- copies of this license document, and changing it is allowed as long
- as the name is changed.
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-  0. You just DO WHAT THE FUCK YOU WANT TO.
-
-
-*/
-Object.defineProperty(exports, "__esModule", { value: true });
-var Md5 = (function () {
-    function Md5() {
-        this._state = new Int32Array(4);
-        this._buffer = new ArrayBuffer(68);
-        this._buffer8 = new Uint8Array(this._buffer, 0, 68);
-        this._buffer32 = new Uint32Array(this._buffer, 0, 17);
-        this.start();
-    }
-    // One time hashing functions
-    Md5.hashStr = function (str, raw) {
-        if (raw === void 0) { raw = false; }
-        return this.onePassHasher
-            .start()
-            .appendStr(str)
-            .end(raw);
-    };
-    Md5.hashAsciiStr = function (str, raw) {
-        if (raw === void 0) { raw = false; }
-        return this.onePassHasher
-            .start()
-            .appendAsciiStr(str)
-            .end(raw);
-    };
-    Md5._hex = function (x) {
-        var hc = Md5.hexChars;
-        var ho = Md5.hexOut;
-        var n;
-        var offset;
-        var j;
-        var i;
-        for (i = 0; i < 4; i += 1) {
-            offset = i * 8;
-            n = x[i];
-            for (j = 0; j < 8; j += 2) {
-                ho[offset + 1 + j] = hc.charAt(n & 0x0F);
-                n >>>= 4;
-                ho[offset + 0 + j] = hc.charAt(n & 0x0F);
-                n >>>= 4;
-            }
-        }
-        return ho.join('');
-    };
-    Md5._md5cycle = function (x, k) {
-        var a = x[0];
-        var b = x[1];
-        var c = x[2];
-        var d = x[3];
-        // ff()
-        a += (b & c | ~b & d) + k[0] - 680876936 | 0;
-        a = (a << 7 | a >>> 25) + b | 0;
-        d += (a & b | ~a & c) + k[1] - 389564586 | 0;
-        d = (d << 12 | d >>> 20) + a | 0;
-        c += (d & a | ~d & b) + k[2] + 606105819 | 0;
-        c = (c << 17 | c >>> 15) + d | 0;
-        b += (c & d | ~c & a) + k[3] - 1044525330 | 0;
-        b = (b << 22 | b >>> 10) + c | 0;
-        a += (b & c | ~b & d) + k[4] - 176418897 | 0;
-        a = (a << 7 | a >>> 25) + b | 0;
-        d += (a & b | ~a & c) + k[5] + 1200080426 | 0;
-        d = (d << 12 | d >>> 20) + a | 0;
-        c += (d & a | ~d & b) + k[6] - 1473231341 | 0;
-        c = (c << 17 | c >>> 15) + d | 0;
-        b += (c & d | ~c & a) + k[7] - 45705983 | 0;
-        b = (b << 22 | b >>> 10) + c | 0;
-        a += (b & c | ~b & d) + k[8] + 1770035416 | 0;
-        a = (a << 7 | a >>> 25) + b | 0;
-        d += (a & b | ~a & c) + k[9] - 1958414417 | 0;
-        d = (d << 12 | d >>> 20) + a | 0;
-        c += (d & a | ~d & b) + k[10] - 42063 | 0;
-        c = (c << 17 | c >>> 15) + d | 0;
-        b += (c & d | ~c & a) + k[11] - 1990404162 | 0;
-        b = (b << 22 | b >>> 10) + c | 0;
-        a += (b & c | ~b & d) + k[12] + 1804603682 | 0;
-        a = (a << 7 | a >>> 25) + b | 0;
-        d += (a & b | ~a & c) + k[13] - 40341101 | 0;
-        d = (d << 12 | d >>> 20) + a | 0;
-        c += (d & a | ~d & b) + k[14] - 1502002290 | 0;
-        c = (c << 17 | c >>> 15) + d | 0;
-        b += (c & d | ~c & a) + k[15] + 1236535329 | 0;
-        b = (b << 22 | b >>> 10) + c | 0;
-        // gg()
-        a += (b & d | c & ~d) + k[1] - 165796510 | 0;
-        a = (a << 5 | a >>> 27) + b | 0;
-        d += (a & c | b & ~c) + k[6] - 1069501632 | 0;
-        d = (d << 9 | d >>> 23) + a | 0;
-        c += (d & b | a & ~b) + k[11] + 643717713 | 0;
-        c = (c << 14 | c >>> 18) + d | 0;
-        b += (c & a | d & ~a) + k[0] - 373897302 | 0;
-        b = (b << 20 | b >>> 12) + c | 0;
-        a += (b & d | c & ~d) + k[5] - 701558691 | 0;
-        a = (a << 5 | a >>> 27) + b | 0;
-        d += (a & c | b & ~c) + k[10] + 38016083 | 0;
-        d = (d << 9 | d >>> 23) + a | 0;
-        c += (d & b | a & ~b) + k[15] - 660478335 | 0;
-        c = (c << 14 | c >>> 18) + d | 0;
-        b += (c & a | d & ~a) + k[4] - 405537848 | 0;
-        b = (b << 20 | b >>> 12) + c | 0;
-        a += (b & d | c & ~d) + k[9] + 568446438 | 0;
-        a = (a << 5 | a >>> 27) + b | 0;
-        d += (a & c | b & ~c) + k[14] - 1019803690 | 0;
-        d = (d << 9 | d >>> 23) + a | 0;
-        c += (d & b | a & ~b) + k[3] - 187363961 | 0;
-        c = (c << 14 | c >>> 18) + d | 0;
-        b += (c & a | d & ~a) + k[8] + 1163531501 | 0;
-        b = (b << 20 | b >>> 12) + c | 0;
-        a += (b & d | c & ~d) + k[13] - 1444681467 | 0;
-        a = (a << 5 | a >>> 27) + b | 0;
-        d += (a & c | b & ~c) + k[2] - 51403784 | 0;
-        d = (d << 9 | d >>> 23) + a | 0;
-        c += (d & b | a & ~b) + k[7] + 1735328473 | 0;
-        c = (c << 14 | c >>> 18) + d | 0;
-        b += (c & a | d & ~a) + k[12] - 1926607734 | 0;
-        b = (b << 20 | b >>> 12) + c | 0;
-        // hh()
-        a += (b ^ c ^ d) + k[5] - 378558 | 0;
-        a = (a << 4 | a >>> 28) + b | 0;
-        d += (a ^ b ^ c) + k[8] - 2022574463 | 0;
-        d = (d << 11 | d >>> 21) + a | 0;
-        c += (d ^ a ^ b) + k[11] + 1839030562 | 0;
-        c = (c << 16 | c >>> 16) + d | 0;
-        b += (c ^ d ^ a) + k[14] - 35309556 | 0;
-        b = (b << 23 | b >>> 9) + c | 0;
-        a += (b ^ c ^ d) + k[1] - 1530992060 | 0;
-        a = (a << 4 | a >>> 28) + b | 0;
-        d += (a ^ b ^ c) + k[4] + 1272893353 | 0;
-        d = (d << 11 | d >>> 21) + a | 0;
-        c += (d ^ a ^ b) + k[7] - 155497632 | 0;
-        c = (c << 16 | c >>> 16) + d | 0;
-        b += (c ^ d ^ a) + k[10] - 1094730640 | 0;
-        b = (b << 23 | b >>> 9) + c | 0;
-        a += (b ^ c ^ d) + k[13] + 681279174 | 0;
-        a = (a << 4 | a >>> 28) + b | 0;
-        d += (a ^ b ^ c) + k[0] - 358537222 | 0;
-        d = (d << 11 | d >>> 21) + a | 0;
-        c += (d ^ a ^ b) + k[3] - 722521979 | 0;
-        c = (c << 16 | c >>> 16) + d | 0;
-        b += (c ^ d ^ a) + k[6] + 76029189 | 0;
-        b = (b << 23 | b >>> 9) + c | 0;
-        a += (b ^ c ^ d) + k[9] - 640364487 | 0;
-        a = (a << 4 | a >>> 28) + b | 0;
-        d += (a ^ b ^ c) + k[12] - 421815835 | 0;
-        d = (d << 11 | d >>> 21) + a | 0;
-        c += (d ^ a ^ b) + k[15] + 530742520 | 0;
-        c = (c << 16 | c >>> 16) + d | 0;
-        b += (c ^ d ^ a) + k[2] - 995338651 | 0;
-        b = (b << 23 | b >>> 9) + c | 0;
-        // ii()
-        a += (c ^ (b | ~d)) + k[0] - 198630844 | 0;
-        a = (a << 6 | a >>> 26) + b | 0;
-        d += (b ^ (a | ~c)) + k[7] + 1126891415 | 0;
-        d = (d << 10 | d >>> 22) + a | 0;
-        c += (a ^ (d | ~b)) + k[14] - 1416354905 | 0;
-        c = (c << 15 | c >>> 17) + d | 0;
-        b += (d ^ (c | ~a)) + k[5] - 57434055 | 0;
-        b = (b << 21 | b >>> 11) + c | 0;
-        a += (c ^ (b | ~d)) + k[12] + 1700485571 | 0;
-        a = (a << 6 | a >>> 26) + b | 0;
-        d += (b ^ (a | ~c)) + k[3] - 1894986606 | 0;
-        d = (d << 10 | d >>> 22) + a | 0;
-        c += (a ^ (d | ~b)) + k[10] - 1051523 | 0;
-        c = (c << 15 | c >>> 17) + d | 0;
-        b += (d ^ (c | ~a)) + k[1] - 2054922799 | 0;
-        b = (b << 21 | b >>> 11) + c | 0;
-        a += (c ^ (b | ~d)) + k[8] + 1873313359 | 0;
-        a = (a << 6 | a >>> 26) + b | 0;
-        d += (b ^ (a | ~c)) + k[15] - 30611744 | 0;
-        d = (d << 10 | d >>> 22) + a | 0;
-        c += (a ^ (d | ~b)) + k[6] - 1560198380 | 0;
-        c = (c << 15 | c >>> 17) + d | 0;
-        b += (d ^ (c | ~a)) + k[13] + 1309151649 | 0;
-        b = (b << 21 | b >>> 11) + c | 0;
-        a += (c ^ (b | ~d)) + k[4] - 145523070 | 0;
-        a = (a << 6 | a >>> 26) + b | 0;
-        d += (b ^ (a | ~c)) + k[11] - 1120210379 | 0;
-        d = (d << 10 | d >>> 22) + a | 0;
-        c += (a ^ (d | ~b)) + k[2] + 718787259 | 0;
-        c = (c << 15 | c >>> 17) + d | 0;
-        b += (d ^ (c | ~a)) + k[9] - 343485551 | 0;
-        b = (b << 21 | b >>> 11) + c | 0;
-        x[0] = a + x[0] | 0;
-        x[1] = b + x[1] | 0;
-        x[2] = c + x[2] | 0;
-        x[3] = d + x[3] | 0;
-    };
-    Md5.prototype.start = function () {
-        this._dataLength = 0;
-        this._bufferLength = 0;
-        this._state.set(Md5.stateIdentity);
-        return this;
-    };
-    // Char to code point to to array conversion:
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
-    // #Example.3A_Fixing_charCodeAt_to_handle_non-Basic-Multilingual-Plane_characters_if_their_presence_earlier_in_the_string_is_unknown
-    Md5.prototype.appendStr = function (str) {
-        var buf8 = this._buffer8;
-        var buf32 = this._buffer32;
-        var bufLen = this._bufferLength;
-        var code;
-        var i;
-        for (i = 0; i < str.length; i += 1) {
-            code = str.charCodeAt(i);
-            if (code < 128) {
-                buf8[bufLen++] = code;
-            }
-            else if (code < 0x800) {
-                buf8[bufLen++] = (code >>> 6) + 0xC0;
-                buf8[bufLen++] = code & 0x3F | 0x80;
-            }
-            else if (code < 0xD800 || code > 0xDBFF) {
-                buf8[bufLen++] = (code >>> 12) + 0xE0;
-                buf8[bufLen++] = (code >>> 6 & 0x3F) | 0x80;
-                buf8[bufLen++] = (code & 0x3F) | 0x80;
-            }
-            else {
-                code = ((code - 0xD800) * 0x400) + (str.charCodeAt(++i) - 0xDC00) + 0x10000;
-                if (code > 0x10FFFF) {
-                    throw new Error('Unicode standard supports code points up to U+10FFFF');
-                }
-                buf8[bufLen++] = (code >>> 18) + 0xF0;
-                buf8[bufLen++] = (code >>> 12 & 0x3F) | 0x80;
-                buf8[bufLen++] = (code >>> 6 & 0x3F) | 0x80;
-                buf8[bufLen++] = (code & 0x3F) | 0x80;
-            }
-            if (bufLen >= 64) {
-                this._dataLength += 64;
-                Md5._md5cycle(this._state, buf32);
-                bufLen -= 64;
-                buf32[0] = buf32[16];
-            }
-        }
-        this._bufferLength = bufLen;
-        return this;
-    };
-    Md5.prototype.appendAsciiStr = function (str) {
-        var buf8 = this._buffer8;
-        var buf32 = this._buffer32;
-        var bufLen = this._bufferLength;
-        var i;
-        var j = 0;
-        for (;;) {
-            i = Math.min(str.length - j, 64 - bufLen);
-            while (i--) {
-                buf8[bufLen++] = str.charCodeAt(j++);
-            }
-            if (bufLen < 64) {
-                break;
-            }
-            this._dataLength += 64;
-            Md5._md5cycle(this._state, buf32);
-            bufLen = 0;
-        }
-        this._bufferLength = bufLen;
-        return this;
-    };
-    Md5.prototype.appendByteArray = function (input) {
-        var buf8 = this._buffer8;
-        var buf32 = this._buffer32;
-        var bufLen = this._bufferLength;
-        var i;
-        var j = 0;
-        for (;;) {
-            i = Math.min(input.length - j, 64 - bufLen);
-            while (i--) {
-                buf8[bufLen++] = input[j++];
-            }
-            if (bufLen < 64) {
-                break;
-            }
-            this._dataLength += 64;
-            Md5._md5cycle(this._state, buf32);
-            bufLen = 0;
-        }
-        this._bufferLength = bufLen;
-        return this;
-    };
-    Md5.prototype.getState = function () {
-        var self = this;
-        var s = self._state;
-        return {
-            buffer: String.fromCharCode.apply(null, self._buffer8),
-            buflen: self._bufferLength,
-            length: self._dataLength,
-            state: [s[0], s[1], s[2], s[3]]
-        };
-    };
-    Md5.prototype.setState = function (state) {
-        var buf = state.buffer;
-        var x = state.state;
-        var s = this._state;
-        var i;
-        this._dataLength = state.length;
-        this._bufferLength = state.buflen;
-        s[0] = x[0];
-        s[1] = x[1];
-        s[2] = x[2];
-        s[3] = x[3];
-        for (i = 0; i < buf.length; i += 1) {
-            this._buffer8[i] = buf.charCodeAt(i);
-        }
-    };
-    Md5.prototype.end = function (raw) {
-        if (raw === void 0) { raw = false; }
-        var bufLen = this._bufferLength;
-        var buf8 = this._buffer8;
-        var buf32 = this._buffer32;
-        var i = (bufLen >> 2) + 1;
-        var dataBitsLen;
-        this._dataLength += bufLen;
-        buf8[bufLen] = 0x80;
-        buf8[bufLen + 1] = buf8[bufLen + 2] = buf8[bufLen + 3] = 0;
-        buf32.set(Md5.buffer32Identity.subarray(i), i);
-        if (bufLen > 55) {
-            Md5._md5cycle(this._state, buf32);
-            buf32.set(Md5.buffer32Identity);
-        }
-        // Do the final computation based on the tail and length
-        // Beware that the final length may not fit in 32 bits so we take care of that
-        dataBitsLen = this._dataLength * 8;
-        if (dataBitsLen <= 0xFFFFFFFF) {
-            buf32[14] = dataBitsLen;
-        }
-        else {
-            var matches = dataBitsLen.toString(16).match(/(.*?)(.{0,8})$/);
-            if (matches === null) {
-                return;
-            }
-            var lo = parseInt(matches[2], 16);
-            var hi = parseInt(matches[1], 16) || 0;
-            buf32[14] = lo;
-            buf32[15] = hi;
-        }
-        Md5._md5cycle(this._state, buf32);
-        return raw ? this._state : Md5._hex(this._state);
-    };
-    // Private Static Variables
-    Md5.stateIdentity = new Int32Array([1732584193, -271733879, -1732584194, 271733878]);
-    Md5.buffer32Identity = new Int32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    Md5.hexChars = '0123456789abcdef';
-    Md5.hexOut = [];
-    // Permanent instance is to use for one-call hashing
-    Md5.onePassHasher = new Md5();
-    return Md5;
-}());
-exports.Md5 = Md5;
-if (Md5.hashStr('hello') !== '5d41402abc4b2a76b9719d911017c592') {
-    console.error('Md5 self test failed.');
-}
-//# sourceMappingURL=md5.js.map
 
 /***/ }),
 
@@ -83285,7 +80723,7 @@ ReactiveFormsModule.ctorParameters = function () { return []; };
 /* unused harmony export Request */
 /* unused harmony export Response */
 /* unused harmony export QueryEncoder */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return URLSearchParams; });
+/* unused harmony export URLSearchParams */
 /* unused harmony export VERSION */
 /* unused harmony export ɵg */
 /* unused harmony export ɵa */
@@ -90170,7 +87608,7 @@ var VERSION = new __WEBPACK_IMPORTED_MODULE_2__angular_core__["_15" /* Version *
 /* unused harmony export GuardsCheckEnd */
 /* unused harmony export GuardsCheckStart */
 /* unused harmony export NavigationCancel */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return NavigationEnd; });
+/* unused harmony export NavigationEnd */
 /* unused harmony export NavigationError */
 /* unused harmony export NavigationStart */
 /* unused harmony export ResolveEnd */
@@ -90179,11 +87617,11 @@ var VERSION = new __WEBPACK_IMPORTED_MODULE_2__angular_core__["_15" /* Version *
 /* unused harmony export RouteConfigLoadStart */
 /* unused harmony export RoutesRecognized */
 /* unused harmony export RouteReuseStrategy */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return Router; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Router; });
 /* unused harmony export ROUTES */
 /* unused harmony export ROUTER_CONFIGURATION */
 /* unused harmony export ROUTER_INITIALIZER */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return RouterModule; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return RouterModule; });
 /* unused harmony export provideRoutes */
 /* unused harmony export ChildrenOutletContexts */
 /* unused harmony export OutletContext */

@@ -47,7 +47,7 @@ module.exports = {
   },
 
   getRoomById: function(req, res){
-    Room.findOne({roomId: req.params.id}, function(err, room){
+    Room.findOne({roomId: req.params.id}).populate('_roomMembers _owner').exec(function(err, room){
       res.json(room);
     })
   },
@@ -82,6 +82,61 @@ module.exports = {
         } )
       })
     })
-  }
+  },
+
+  leaveRoom: function(req, res){
+    Room.findOne({roomId: req.params.id}, function(err, room){
+      for(var i = 0; i < room._roomMembers.length; i++){
+        if(room._roomMembers[i] == req.session.currentUser._id){
+          room._roomMembers.splice(i, 1);
+          break;
+        }
+      }
+      room.save(function(err){
+        User.findOneAndUpdate({userId: req.session.currentUser.userId}, {$pull:{joinedRooms: room}}, {new: true}, function(err2, updatedUser){
+          if(err2) {
+            res.json(err2);
+          }
+          else {
+            req.session.currentUser = updatedUser;
+            res.json(true);
+          }
+        } )
+      })
+    })
+  },
+
+  deleteRoom: function(req, res){
+    Room.findOneAndRemove({roomId: req.params.id}, function(err, room){
+      console.log("ASHFABLSBFDLKADFKJBALKBA");
+      console.log(room);
+      User.find({joinedRooms: room._id}, function(err, users){
+        console.log(users);
+        for(var i = 0; i < users.length; i++){
+          for(var j = 0; j < users[i].joinedRooms.length; j++){
+            if(users[i].joinedRooms[j] == req.params.id){
+              users[i].joinedRooms.splice(j, 1);
+              break;
+            }
+          }
+        }
+      })
+
+      User.findOne({ownedRooms: room._id}, function(err, user){
+        console.log("PPPPPP");
+        console.log(user);
+        if(user != null){
+          for(var j = 0; j < user.ownedRooms.length; j++){
+            if(users[i].ownedRooms[j] == req.params.id){
+              users[i].ownedRooms.splice(j, 1);
+              break;
+            }
+          }
+        }
+      })
+
+      res.json(true);
+    })
+  },
 
 }
