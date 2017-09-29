@@ -20,40 +20,41 @@
         <ul class="nav navbar-nav navbar-right">
           <li *ngIf="!currentUser"><a [routerLink]="['/register']" style="padding-top:19px;"><b>Register</b> <span class="caret"></span></a></li>
           <li *ngIf="!currentUser"><p class="navbar-text" style="padding-top:4px;">Already have an account?</p></li>
-          <li *ngIf="!currentUser"><a  [routerLink]="['/login']" style="padding-top:19px;"><b>Login</b> <span class="caret"></span></a></li>
-          
-          <li *ngIf="currentUser"><a [routerLink]="['/home/profile/current']" style="padding-top:19px;"><b>Home</b> <span class="caret"></span></a></li>
+          <li *ngIf="!currentUser"><a  [routerLink]="['/login']" style="padding-top:19px; "><b>Login</b> <span class="caret"></span></a></li>
+         
+          <!-- <li *ngIf="currentUser"><a [routerLink]="['/home/profile/current']" style="padding-top:19px;"><b>Home</b> <span class="caret"></span></a></li> -->
+
+          <li *ngIf="currentUser"><a [routerLink]="['/home/profile/current']" style="padding-top:19px;"><b>Dashboard</b> <span class="caret"></span></a></li>
 
 
 
-          <li *ngIf="searchMode==='users' && currentUser" style="display: inline-block;">
+          <li *ngIf="searchMode==='users' && currentUser" style="display: inline-block; margin-top:15px;">
               <form *ngIf="currentUser" (submit) = "redirectToSearchPageWithSearchVal()">
                 <input type="text" name="searchU" placeholder="Search User" [(ngModel)]="searchVal" (keyup) = "searchUsers()" />
                 <input type="submit" value="Search Users" />
               </form>
             </li>
-          
-            <li *ngIf="searchMode==='music' && currentUser"style="display: inline-block;">
-              <form *ngIf="currentUser" (submit) = "searchMusic()">
-                <input type="text" name="searchM" placeholder="Search Music" [(ngModel)]="searchVal2" />
-                <input type="submit" value="Search Music" />
-              </form>
-            </li>
-          
-            <li *ngIf="searchMode==='rooms' && currentUser"style="display: inline-block;">
+            <li *ngIf="searchMode==='rooms' && currentUser"style="display: inline-block; margin-top:15px;">
               <form *ngIf="currentUser" (submit) = "redirectToSearchRoomPageWithSearchVal3()">
                 <input type="text" name="searchM" placeholder="Search Chatrooms" [(ngModel)]="searchVal3" (keyup) = "searchRooms()"/>
                 <input type="submit" value="Search Rooms" />
               </form>
             </li>
-            <li>
-              <select *ngIf="currentUser" name="searchMode" [(ngModel)]="searchMode">
-                <option value="users">Users</option>
-                <option value="music">Music</option>
-                <option value="rooms">Chatrooms</option>
-              </select>
+         
+            <li *ngIf="searchMode==='music' && currentUser"style="display: inline-block; margin-top:15px;">
+              <form *ngIf="currentUser" (submit) = "searchMusic()">
+                <input type="text" name="searchM" placeholder="Search Music" [(ngModel)]="searchVal2" />
+                <input type="submit" value="Search Music" />
+              </form>
             </li>
-            <li *ngIf="currentUser"><a [routerLink]="['/home','logout']" style="padding-top:19px;"><b>Logout</b> <span class="caret"></span></a></li>
+            <li>
+            <select *ngIf="currentUser" name="searchMode" [(ngModel)]="searchMode" style= "margin-top:18px;">
+              <option value="users" >Users</option>
+              <option value="music">Music</option>
+              <option value="rooms">Chatrooms</option>
+            </select>
+          </li>
+          <li *ngIf="currentUser"><a [routerLink]="['/home','logout']" style="padding-top:19px;"><b>Logout</b> <span class="caret"></span></a></li>
 
 
 

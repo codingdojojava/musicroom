@@ -1,13 +1,36 @@
-<form (submit)="createRoom()">
-  <div><label>Title: </label><input [(ngModel)] = "room.title" type="text" name='roomtitle'></div>
-  <div>
-      <label>Privacy:</label>
-      <select name="public" id="" [(ngModel)]="room.isPublic">
-          <option value="true">Public</option>
-          <option value="false">Private</option>
-      </select>
-  </div>
-  <div><label>Password: </label><input type="text" [disabled]="room.isPublic == 'true'" name="pw" [(ngModel)]="room.password"></div>
-  <div><label>Description: </label><input [(ngModel)]="room.description" type="text" name='description'></div>
-  <div><input type="submit" value="Create Room"></div>
-</form>
+
+
+<div class="wrap">
+    <div class="container-fluid" id="loginform" class="col-sm-4">
+      <div class="row">
+            <section class="col-sm-12 align-left">
+           
+              <h3>Create a New Room</h3>
+    
+              <div class="container-fluid"></div>
+              <form id="newroomform" (submit)="createRoom()">
+                <div>
+                <label for="title" class="newroom1">Title: </label>
+                <input [(ngModel)] = "room.title" type="text" name='roomtitle' class="newroom1a">
+                </div>
+            
+                <div>
+                <label for="description" class="newroom4">Description: </label>
+                <input [(ngModel)]="room.description" type="text" name='description' class="newroom4a">
+
+                <label for="password" class="newroom3">Password: </label>
+                <input class="newroom3a" type="text" [disabled]="room.isPublic == 'true'" name="pw" [(ngModel)]="room.password">
+                </div>
+                <div>
+                <label for="label" class="newroom2">Privacy:</label>
+                <select class="newroom2" name="public" id="" [(ngModel)]="room.isPublic">
+                <option value="true">Public</option>
+                <option value="false">Private</option>
+                </select>
+                </div>
+                <input type="submit" value="Create Room" class="newroombtn">
+              </form> 
+            </section>
+
+    </div>
+    </div>
