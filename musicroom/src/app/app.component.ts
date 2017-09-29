@@ -99,10 +99,10 @@ export class AppComponent implements OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    // this._apicallService.logoutUser()
-    //   .then(data => {
-    //     console.log(data);
-    //   });
+    this._apicallService.logoutUser()
+      .then(data => {
+        console.log(data);
+      });
   }
   
 }

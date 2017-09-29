@@ -28,6 +28,7 @@ import { SearchMusicComponent } from './search-manager/search-music/search-music
 import { SearchUsersComponent } from './search-manager/search-users/search-users.component';
 import { NewRoomComponent } from './new-room/new-room.component';
 import { SearchRoomsComponent } from './search-manager/search-rooms/search-rooms.component';
+import { HomeComponent } from './dashboard/home/home.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
 
@@ -49,6 +50,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
     SearchUsersComponent,
     NewRoomComponent,
     SearchRoomsComponent,
+    HomeComponent,
   ],
   imports: [
     // ngx-bootstrap

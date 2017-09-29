@@ -1,51 +1,89 @@
-<p>Search Music Results</p>
-<fieldset *ngIf="trackSearchResults">
-  <legend>Tracks</legend>
-  <table class="music-results" >
-    <tr>
-      <th>Title</th>
-      <th>Artist</th>
-      <th>Actions</th>
-    </tr>
-    <tr *ngFor="let track of trackSearchResults">
-      <td>{{track.name}}</td>
-      <td>{{track.artist}}</td>
-      <td>
-        <a href="#">Add to Favorites</a>
-      </td>
-    </tr>
-  </table>
-</fieldset>
-<fieldset *ngIf="albumSearchResults">
-  <legend>Album</legend>
-  <table class="music-results" >
-    <tr>
-      <th>Title</th>
-      <th>Artist</th>
-      <th>Actions</th>
-    </tr>
-    <tr *ngFor="let album of albumSearchResults">
-      <td>{{album.name}}</td>
-      <td>{{album.artist}}</td>
-      <td>
-        <a href="#">Browse Album's Songs</a>
-      </td>
-    </tr>
-  </table>
-</fieldset>
-<!--<fieldset *ngIf="artistSearchResults">
-  <legend>Artist</legend>
-  <table class="music-results" >
-    <tr>
-      <th>Name</th>
-      <th>Actions</th>
-    </tr>
-    <tr *ngFor="let artist of artistSearchResults">
-      <td>{{artist.name}}</td>
-      <td>
-        <a href="#">Browse Artist's Albums</a>
-        <a href="#">Browse Artist's Songs</a>
-      </td>
-    </tr>
-  </table>
-</fieldset>-->
+
+
+ <div *ngIf="trackSearchResults" class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="page-header small">Tracks</h1>
+            <p class="page-subtitle small">Found {{tracks['opensearch:totalResults']}} songs based on "{{prevSearchVal}}" </p>
+          </div>
+          <div class="col-md-12">
+            <div class="memberblock">
+              <span *ngFor="let track of trackSearchResults">
+                <span style="width:19%;" *ngIf="track.image[2]['#text'] != ''" class="member">
+                  <a href="{{track.url}}" target="_blank" > 
+                    <img src="{{track.image[2]['#text']}}" alt="">
+                  </a>
+                  <div *ngIf="!track.artist.name" class="memmbername">{{track.name}} by {{track.artist}}</div>
+                  <div *ngIf="track.artist.name" class="memmbername">{{track.name}} by {{track.artist.name}}</div>
+                </span> 
+                
+                <span style="width:19%;" *ngIf="track.image[2]['#text'] == ''" class="member">
+                  <a href="{{track.url}}" target="_blank" > 
+                    <img style="margin-top: 33%;" src="http://colonieems.org/wp-content/uploads/2015/05/placeholder.jpg" alt="">
+                  </a>
+                  <div *ngIf="!track.artist.name" class="memmbername">{{track.name}} by {{track.artist}}</div>
+                  <div *ngIf="track.artist.name" class="memmbername">{{track.name}} by {{track.artist.name}}</div>
+                </span> 
+              </span>
+
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+ <div *ngIf="albumSearchResults" class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="page-header small">Albums</h1>
+            <p class="page-subtitle small">Found {{albums['opensearch:totalResults']}} albums based on "{{prevSearchVal}}" </p>
+          </div>
+          <div class="col-md-12">
+            <div class="memberblock">
+            <span *ngFor="let album of albumSearchResults">
+
+              <span style="width:19%;" *ngIf="album.image[2]['#text'] != ''" class="member">
+                <a href="{{album.url}}" target="_blank" > 
+                  <img src="{{album.image[2]['#text']}}" alt="">
+                </a>
+                <div class="memmbername">{{album.name}} by {{album.artist}}</div>
+              </span>
+              <span style="width:19%; " *ngIf="album.image[2]['#text'] == ''" class="member">
+                <a href="{{album.url}}" target="_blank" > 
+                  <img style="margin-top: 33%;" src="http://colonieems.org/wp-content/uploads/2015/05/placeholder.jpg" alt="">
+                </a>
+                <div class="memmbername">{{album.name}} by {{album.artist}}</div>
+              </span>
+
+            </span>
+
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+ <div *ngIf="artistSearchResults" class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="page-header small">Artists</h1>
+            <p class="page-subtitle small">Found {{artists['opensearch:totalResults']}} artists based on "{{prevSearchVal}}" </p>
+          </div>
+          <div class="col-md-12">
+            <div class="memberblock">
+
+              <span *ngFor="let artist of artistSearchResults">
+
+                <span style="width:19%;" *ngIf="artist.image[2]['#text'] != ''" class="member">
+                  <a href="{{artist.url}}" target="_blank" > 
+                    <img src="{{artist.image[2]['#text']}}" alt="">
+                  </a>
+                  <div class="memmbername">{{artist.name}}</div>
+                </span> 
+                <span style="width:19%; " *ngIf="artist.image[2]['#text'] == ''" class="member">
+                  <a href="{{artist.url}}" target="_blank" > 
+                    <img style="margin-top: 33%;" src="http://colonieems.org/wp-content/uploads/2015/05/placeholder.jpg" alt="">
+                  </a>
+                  <div class="memmbername">{{artist.name}}</div>
+                </span> 
+                
+              </span>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>

@@ -19,7 +19,7 @@
       <!-- /.col-md-12 -->
       <div class="col-md-4 col-sm-12 pull-right">
         <div class="panel panel-default">
-          <div style="min-height: 490px;" class="panel-heading">
+          <div style="min-height: 330px;" class="panel-heading">
             <h1 class="page-header small">Personal Details</h1>
             <router-outlet></router-outlet>
           </div>
@@ -97,7 +97,7 @@
               <span *ngFor="let friend of currentUser.friends" class="member">
                 <button *ngIf="editMode" style="display: block; margin-left: 6%; z-index: 1" class="btn btn-link" (click)="removeFriend(friend._id)">Remove</button>
                 <a [routerLink]="['/home/users', friend.userId]" > 
-                  <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
+                  <img src="{{friend.profileImageUrl}}" alt="">
                 </a>
                 <div class="memmbername">{{friend.username}}</div>
               </span> 

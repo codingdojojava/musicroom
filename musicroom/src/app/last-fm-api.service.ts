@@ -29,14 +29,14 @@ export class LastFmApiService {
 
   getTopArtist() {
     console.log('calling last fm api to get current top artisst');
-    return this._http.get('http://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country=spain&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
+    return this._http.get('http://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
       .map(response => response.json())
       .toPromise();
   }
 
   getTopTracks() {
     console.log('calling last fm api to get current top tracks');
-    return this._http.get('http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country=spain&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
+    return this._http.get('http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
       .map(response => response.json())
       .toPromise();
   }

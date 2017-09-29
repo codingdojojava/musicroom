@@ -1,3 +1,4 @@
+import { HomeComponent } from './dashboard/home/home.component';
 import { SearchRoomsComponent } from './search-manager/search-rooms/search-rooms.component';
 import { NewRoomComponent } from './new-room/new-room.component';
 import { RoomComponent } from './dashboard/room/room.component';
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'register', pathMatch: 'full', component: RegistrationComponent },
   { path: 'home', component: DashboardComponent, children: [
     { path: 'logout', component: LogoutComponent },
+    { path: 'main', component: HomeComponent },
     { path: 'profile', component: ProfileComponent, children: [
           {path: 'edit', component: EditProfileComponent},
           {path: 'current', component: CurrentProfileComponent}

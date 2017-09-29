@@ -13,7 +13,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 export class SearchMusicComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   subscription2: Subscription;
+  tracks;
+  albums;
+  artists;
   searchVal = '';
+  prevSearchVal;
   trackSearchResults;
   albumSearchResults;
   artistSearchResults;
@@ -45,6 +49,7 @@ export class SearchMusicComponent implements OnInit, OnDestroy {
       console.log('hiiiii');
       // console.log(search);
       this.searchMusic(music);
+      this.prevSearchVal = music;
     });
   }
 
@@ -52,6 +57,8 @@ export class SearchMusicComponent implements OnInit, OnDestroy {
     if (search) {
       this._lastFmApiService.searchTrack(search)
         .then(data => {
+          this.tracks = data.results;
+          console.log(this.tracks);
           this.trackSearchResults = data.results.trackmatches.track;
           console.log(this.trackSearchResults);
         })
@@ -61,6 +68,8 @@ export class SearchMusicComponent implements OnInit, OnDestroy {
 
       this._lastFmApiService.searchAlbum(search)
         .then(data => {
+          this.albums = data.results;
+          console.log(this.albums);
           this.albumSearchResults = data.results.albummatches.album;
           console.log(this.albumSearchResults);
         })
@@ -69,6 +78,8 @@ export class SearchMusicComponent implements OnInit, OnDestroy {
         });
       this._lastFmApiService.searchArtist(search)
         .then(data => {
+          this.artists = data.results;
+          console.log(this.artists);
           this.artistSearchResults = data.results.artistmatches.artist;
           console.log(this.artistSearchResults);
         })
@@ -81,7 +92,7 @@ export class SearchMusicComponent implements OnInit, OnDestroy {
   getTopMusic() {
     this._lastFmApiService.getTopArtist()
       .then(data => {
-        this.artistSearchResults = data;
+        this.artistSearchResults = data.artists.artist;
         console.log(this.artistSearchResults);
       })
       .catch(error => {
@@ -89,7 +100,7 @@ export class SearchMusicComponent implements OnInit, OnDestroy {
       });
     this._lastFmApiService.getTopTracks()
       .then(data => {
-        this.trackSearchResults = data;
+        this.trackSearchResults = data.tracks.track;
         console.log(this.trackSearchResults);
       })
       .catch(error => {

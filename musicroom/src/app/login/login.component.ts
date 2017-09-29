@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
           this._appComponent.getCurrentUserInSession();
           this.getCurrentUserInSession();
           console.log(this.currentUser);
-          this._router.navigate(['home', 'profile', 'current']);
+          this._router.navigate(['home', 'main']);
           // }
         }
       })

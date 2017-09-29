@@ -1,36 +1,67 @@
+<!--<form (submit)="createRoom()">
+  <div><label>Title: </label><input [(ngModel)] = "room.title" type="text" name='roomtitle'></div>
+  <div>
+      <label>Privacy:</label>
+      <select name="public" id="" [(ngModel)]="room.isPublic">
+          <option selected value="true">Public</option>
+          <option value="false">Private</option>
+      </select>
+  </div>
+  <div><label>Password: </label><input type="text" [disabled]="room.isPublic == 'true'" name="pw" [(ngModel)]="room.password"></div>
+  <div><label>Description: </label><input [(ngModel)]="room.description" type="text" name='description'></div>
+  <div><input type="submit" value="Create Room"></div>
+</form>-->
 
+    <div class="col-sm-6 col-centered">
+        <div class="panel panel-default">
+            <!--<div class="panel-heading" >
+                <h1>Edit Personal Details</h1>
+            </div>-->
+      <form (submit)="createRoom()">
+        <div class="panel-body">
 
-<div class="wrap">
-    <div class="container-fluid" id="loginform" class="col-sm-4">
-      <div class="row">
-            <section class="col-sm-12 align-left">
-           
-              <h3>Create a New Room</h3>
-    
-              <div class="container-fluid"></div>
-              <form id="newroomform" (submit)="createRoom()">
-                <div>
-                <label for="title" class="newroom1">Title: </label>
-                <input [(ngModel)] = "room.title" type="text" name='roomtitle' class="newroom1a">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope blue"></i></span>
+                    <input [(ngModel)] = "room.title" type="text" name='roomtitle' placeholder="Title" class="form-control" />
                 </div>
-            
-                <div>
-                <label for="description" class="newroom4">Description: </label>
-                <input [(ngModel)]="room.description" type="text" name='description' class="newroom4a">
+            </div>
 
-                <label for="password" class="newroom3">Password: </label>
-                <input class="newroom3a" type="text" [disabled]="room.isPublic == 'true'" name="pw" [(ngModel)]="room.password">
+                      <label for="privacy">Privacy</label>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user blue"></i></span>
+                    <select name="public" id="privacy" [(ngModel)]="room.isPublic" class="form-control">
+                        <option selected value="true">Public</option>
+                        <option value="false">Private</option>
+                    </select>
                 </div>
-                <div>
-                <label for="label" class="newroom2">Privacy:</label>
-                <select class="newroom2" name="public" id="" [(ngModel)]="room.isPublic">
-                <option value="true">Public</option>
-                <option value="false">Private</option>
-                </select>
-                </div>
-                <input type="submit" value="Create Room" class="newroombtn">
-              </form> 
-            </section>
+            </div>
 
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user blue"></i></span>
+                    <input type="text" [disabled]="room.isPublic == 'true'" name="pw" [(ngModel)]="room.password" placeholder="Password" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-comment blue"></i></span>
+                    <textarea 
+                      name="description"
+                      placeholder="Description(optional)"
+                      rows="6" 
+                      class="form-control" 
+                      [(ngModel)]="room.description"
+                      #description='ngModel'
+                      type="text" ></textarea>
+                </div>
+            </div>
+            <div class="">
+            <input type="submit" class="btn btn-success pull-right" [disabled] = "lastName.invalid || firstName.invalid || email.invalid" />
+            </div>
+        </div>
+        </form>
     </div>
-    </div>
+</div>

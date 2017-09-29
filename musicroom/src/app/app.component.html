@@ -1,18 +1,12 @@
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
-<div class="header">
-  <nav class="navbar navbar-default navbar-inverse" role="navigation" style="vertical-align: top; margin-bottom: 0; height: 60px; border-radius:0;">
+<div class="header" style="position: fixed; width: 100%; z-index: 1000;">
+  <nav class="navbar navbar-default navbar-inverse" data-spy="affix" role="navigation" style="vertical-align: top; margin-bottom: 0; height: 60px; border-radius:0;">
     <div class="container-fluid">
 
       <div class="navbar-header" dropdown>
-        <button type="button" class="navbar-toggle collapsed dropdown" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" *ngIf="!currentUser" [routerLink]="['/']" style="padding-top:19px; color:white;">CHATTERBOX</a>
+        <a class="navbar-brand" [routerLink]="['/']" style="padding-top:19px; color:white;">CHATTERBOX</a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
@@ -20,12 +14,10 @@
         <ul class="nav navbar-nav navbar-right">
           <li *ngIf="!currentUser"><a [routerLink]="['/register']" style="padding-top:19px;"><b>Register</b> <span class="caret"></span></a></li>
           <li *ngIf="!currentUser"><p class="navbar-text" style="padding-top:4px;">Already have an account?</p></li>
-          <li *ngIf="!currentUser"><a  [routerLink]="['/login']" style="padding-top:19px; "><b>Login</b> <span class="caret"></span></a></li>
-         
-          <!-- <li *ngIf="currentUser"><a [routerLink]="['/home/profile/current']" style="padding-top:19px;"><b>Home</b> <span class="caret"></span></a></li> -->
-
-          <li *ngIf="currentUser"><a [routerLink]="['/home/profile/current']" style="padding-top:19px;"><b>Dashboard</b> <span class="caret"></span></a></li>
-
+          <li *ngIf="!currentUser"><a  [routerLink]="['/login']" style="padding-top:19px;"><b>Login</b> <span class="caret"></span></a></li>
+          
+          <li *ngIf="currentUser"><a [routerLink]="['/home/main']" style="padding-top:19px;"><b>Home</b> <span class="caret"></span></a></li>
+          <li *ngIf="currentUser"><a [routerLink]="['/home/profile/current']" style="padding-top:19px;"><b>Profile</b> <span class="caret"></span></a></li>
 
 
           <li *ngIf="searchMode==='users' && currentUser" style="display: inline-block; margin-top:15px;">
@@ -66,4 +58,4 @@
   </div>
 
 
-<router-outlet></router-outlet>
+<router-outlet  ></router-outlet>
