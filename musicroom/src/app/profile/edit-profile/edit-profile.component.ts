@@ -1,3 +1,4 @@
+import { SearchService } from './../../search.service';
 import { Router } from '@angular/router';
 import { ApiCallService } from './../../api-call.service';
 import { User } from './../../models/user';
@@ -10,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditProfileComponent implements OnInit {
   currentUser: User;
-  constructor(private _apicallService: ApiCallService, private _router: Router) {
+  constructor(private _apicallService: ApiCallService, private _router: Router, private _searchService: SearchService) {
     this.getCurrentUserInSession();
    }
 
@@ -39,7 +40,7 @@ export class EditProfileComponent implements OnInit {
     this._apicallService.editCurrentUser(this.currentUser)
       .then(data => {
         // console.log('then response to update current user');
-        // console.log(data);
+        this._searchService.editUserEvent('it happened');
         this._router.navigate(['/home/profile/current']);
       })
       .catch(error => {

@@ -67,20 +67,24 @@
 
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h1 class="page-header small">Friends <button class="btn btn-link" (click)="setEditMode()">Edit</button></h1>
+            <h1 class="page-header small">Friends</h1>
             <p class="page-subtitle small"> {{user.friends.length}} friends</p>
           </div>
           <div class="col-md-12">
             <div class="memberblock">
               <span *ngFor="let friend of user.friends" class="member">
                   <button *ngIf="!hasReceivedInviteFromCurrentUser(friend.received_invites) && !isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id" style="display: block; margin-left: -12%; z-index: 1" class="btn btn-link" (click)="sendInvite(friend.userId)">Friend Request</button>
-                  <span style="display: block; z-index: 1" *ngIf="hasReceivedInviteFromCurrentUser(friend.received_invites)">Invite Sent</span>
-                  <span style="display: block; z-index: 1" *ngIf="isFriendOfCurrentUser(friend.friends)">Your Friend</span>
-                  <span style="display: block; z-index: 1" *ngIf="friend._id == currentUser._id">You</span>
-                  <a [routerLink]="['/home/users', friend.userId]" > 
+                  <a *ngIf="friend._id != currentUser._id" [routerLink]="['/home/users', friend.userId]" > 
                     <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
                   </a>
-                  <div class="memmbername">{{friend.firstName}}</div>
+                  <a *ngIf="friend._id == currentUser._id" [routerLink]="['/home/profile/current']" > 
+                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
+                  </a>
+                  <div class="memmbername">
+                    {{friend.firstName}}
+                  <div style="display: block; z-index: 1" *ngIf="hasReceivedInviteFromCurrentUser(friend.received_invites)">Invite Sent</div>
+                  <div style="display: block; z-index: 1" *ngIf="isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id">Your Friend</div>
+                  </div>
               </span> 
             </div>
           </div>

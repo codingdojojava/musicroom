@@ -1,3 +1,5 @@
+import { Subscription } from 'rxjs/Subscription';
+import { SearchService } from './../search.service';
 import { ChatService } from './../chat.service';
 import { User } from './../models/user';
 import { Router } from '@angular/router';
@@ -14,11 +16,21 @@ export class ProfileComponent implements OnInit {
   editMode: Boolean = false;
   isCheckingRecent: Boolean = false;
   isCheckingSent: Boolean = false;
-  constructor(private _apicallService: ApiCallService, private _router: Router, private _chatService: ChatService) {
+  subscription: Subscription;
+  constructor(private _apicallService: ApiCallService, private _router: Router, private _chatService: ChatService, private _searchService: SearchService) {
     this.getCurrentUserInSession();
    }
 
   ngOnInit() {
+    this.watchForEditUserEvent();
+  }
+
+  watchForEditUserEvent() {
+    this.subscription = this._searchService.editUserEvent$.subscribe(search => {
+      // console.log('hiiiii');
+      // console.log(search);
+      this.getCurrentUserInSession();
+    });
   }
 
   getCurrentUserInSession() {

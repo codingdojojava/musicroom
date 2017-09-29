@@ -226,7 +226,8 @@ module.exports = {
                               { email: req.body.email,
                                 firstName: req.body.firstName,
                                 lastName: req.body.lastName,
-                                description: req.body.description }, 
+                                description: req.body.description,
+                                profileImageUrl: req.body.profileImageUrl}, 
                               { new: true},
                               (error, updatedUser) => {
                                   if (error) {

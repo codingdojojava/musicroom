@@ -119,11 +119,24 @@
                     <textarea 
                       name="description"
                       placeholder="Description(optional)"
-                      rows="6" 
+                      rows="4" 
                       class="form-control" 
                       [(ngModel)]="currentUser.description"
                       #description='ngModel'
                       type="text" ></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-picture blue"></i></span>
+                    <input 
+                      name="profileImageUrl"
+                      placeholder="Profile Image(optional)"
+                      class="form-control" 
+                      [(ngModel)]="currentUser.profileImageUrl"
+                      #profileImageUrl='ngModel'
+                      type="text" />
                 </div>
             </div>
             <div class="">
