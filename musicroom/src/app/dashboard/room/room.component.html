@@ -19,7 +19,7 @@
           </p>
         </div>
       </div>
-      <div style='display: inline-block; float: right;'>
+      <div>
         <button *ngIf="!isOwner && userInRoom" class='btn btn-danger' (click)="leaveRoom()">Leave Room</button>
         <button *ngIf="isOwner" class='btn btn-danger' (click)="deleteRoom()">Delete Room</button>
       </div>

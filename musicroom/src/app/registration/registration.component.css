@@ -18,7 +18,8 @@ h3{
     /* background-color:rgba(255,255,255,.3); */
     padding:25px;
     vertical-align: top;
-    border: 1px solid grey;
+    border: 1px solid #428bca;
+    margin-top: 100px;
 }
 .regis0{
     color: #CECECE;
@@ -95,6 +96,6 @@ h3{
 }
 .regisbtn{
     margin-top: 15px;
-    background-color: #7E6443;
+    background-color: #428bca;
     width:100px;
 }

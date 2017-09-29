@@ -18,6 +18,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   room:object={};
   subscription: Subscription;
   subscription2: Subscription;
+  showFriends = false;
+  showRooms = false;
   constructor(private _apicallService: ApiCallService, private _router: Router, private chatService: ChatService) {
    }
   ngOnInit() {
@@ -29,6 +31,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
+  displayFriends(){
+    this.showFriends = !this.showFriends;
+  }
+  displayRooms(){
+    this.showRooms = !this.showRooms;
+  }
   getCurrentUserInSession() {
     this._apicallService.getCurrentUserInSession()
       .then((data) => {
