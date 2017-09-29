@@ -12,7 +12,7 @@
 
 
 
-<div *ngIf="showSearchResultRooms">
+<!--<div *ngIf="showSearchResultRooms">
   <div class="mb20">
       <h2 class="lead"><strong class="text-danger">{{showSearchResultRooms.length}}</strong> results were found for the search for <span *ngIf="searchVal==''"></span><strong class="text-danger">{{searchVal}}</strong></h2>								
   </div>
@@ -20,11 +20,8 @@
     <section class="col-xs-12 col-sm-6 col-md-12">
       <div *ngFor="let user of showSearchResultRooms">
           <article class="search-result row">
-            <div *ngIf="user && user._id != currentUser._id" class="col-xs-12 col-sm-12 col-md-3">
+            <div class="col-xs-12 col-sm-12 col-md-3">
               <a [routerLink]="['/home/room', room.roomId]" title="Lorem ipsum" class="thumbnail">{{user.title}}</a>
-            </div>
-            <div *ngIf="user && user._id == currentUser._id" class="col-xs-12 col-sm-12 col-md-3">
-              <a [routerLink]="['/home/profile/current']" title="Lorem ipsum" class="thumbnail"><img class="img-fluid" style="max-width:43%" src="{{user.profileImageUrl}}" alt="Lorem ipsum" /></a>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-2">
               <ul class="meta-search">
@@ -49,4 +46,4 @@
           </article>	
       </div>
     </section>
-</div>
+</div>-->

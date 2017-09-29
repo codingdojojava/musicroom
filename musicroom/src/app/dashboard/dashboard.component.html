@@ -1,30 +1,34 @@
 
 <!-- <router-outlet></router-outlet> -->
 <!-- <a [routerLink]="['room']">qqqq</a> -->
+<!-- JOE's top SECTION -->
 <div *ngIf="currentUser">
     <div class="container-fluid">
         <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
+                <!-- friends online list -->
             <li class="active"><a [routerLink]='["room","new"]'>Friends Online</a></li>
             <li *ngFor="let friend of onlineFriends">
                 <a [routerLink]="['home','users', friend.userId]">{{friend.username}}</a>
             </li>
             </ul>
             <ul class="nav nav-sidebar">
+
+<!-- create room button -->
             <li class="active"><a [routerLink]='["room","new"]'>+ Create Room</a></li>
+<!--  -->
+            <p>joined rooms list</p>
             <li *ngFor="let room of currentUser.joinedRooms">
                 <a [routerLink]="['room', room.roomId]">{{room.title}}</a>
             </li>
             </ul>
         </div>
-
+<!-- JOE bottom -->
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-           
             <router-outlet></router-outlet>
-
         </div>
+
         </div>
     </div>
 </div>
