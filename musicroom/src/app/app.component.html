@@ -22,7 +22,8 @@
           <li *ngIf="!currentUser"><p class="navbar-text" style="padding-top:4px;">Already have an account?</p></li>
           <li *ngIf="!currentUser"><a  [routerLink]="['/login']" style="padding-top:19px;"><b>Login</b> <span class="caret"></span></a></li>
           
-          <li *ngIf="currentUser"><a [routerLink]="['/home/profile/current']" style="padding-top:19px;"><b>Home</b> <span class="caret"></span></a></li>
+          <li *ngIf="currentUser"><a [routerLink]="['/home/main']" style="padding-top:19px;"><b>Home</b> <span class="caret"></span></a></li>
+          <li *ngIf="currentUser"><a [routerLink]="['/home/profile/current']" style="padding-top:19px;"><b>Profile</b> <span class="caret"></span></a></li>
 
 
 

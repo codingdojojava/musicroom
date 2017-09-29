@@ -26,7 +26,7 @@
       <div class="col-md-12 text-center ">
         <div class="panel panel-default">
           <div class="userprofile social ">
-            <div class="userpic" > <img src="http://style.anu.edu.au/_anu/4/images/placeholders/person.png"  alt="" class="userpicimg"> </div>
+            <div class="userpic" > <img src="{{user.profileImageUrl}}"  alt="" class="userpicimg"> </div>
             <h3 class="username">{{user.firstName}} {{user.lastName}}</h3>
             <p>{{user.username}}</p>
             <div class="socials tex-center"> <a href="" class="btn btn-circle btn-primary ">
@@ -42,7 +42,7 @@
       <!-- /.col-md-12 -->
       <div class="col-md-4 col-sm-12 pull-right">
         <div class="panel panel-default">
-          <div style="min-height: 490px;" class="panel-heading">
+          <div style="min-height: 330px;" class="panel-heading">
             <h1 class="page-header small">Personal Details</h1>
               <p>Username: {{user.username}}</p>
               <p>Email: {{user.email}}</p>
@@ -75,10 +75,10 @@
               <span *ngFor="let friend of user.friends" class="member">
                   <button *ngIf="!hasReceivedInviteFromCurrentUser(friend.received_invites) && !isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id" style="display: block; margin-left: -12%; z-index: 1" class="btn btn-link" (click)="sendInvite(friend.userId)">Friend Request</button>
                   <a *ngIf="friend._id != currentUser._id" [routerLink]="['/home/users', friend.userId]" > 
-                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
+                    <img src="{{friend.profileImageUrl}}" alt="">
                   </a>
                   <a *ngIf="friend._id == currentUser._id" [routerLink]="['/home/profile/current']" > 
-                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
+                    <img src="{{friend.profileImageUrl}}" alt="">
                   </a>
                   <div class="memmbername">
                     {{friend.firstName}}
