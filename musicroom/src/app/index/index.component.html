@@ -2,32 +2,7 @@
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
 
-  <div class="header">
-  <nav class="navbar navbar-default navbar-inverse" role="navigation" style="vertical-align: top; margin-bottom: 0; height: 60px; border-radius:0;">
-    <div class="container-fluid">
-
-      <div class="navbar-header" dropdown>
-        <button type="button" class="navbar-toggle collapsed dropdown" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" *ngIf="!currentUser" [routerLink]="['/']" style="padding-top:19px; color:white;">CHATTERBOX</a>
-      </div>
-
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right">
-          <!-- <li><a *ngIf="!currentUser" [routerLink]="['/']" style="padding-top:19px;">Home</a></li> -->
-          <li><a *ngIf="!currentUser" [routerLink]="['/register']" style="padding-top:19px;"><b>Register</b> <span class="caret"></span></a></li>
-          <li><p class="navbar-text" style="padding-top:4px;">Already have an account?</p></li>
-          <li><a *ngIf="!currentUser" [routerLink]="['/login']" style="padding-top:19px;"><b>Login</b> <span class="caret"></span></a></li>
-        </ul>
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-  </nav>
-  </div>
+ 
 
   <!-- background video -->
   <div class="bigwrapper">
