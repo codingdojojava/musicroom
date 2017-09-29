@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // static content 
 app.use(express.static(path.join(__dirname, "./musicroom/dist")));
+app.use(express.static(path.join(__dirname, "./musicroom/assets")));
 // setting up ejs and our views folder
 require('./server/config/mongoose');
 

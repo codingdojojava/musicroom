@@ -1,11 +1,4 @@
-<fieldset>
-  <legend>Nav Bar</legend>
-  <a *ngIf="!currentUser" [routerLink]="['/']">Home</a>
-  <a *ngIf="currentUser" [routerLink]="['/home']">Home</a>
-  <a *ngIf="!currentUser" [routerLink]="['/login']">Login</a>
-  <a *ngIf="!currentUser" [routerLink]="['/register']">Register</a>
-  <a *ngIf="currentUser" [routerLink]="['/home/profile/current']">My Profile</a>
-
+<!-- <fieldset style="height:0px;">
   <div *ngIf="searchMode==='users'" style="display: inline-block;">
     <form *ngIf="currentUser" (submit) = "redirectToSearchPageWithSearchVal()">
       <input type="text" name="searchU" placeholder="Search User" [(ngModel)]="searchVal" (keyup) = "searchUsers()" />
@@ -34,6 +27,6 @@
   </select>
 
   <a *ngIf="currentUser" [routerLink]="['/logout']">Logout</a>
-</fieldset>
+</fieldset> -->
 
 <router-outlet></router-outlet>

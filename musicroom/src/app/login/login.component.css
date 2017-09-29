@@ -1,0 +1,54 @@
+.wrap{
+    position: absolute;
+    top: 60px;
+    left: 0%;
+    height: 1080px;
+    width: 100%;
+    overflow: hidden;
+    background: url(/bg1.jpg) no-repeat center center fixed;
+}
+h3{
+    color: #CECECE;
+}
+
+#loginform{
+    width: 350px;
+    /* height: 600px; */
+    /* margin-left:550px; */
+    /* background-color:rgba(255,255,255,.3); */
+    padding:25px;
+    vertical-align: top;
+    border: 1px solid grey;
+    margin-top: 100px;
+}
+.login1{
+    color: #CECECE;
+}
+.login1a{
+    width: 100%;
+}
+.login1b{
+    font-size: 9pt;
+    text-align: right;
+    margin-top: 5px;
+    vertical-align: top;
+}
+
+.login2{
+    margin-top: 20px;
+    color: #CECECE;
+}
+.login2a{
+    width: 100%;
+}
+.login2b{
+    font-size: 9pt;
+    text-align: right;
+    margin-top: 5px;
+    vertical-align: top;
+}
+.loginbtn{
+    margin-top: 15px;
+    background-color: #7E6443;
+    width:100px;
+}

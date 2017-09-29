@@ -1,3 +1,111 @@
-<fieldset class="cover">
-  <legend>Cover Page</legend>
-</fieldset>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+  <div class="header">
+  <nav class="navbar navbar-default navbar-inverse" role="navigation" style="vertical-align: top; margin-bottom: 0; height: 60px; border-radius:0;">
+    <div class="container-fluid">
+
+      <div class="navbar-header" dropdown>
+        <button type="button" class="navbar-toggle collapsed dropdown" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" *ngIf="!currentUser" [routerLink]="['/']" style="padding-top:19px; color:white;">CHATTERBOX</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <!-- <li><a *ngIf="!currentUser" [routerLink]="['/']" style="padding-top:19px;">Home</a></li> -->
+          <li><a *ngIf="!currentUser" [routerLink]="['/register']" style="padding-top:19px;"><b>Register</b> <span class="caret"></span></a></li>
+          <li><p class="navbar-text" style="padding-top:4px;">Already have an account?</p></li>
+          <li><a *ngIf="!currentUser" [routerLink]="['/login']" style="padding-top:19px;"><b>Login</b> <span class="caret"></span></a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+  </div>
+
+  <!-- background video -->
+  <div class="bigwrapper">
+    
+  <div class="header-container">
+    <img src="/logo2.png" style="max-height: 100px;">
+    <div id="title" class="col-sm-4 col-sm-offset-1" style="max-width:500px;">
+      <p style="color:white; font-size: 16pt; margin-bottom: 0;">welcome to </p>
+      <h1>CHATTERBOX </h1>
+      <p style="color:white; font-size: 16pt;">a place to chat about music</p>
+    </div>
+    <div class="video-container">
+      <video preload="true" autoplay="autoplay" loop="loop" volume="0" poster="/record_player.jpg">
+        <source src="/record_player.mp4" type="video/mp4">
+        <source src="/record_player.webm" type="video/webm">
+        <source src="/record_player.ogv" type="video/ogg">
+      </video>
+    </div>
+  </div>
+</div>
+
+
+  <!-- carousel box -->
+  <!-- <div id="carousel-box" class="pad-section">
+    <div class="container">
+    <div class="row"> -->
+    <div id="myCarousel" class="carousel slide" class="col-sm-4 col-sm-offset-2" style="max-width:500px;">
+      <carousel class="text-center">
+        <slide>
+          <img class="img-main-carousel" src="/album/500-bruno-mars-01.jpg" alt="First slide">
+          <!-- <div class="carousel-caption">
+            <h4>Taylor Swift</h4>
+          </div> -->
+        </slide>
+        <slide>
+          <img class="img-main-carousel" src="/album/500-Alicia-Keys-03.jpg" alt="Second slide">
+          <!-- <div class="carousel-caption">
+            <h4>Alicia Keys</h4>
+          </div> -->
+        </slide>
+        <slide>
+          <img class="img-main-carousel" src="/album/500-Blake-shelton-01.jpg" alt="Third slide">
+          <!-- <div class="carousel-caption">
+            <h4>Blake Shelton</h4>
+          </div> -->
+        </slide>
+        <slide>
+          <img class="img-main-carousel" src="/album/500-Selena-Gomez-01.jpg" alt="Fourth slide">
+          <!-- <div class="carousel-caption">
+            <h4>Selena Gomez</h4>
+          </div> -->
+        </slide>
+        <slide>
+          <img class="img-main-carousel" src="/album/500-Rhianna-01.jpg" alt="Fifth slide">
+          <!-- <div class="carousel-caption">
+            <h4>Rhianna</h4>
+          </div> -->
+        </slide>
+        <slide>
+          <img class="img-main-carousel" src="/album/500-Lady-Gaga-01.jpg" alt="Six slide">
+          <!-- <div class="carousel-caption">
+            <h4>Lady Gaga</h4>
+          </div> -->
+        </slide>
+        <slide>
+          <img class="img-main-carousel" src="/album/500-justin-bieber-01.jpg" alt="Seven slide">
+        </slide>
+        <slide>
+          <img class="img-main-carousel" src="/album/500-John-Legend-01.jpg" alt="Eight slide">
+        </slide>
+        <slide>
+          <img class="img-main-carousel" src="/album/500-IZ-01.jpg" alt="Nine slide">
+        </slide>
+        <slide>
+          <img class="img-main-carousel" src="/album/500-celine-dion-01.jpg" alt="Ten slide">
+        </slide>
+      </carousel>
+    <!-- </div>
+    </div>
+    </div> -->
+  </div>

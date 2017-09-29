@@ -1,9 +1,67 @@
-<p>You now in dashboard</p>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+
+<div class="header">
+    <nav class="navbar navbar-default navbar-inverse" role="navigation" style="vertical-align: top; margin-bottom: 0; height: 60px; border-radius:0;">
+        <div class="container-fluid">
+      
+        <div class="navbar-header" dropdown>
+            <button type="button" class="navbar-toggle collapsed dropdown" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" *ngIf="!currentUser" [routerLink]="['/']" style="padding-top:19px; color:white;">CHATTERBOX</a>
+        </div>
+      
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+            <li><a *ngIf="!currentUser" [routerLink]="['/']" style="padding-top:19px;">Home</a></li>
+            <li><span *ngIf="searchMode==='users'" style="display: inline-block;">
+                <form *ngIf="currentUser" (submit) = "redirectToSearchPageWithSearchVal()">
+                <input type="text" name="searchU" placeholder="Search User" [(ngModel)]="searchVal" (keyup) = "searchUsers()" />
+                <input type="submit" value="Search Users" />
+                </form>
+                </span>
+            </li>
+            <li><span *ngIf="searchMode==='music'"style="display: inline-block;">
+                <form *ngIf="currentUser" (submit) = "searchMusic()">
+                <input type="text" name="searchM" placeholder="Search Music" [(ngModel)]="searchVal2" />
+                <input type="submit" value="Search Music" />
+                </form>
+                </span>           
+            </li>
+            <li><span *ngIf="searchMode==='rooms'"style="display: inline-block;">
+                <form *ngIf="currentUser" (submit) = "redirectToSearchRoomPageWithSearchVal3()">
+                <input type="text" name="searchM" placeholder="Search Chatrooms" [(ngModel)]="searchVal3" (keyup) = "searchRooms()"/>
+                <input type="submit" value="Search Rooms" />
+                </form>
+                </span>    
+            </li>
+            <li><select *ngIf="currentUser" name="searchMode" [(ngModel)]="searchMode">
+                <option selected value="users">Users</option>
+                <option value="music">Music</option>
+                <option value="rooms">Chatrooms</option>
+                </select>
+            </li>
+            <li><a *ngIf="currentUser" [routerLink]="['/logout']">Logout</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</div>
+<a *ngIf="!currentUser" [routerLink]="['/']" style="padding-top:19px;">Home</a>
+<a *ngIf="currentUser" [routerLink]="['/home/profile/current']">My Profile</a>
+
+<!-- <p>You now in dashboard</p> -->
 
 <!-- <router-outlet></router-outlet> -->
 <!-- <a [routerLink]="['room']">qqqq</a> -->
 <fieldset class="wrapper">
-    <legend>Dashboard Page</legend>
+    <h3>Hello! {{ user }} </h3>
     <fieldset class="joined inblock">
         <legend>Joined Rooms</legend>
         <a [routerLink]='["room","new"]' >Create Room</a>

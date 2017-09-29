@@ -5,6 +5,10 @@ import { ChatService } from './chat.service';
 import { NgModule } from '@angular/core';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { AppRoutingModule } from './app-routing.module';
+
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
+
 import { AppComponent } from './app.component';
 import { ApiCallService } from './api-call.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -50,6 +54,10 @@ const config: SocketIoConfig = { url: 'http://localhost:8000', options: {} };
     SearchRoomsComponent,
   ],
   imports: [
+    // ngx-bootstrap
+    BsDropdownModule.forRoot(),
+    CarouselModule.forRoot(),
+    
     BrowserModule,
     AppRoutingModule,
     SocketIoModule.forRoot(config),
