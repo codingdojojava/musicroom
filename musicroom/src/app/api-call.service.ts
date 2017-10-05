@@ -129,5 +129,28 @@ export class ApiCallService {
       .toPromise();
   }
 
+  addMessageToCurrUser(messageData) {
+    return this._http.post('/api/message/share', messageData)
+      .map(response => response.json())
+      .toPromise();
+  }
 
+  addCommentToMessage(commentData) {
+    return this._http.post('/api/comment/add', commentData)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  getMessagesAndCommentsOfCurrUser() {
+    return this._http.get('/api/current/messages')
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  addLike(messageIdData) {
+    console.log('service adding like');
+    return this._http.post('/api/current/messages/like', messageIdData)
+      .map(response => response.json())
+      .toPromise();
+  }
 }
