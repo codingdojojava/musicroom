@@ -76,27 +76,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   watchForFriendLoginEvent(id) {
-    console.log('Client On: Now Watching for Current User Friends Logging in');
+    // console.log('Client On: Now Watching for Current User Friends Logging in');
     this.subscription = this.chatService.getLoginEvent(id).subscribe(data => {
-      console.log('Login Event Happened');
+      // console.log('Login Event Happened');
       this.getCurrentUserInSession();
       this._apicallService.getOnlineFriends().then((data)=>{
-        console.log('list of online friends');
-        console.log(data);
+        // console.log('list of online friends');
+        // console.log(data);
         this.onlineFriends = data;
       });
     });
   }
 
   watchForFriendLogoutEvent(id) {
-    console.log('Client On: Now Watching for Current User Friends Logging out');
+    // console.log('Client On: Now Watching for Current User Friends Logging out');
     this.subscription2 = this.chatService.getLogoutEvent(id).subscribe(data => {
-      console.log('a friend is offline');
+      // console.log('a friend is offline');
       this.getCurrentUserInSession();
-      console.log("getting online friends");
+      // console.log("getting online friends");
       this._apicallService.getOnlineFriends().then((data)=>{
-        console.log('list of online friends');
-        console.log(data);
+        // console.log('list of online friends');
+        // console.log(data);
         this.onlineFriends = data;
       });
     });

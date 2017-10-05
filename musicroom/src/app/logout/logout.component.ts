@@ -21,7 +21,7 @@ export class LogoutComponent implements OnInit {
   loggingOut() {
     this._apicallService.logoutUser()
       .then(data => {
-        console.log('success logging user out refreshing user session');
+        // console.log('success logging user out refreshing user session');
         this.emitLogoutEvent(data);
         this._appComponent.refreshUserSession();
         this._router.navigate(['']);
@@ -50,7 +50,7 @@ export class LogoutComponent implements OnInit {
   // }
 
   emitLogoutEvent(currentUser) {
-    console.log('Client Emitting Logout Event');
+    // console.log('Client Emitting Logout Event');
     this._chatService.logoutEvent(currentUser);
   }
 

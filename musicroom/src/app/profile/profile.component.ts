@@ -82,7 +82,7 @@ export class ProfileComponent implements OnInit {
             this.getCurrentUserInSession();
           })
           .catch(error => {
-            console.log('catch response rejectInvite');
+            // console.log('catch response rejectInvite');
             console.log(error);
           });
       }
@@ -99,7 +99,7 @@ export class ProfileComponent implements OnInit {
             this.getCurrentUserInSession();
           })
           .catch(error => {
-            console.log('catch response removeFriend');
+            // console.log('catch response removeFriend');
             console.log(error);
           });
       }
@@ -140,17 +140,17 @@ export class ProfileComponent implements OnInit {
   }
 
   shareMessage() {
-    console.log('sharing message');
+    // console.log('sharing message');
     this.message._owner = this.currentUser._id;
     this._apicallService.addMessageToCurrUser(this.message)
       .then(data => {
-        console.log('then response shareMessage');
-        console.log(data);
+        // console.log('then response shareMessage');
+        // console.log(data);
         this.message = new Message();
         this.getMessages();
       })
       .catch(error => {
-        console.log('catch response shareMessage');
+        // console.log('catch response shareMessage');
         console.log(error);
       });
   }
@@ -164,28 +164,28 @@ export class ProfileComponent implements OnInit {
     console.log(comment);
     this._apicallService.addCommentToMessage(comment)
       .then(data => {
-        console.log('then response addComment');
-        console.log(data);
+        // console.log('then response addComment');
+        // console.log(data);
         this.getMessages();
       })
       .catch(error => {
-        console.log('error response addComment');
+        // console.log('error response addComment');
         console.log(error);
       });
   }
 
   getMessages() {
-    console.log('getting current profile messages');
+    // console.log('getting current profile messages');
     this._apicallService.getMessagesAndCommentsOfCurrUser()
       .then(data => {
-        console.log('Then response getting messages of current user profile');
+        // console.log('Then response getting messages of current user profile');
         this.userMessages = this.sortMessages(data);
         this.populateMessagesWithNewCommentModels(this.userMessages);
-        console.log(this.userMessages);
+        // console.log(this.userMessages);
       })
       .catch(error => {
-        console.log('Error response getting messages of current user profile');
-        console.log(error);
+        // console.log('Error response getting messages of current user profile');
+        // console.log(error);
       });
   }
 
@@ -204,22 +204,22 @@ export class ProfileComponent implements OnInit {
   }
 
   addLike(messageId) {
-    console.log('liking');
+    // console.log('liking');
     const msgData = {messageId: messageId};
     this._apicallService.addLike(msgData)
       .then(data => {
-        console.log('then response');
-        console.log(data);
+        // console.log('then response');
+        // console.log(data);
         this.getMessages();
       })
       .catch(error => {
-        console.log('then response');
-        console.log(error);
+        // console.log('catch response');
+        // console.log(error);
       });
   }
 
   populateMessagesWithNewCommentModels(messages) {
-    console.log('populating comments');
+    // console.log('populating comments');
     if (messages) {
       for (const message of messages) {
         const newComment = new Comment();
@@ -227,4 +227,6 @@ export class ProfileComponent implements OnInit {
       }
     }
   }
+
+
 }
