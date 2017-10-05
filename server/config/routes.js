@@ -18,9 +18,11 @@ module.exports = function(app) {
   app.get('/api/users/online_friends', userRepo.getLoggedInFriends);
   app.post('/api/users/profile/edit', userRepo.editCurrentUser);
   app.post('/api/message/share', userRepo.addMessageToCurrUser);
+  app.post('/api/message/share/tuser', userRepo.addMessageToTargetUser);
   app.post('/api/comment/add', userRepo.addCommentToMessage);
   app.get('/api/current/messages', userRepo.getMessagesAndCommentsOfCurrUser);
   app.post('/api/current/messages/like', userRepo.addLike);
+  app.get('/api/users/:id/messages', userRepo.getMessagesAndCommentsOfTargetUser);
   app.get('/api/users/:id', userRepo.getUserByUserId);
   app.post('/api/rooms/create', musicroom.create);
   app.get('/api/rooms', musicroom.allRooms);

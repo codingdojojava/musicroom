@@ -141,6 +141,7 @@ export class ProfileComponent implements OnInit {
 
   shareMessage() {
     console.log('sharing message');
+    this.message._owner = this.currentUser._id;
     this._apicallService.addMessageToCurrUser(this.message)
       .then(data => {
         console.log('then response shareMessage');
@@ -158,6 +159,8 @@ export class ProfileComponent implements OnInit {
   addComment(messageId, comment) {
     console.log('adding comment');
     comment._message = messageId;
+    comment.owner = this.currentUser._id;
+    comment.sender = this.currentUser._id;
     console.log(comment);
     this._apicallService.addCommentToMessage(comment)
       .then(data => {
@@ -188,10 +191,6 @@ export class ProfileComponent implements OnInit {
 
   sortMessages(messages) {
     return messages.sort((a, b) => {
-      console.log('----------');
-      console.log(b.createdAt);
-      console.log(a.createdAt);
-      console.log('----------');
       return +new Date(b.createdAt) - +new Date(a.createdAt);
     });
   }

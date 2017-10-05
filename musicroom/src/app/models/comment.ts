@@ -3,6 +3,7 @@ export class Comment {
         public commentId: number = null,
         public content: string = '',
         public owner = '',
+        public sender = '',
         public _comments = [],
         public _message = '',
         public created_at: Date = new Date(),

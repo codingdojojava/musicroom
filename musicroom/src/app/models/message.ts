@@ -4,6 +4,7 @@ export class Message {
         public content: string = '',
         public likes: number = 0,
         public _owner = '',
+        public _sender = '',
         public comments = [],
         public created_at: Date = new Date(),
         public updated_at: Date = new Date()

@@ -24,7 +24,7 @@ export class ApiCallService {
   }
 
   getCurrentUserInSession() {
-    // console.log('service getting current user session');
+    console.log('service getting current user session');
     return this._http.get('/api/users/current')
       .map(response => response.json())
       .toPromise();
@@ -150,6 +150,18 @@ export class ApiCallService {
   addLike(messageIdData) {
     console.log('service adding like');
     return this._http.post('/api/current/messages/like', messageIdData)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  addMessageToTargetUser(messageData) {
+    return this._http.post('/api/message/share/tuser', messageData)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  getMessagesAndCommentsOfTargetUser(userId) {
+    return this._http.get('/api/users/' + userId + '/messages')
       .map(response => response.json())
       .toPromise();
   }

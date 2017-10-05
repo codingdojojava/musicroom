@@ -295,7 +295,7 @@ module.exports = {
             });
 
             let newMessage = new Message(req.body);
-            newMessage._owner = req.session.currentUser._id;
+            newMessage._sender = req.session.currentUser._id;
             newMessage.save((error, savedMessage) => {
                 if(error) {
                     console.log('error saving message');
@@ -303,17 +303,29 @@ module.exports = {
                 } else {
                     // console.log('success saving message');
                     // console.log(savedMessage);
+                    User.findOneAndUpdate({_id: req.session.currentUser._id}, {$push: {_sent_messages: savedMessage._id}}, {new: true}, 
+                            (error, updatedUser) => {
+                                if (error) {
+                                    console.log('error updating user with saved message');
+                                    console.log(error);
+                                } else {
+                                    console.log('success updating sender user with saved message')
+                                    console.log(updatedUser);
+                                    // res.json(updatedUser);
+                                }
+                            });
+
                     User.findOneAndUpdate({_id: req.session.currentUser._id}, {$push: {_messages: savedMessage._id}}, {new: true}, 
                             (error, updatedUser) => {
                                 if (error) {
                                     console.log('error updating user with saved message');
                                     console.log(error);
                                 } else {
-                                    // console.log('success updating user with saved message')
+                                    // console.log('success updating owner user with saved message')
                                     // console.log(updatedUser);
                                     res.json(updatedUser);
                                 }
-                            })
+                            });
                 }
             });
         } else {
@@ -339,7 +351,6 @@ module.exports = {
             });
 
             let newComment = new Comment(req.body);
-            newComment.owner = req.session.currentUser._id;
             newComment.save((err, savedComment) => {
                 if (err) {
                     console.log('error saving new comment');
@@ -348,7 +359,17 @@ module.exports = {
                 } else{
                     console.log('success saving new comment');
                     console.log(savedComment);
-                    User.findOneAndUpdate({_id: req.session.currentUser._id}, {$push: {_comments: savedComment._id}}, {new: true}, 
+                    User.findOneAndUpdate({_id: req.body.owner}, {$push: {_comments: savedComment._id}}, {new: true}, 
+                        (err, updatedUser) => {
+                            if(err) {
+                                console.log('error updating message with comment');
+                                console.log(err);
+                            } else {
+                                // console.log('success updating message with comment');
+                                console.log(updatedUser);
+                            }
+                        });
+                    User.findOneAndUpdate({_id: req.body.sender}, {$push: {_sent_comments: savedComment._id}}, {new: true}, 
                         (err, updatedUser) => {
                             if(err) {
                                 console.log('error updating message with comment');
@@ -381,10 +402,13 @@ module.exports = {
     getMessagesAndCommentsOfCurrUser: (req, res) => {
         console.log('server getting messages and comments');
         Message.find({_owner: req.session.currentUser._id})
-            .populate({
+            .populate([{
                 path: '_comments',
-                populate: { path: 'owner' }
-            })
+                populate: { path: 'sender' }
+            },{
+                path: '_sender',
+                select: 'firstName lastName profileImageUrl'
+            }])
             .exec((err, messages) => {
                 if (err) {
                     console.log('error getting messsages from current user');
@@ -413,5 +437,79 @@ module.exports = {
                         })
             ]
         });
-    }
+    },
+
+    addMessageToTargetUser: (req, res) => {
+        if(req.session.currentUser) {
+             let newMessageId = 1;
+            Message.find({}).sort('-createdAt').exec((error, messages) => {
+                if (error) {
+                    console.log('something went wrong');
+                } else {
+                    if(messages && messages.length > 0) {
+                        // console.log('users true, got all users, now updating newUser id');
+                        newMessageId = messages[0].messageId + 1;
+                    }
+                    req.body.messageId = newMessageId;
+                }
+            });
+
+            let newMessage = new Message(req.body);
+            newMessage._sender = req.session.currentUser._id;
+            newMessage.save((error, savedMessage) => {
+                if(error) {
+                    console.log('error saving message');
+                    console.log(error);
+                } else {
+                    console.log('success saving message');
+                    console.log(savedMessage);
+                    User.findOneAndUpdate({_id: req.session.currentUser._id}, {$push: {_sent_messages: savedMessage._id}}, {new: true}, 
+                            (error, updatedUser) => {
+                                if (error) {
+                                    console.log('error updating user with saved message');
+                                    console.log(error);
+                                } else {
+                                    console.log('success updating sender user with saved message')
+                                    console.log(updatedUser);
+                                }
+                            });
+                    User.findOneAndUpdate({_id: savedMessage._owner}, {$push: {_messages: savedMessage._id}}, {new: true}, 
+                            (error, updatedUser) => {
+                                if (error) {
+                                    console.log('error updating owner user with saved message');
+                                    console.log(error);
+                                } else {
+                                    // console.log('success updating user with saved message')
+                                    // console.log(updatedUser);
+                                    res.json(updatedUser);
+                                }
+                            });
+                }
+            });
+        } else {
+            console.log('no user session found');
+            res.json(false);
+        }
+    },
+
+    getMessagesAndCommentsOfTargetUser: (req, res) => {
+        console.log('server getting messages and comments');
+        Message.find({_owner: req.params.id})
+            .populate([{
+                path: '_comments',
+                populate: { path: 'sender' }
+            },{
+                path: '_sender',
+                select: 'firstName lastName profileImageUrl'
+            }])
+            .exec((err, messages) => {
+                if (err) {
+                    console.log('error getting messsages from current user');
+                    console.log(err);
+                } else {
+                    console.log('success getting messsages from current user');
+                    res.json(messages);
+                }
+            });
+    },
 }
