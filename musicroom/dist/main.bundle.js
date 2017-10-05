@@ -59,7 +59,7 @@ var ApiCallService = (function () {
             .toPromise();
     };
     ApiCallService.prototype.getCurrentUserInSession = function () {
-        console.log('service getting current user session');
+        // console.log('service getting current user session');
         return this._http.get('/api/users/current')
             .map(function (response) { return response.json(); })
             .toPromise();
@@ -80,8 +80,8 @@ var ApiCallService = (function () {
         return this._http.get('/api/rooms/' + id).map(function (data) { return data.json(); }).toPromise();
     };
     ApiCallService.prototype.sendMessage = function (id, message) {
-        console.log("MESSAGE");
-        console.log(message);
+        // console.log("MESSAGE");
+        // console.log(message);
         var msg = { message: message };
         return this._http.post('/api/rooms/' + id + '/messages/new', msg).map(function (data) { return data.json(); }).toPromise();
     };
@@ -162,7 +162,7 @@ var ApiCallService = (function () {
             .toPromise();
     };
     ApiCallService.prototype.addLike = function (messageIdData) {
-        console.log('service adding like');
+        // console.log('service adding like');
         return this._http.post('/api/current/messages/like', messageIdData)
             .map(function (response) { return response.json(); })
             .toPromise();
@@ -580,35 +580,35 @@ var ChatService = (function () {
         return this.socket
             .fromEvent("msg" + id)
             .map(function (data) {
-            console.log("GOT EVENT");
+            // console.log("GOT EVENT");
             return true;
         });
     };
     ChatService.prototype.sendMessage = function (id) {
-        console.log("SENDING EVENT");
+        // console.log("SENDING EVENT");
         this.socket
             .emit("msg", id);
     };
     ChatService.prototype.loginEvent = function (currentUser) {
-        console.log('loginEvent Triggered: Sending currentuser data to server event name: login');
+        // console.log('loginEvent Triggered: Sending currentuser data to server event name: login');
         this.socket.emit('login', currentUser);
     };
     ChatService.prototype.getLoginEvent = function (id) {
         return this.socket
             .fromEvent("online" + id)
             .map(function (data) {
-            console.log('got login event');
+            // console.log('got login event');
             return true;
         });
     };
     ChatService.prototype.logoutEvent = function (currentUser) {
-        console.log('logoutEvent triggered: Sending currentuser data to server event name: logout');
+        // console.log('logoutEvent triggered: Sending currentuser data to server event name: logout');
         this.socket.emit('logout', currentUser);
     };
     ChatService.prototype.getLogoutEvent = function (currentUserid) {
         return this.socket.fromEvent("offline" + currentUserid)
             .map(function (data) {
-            console.log("GOT LOGOUT EVENT");
+            // console.log("GOT LOGOUT EVENT");
             return true;
         });
     };
@@ -739,27 +739,27 @@ var DashboardComponent = (function () {
     };
     DashboardComponent.prototype.watchForFriendLoginEvent = function (id) {
         var _this = this;
-        console.log('Client On: Now Watching for Current User Friends Logging in');
+        // console.log('Client On: Now Watching for Current User Friends Logging in');
         this.subscription = this.chatService.getLoginEvent(id).subscribe(function (data) {
-            console.log('Login Event Happened');
+            // console.log('Login Event Happened');
             _this.getCurrentUserInSession();
             _this._apicallService.getOnlineFriends().then(function (data) {
-                console.log('list of online friends');
-                console.log(data);
+                // console.log('list of online friends');
+                // console.log(data);
                 _this.onlineFriends = data;
             });
         });
     };
     DashboardComponent.prototype.watchForFriendLogoutEvent = function (id) {
         var _this = this;
-        console.log('Client On: Now Watching for Current User Friends Logging out');
+        // console.log('Client On: Now Watching for Current User Friends Logging out');
         this.subscription2 = this.chatService.getLogoutEvent(id).subscribe(function (data) {
-            console.log('a friend is offline');
+            // console.log('a friend is offline');
             _this.getCurrentUserInSession();
-            console.log("getting online friends");
+            // console.log("getting online friends");
             _this._apicallService.getOnlineFriends().then(function (data) {
-                console.log('list of online friends');
-                console.log(data);
+                // console.log('list of online friends');
+                // console.log(data);
                 _this.onlineFriends = data;
             });
         });
@@ -1237,7 +1237,7 @@ var LoginComponent = (function () {
                 _this.incorrectLogin = false;
                 _this._appComponent.getCurrentUserInSession();
                 _this.getCurrentUserInSession();
-                console.log(_this.currentUser);
+                // console.log(this.currentUser);
                 _this._router.navigate(['home', 'main']);
                 // }
             }
@@ -1258,11 +1258,11 @@ var LoginComponent = (function () {
             }
         })
             .catch(function (error) {
-            console.log(error);
+            // console.log(error);
         });
     };
     LoginComponent.prototype.emitLoginEvent = function (friendsData) {
-        console.log('emitLoginEvent');
+        // console.log('emitLoginEvent');
         this._chatService.loginEvent(friendsData);
     };
     return LoginComponent;
@@ -1344,7 +1344,7 @@ var LogoutComponent = (function () {
         var _this = this;
         this._apicallService.logoutUser()
             .then(function (data) {
-            console.log('success logging user out refreshing user session');
+            // console.log('success logging user out refreshing user session');
             _this.emitLogoutEvent(data);
             _this._appComponent.refreshUserSession();
             _this._router.navigate(['']);
@@ -1371,7 +1371,7 @@ var LogoutComponent = (function () {
     //     });
     // }
     LogoutComponent.prototype.emitLogoutEvent = function (currentUser) {
-        console.log('Client Emitting Logout Event');
+        // console.log('Client Emitting Logout Event');
         this._chatService.logoutEvent(currentUser);
     };
     return LogoutComponent;
@@ -1631,7 +1631,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/other-user-profile/other-user-profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<div *ngIf=\"user\">\n<div class=\"row\">\n      <div class=\"col-md-12 text-center \">\n        <div class=\"panel panel-default\">\n          <div class=\"userprofile social \">\n            <div class=\"userpic\" > <img src=\"{{user.profileImageUrl}}\"  alt=\"\" class=\"userpicimg\"> </div>\n            <h3 class=\"username\">{{user.firstName}} {{user.lastName}}</h3>\n            <p>{{user.username}}</p>\n            <div class=\"socials tex-center\"> <a href=\"\" class=\"btn btn-circle btn-primary \">\n            <i class=\"fa fa-facebook\"></i></a> <a href=\"\" class=\"btn btn-circle btn-danger \">\n            <i class=\"fa fa-google-plus\"></i></a> <a href=\"\" class=\"btn btn-circle btn-info \">\n            <i class=\"fa fa-twitter\"></i></a> <a href=\"\" class=\"btn btn-circle btn-warning \"><i class=\"fa fa-envelope\"></i></a>\n            </div>\n          </div>\n\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n      <!-- /.col-md-12 -->\n      <div class=\"col-md-4 col-sm-12 pull-right\">\n        <div class=\"panel panel-default\">\n          <div style=\"min-height: 330px;\" class=\"panel-heading\">\n            <h1 class=\"page-header small\">Personal Details</h1>\n              <p>Username: {{user.username}}</p>\n              <p>Email: {{user.email}}</p>\n              <p>First Name: {{user.firstName}}</p>\n              <p>Last Name: {{user.lastName}}</p>\n              <p>Description: {{user.description}}</p>\n            </div>\n\n\n\n          </div>\n\n          <div class=\"col-md-12 photolist\">\n            <div class=\"row\">\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Friends</h1>\n            <p class=\"page-subtitle small\"> {{user.friends.length}} friends</p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n              <span *ngFor=\"let friend of user.friends\" class=\"member\">\n                  <button *ngIf=\"!hasReceivedInviteFromCurrentUser(friend.received_invites) && !isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id\" style=\"display: block; margin-left: -12%; z-index: 1\" class=\"btn btn-link\" (click)=\"sendInvite(friend.userId)\">Friend Request</button>\n                  <a *ngIf=\"friend._id != currentUser._id\" [routerLink]=\"['/home/users', friend.userId]\" > \n                    <img src=\"{{friend.profileImageUrl}}\" alt=\"\">\n                  </a>\n                  <a *ngIf=\"friend._id == currentUser._id\" [routerLink]=\"['/home/profile/current']\" > \n                    <img src=\"{{friend.profileImageUrl}}\" alt=\"\">\n                  </a>\n                  <div class=\"memmbername\">\n                    {{friend.firstName}}\n                  <div style=\"display: block; z-index: 1\" *ngIf=\"hasReceivedInviteFromCurrentUser(friend.received_invites)\">Invite Sent</div>\n                  <div style=\"display: block; z-index: 1\" *ngIf=\"isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id\">Your Friend</div>\n                  </div>\n              </span> \n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n      </div>\n      </div>\n<!--start here-->\n      \n <div class=\"col-md-8 col-sm-12 pull-left posttimeline\">\n        <div class=\"panel panel-default\">\n          <div class=\"panel-body\">\n            <div *ngIf=\"message\" class=\"status-upload nopaddingbtm\">\n\n              <form (submit)=\"shareMessage()\">\n                <textarea \n                  class=\"form-control\" \n                  name=\"content\"\n                  [(ngModel)]=\"message.content\"\n                  #content = \"ngModel\"\n                  placeholder=\"Write on {{user.firstName}}'s Wall\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Audio\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Video\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Picture\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Share</button>\n              </form>\n\n            </div>\n          </div>\n        </div>\n\n        <div *ngFor=\"let message of userMessages\" class=\"panel panel-default\">\n\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"{{currentUser.profileImageUrl}}\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">{{message._sender.firstName}} {{message._sender.lastName}}<br>\n                  <small><i class=\"fa fa-clock-o\"></i> {{formatDateTime(message.createdAt)}}</small> </h4>\n                <p>{{message.content}}</p>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a (click)=\"addLike(message._id)\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> {{message.likes}}</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> {{message._comments.length}}</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n\n          <div *ngFor=\"let comment of message._comments\" class=\"col-md-12 commentsblock border-top\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"{{comment.sender.profileImageUrl}}\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">{{comment.sender.firstName}} {{comment.sender.lastName}}</h4>\n                <p>{{comment.content}}</p>\n                <!--<div class=\"media\">\n                  <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n                  <div class=\"media-body\">\n                    <h4 class=\"media-heading\">Astha Smith</h4>\n                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n                  </div>\n                </div>-->\n              </div>\n            </div>\n          </div>\n          <div class=\"col-md-12 border-top\">\n            <div class=\"status-upload\">\n\n              <form (submit)=\"addComment(message._id, message.newComment)\">\n                <label>Comment</label>\n                <textarea \n                  class=\"form-control\" \n                  name=\"content\"\n                  [(ngModel)] = \"message.newComment.content\"\n                  placeholder=\"Comment here\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Comment</button>\n              </form>\n\n            </div>\n          </div>\n        </div>\n\n      </div>\n\n      <!--until here-->\n    </div>\n</div>\n\n<!---->\n\n\n\n     "
+module.exports = "\n<div *ngIf=\"user && currentUser\">\n<div class=\"row\">\n      <div class=\"col-md-12 text-center \">\n        <div class=\"panel panel-default\">\n          <div class=\"userprofile social \">\n            <div class=\"userpic\" > <img src=\"{{user.profileImageUrl}}\"  alt=\"\" class=\"userpicimg\"> </div>\n            <h3 class=\"username\">{{user.firstName}} {{user.lastName}}</h3>\n            <p>{{user.username}}</p>\n            <div class=\"socials tex-center\"> <a href=\"\" class=\"btn btn-circle btn-primary \">\n            <i class=\"fa fa-facebook\"></i></a> <a href=\"\" class=\"btn btn-circle btn-danger \">\n            <i class=\"fa fa-google-plus\"></i></a> <a href=\"\" class=\"btn btn-circle btn-info \">\n            <i class=\"fa fa-twitter\"></i></a> <a href=\"\" class=\"btn btn-circle btn-warning \"><i class=\"fa fa-envelope\"></i></a>\n            </div>\n          </div>\n\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n      <!-- /.col-md-12 -->\n      <div class=\"col-md-4 col-sm-12 pull-right\">\n        <div class=\"panel panel-default\">\n          <div style=\"min-height: 330px;\" class=\"panel-heading\">\n            <h1 class=\"page-header small\">Personal Details</h1>\n              <p>Username: {{user.username}}</p>\n              <p>Email: {{user.email}}</p>\n              <p>First Name: {{user.firstName}}</p>\n              <p>Last Name: {{user.lastName}}</p>\n              <p>Description: {{user.description}}</p>\n            </div>\n\n\n\n          </div>\n\n          <div class=\"col-md-12 photolist\">\n            <div class=\"row\">\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"col-md-12\">\n            <div class=\"panel-body\">\n            <div class=\"tex-center\"> \n              <button *ngIf=\"!hasReceivedInviteFromCurrentUserId(user.received_invites) && !isFriendOfCurrentUserId(user.friends) && user._id != currentUser._id\" (click)=\"sendFriendRequest(user.userId)\" style=\"border-radius: 24px;\" class=\"btn btn-link \">\n                Send Friend Request\n              </button> \n              <p *ngIf=\"hasReceivedInviteFromCurrentUserId(user.received_invites)\">Friend Request Sent</p>\n              <p *ngIf=\"isFriendOfCurrentUserId(user.friends)\">This User is your Friend</p>\n            </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Friends</h1>\n            <p class=\"page-subtitle small\"> {{user.friends.length}} friends</p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n              <span *ngFor=\"let friend of user.friends\" class=\"member\">\n                  <button *ngIf=\"!hasReceivedInviteFromCurrentUser(friend.received_invites) && !isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id\" style=\"display: block; margin-left: -12%; z-index: 1\" class=\"btn btn-link\" (click)=\"sendInvite(friend.userId)\">Friend Request</button>\n                  <a *ngIf=\"friend._id != currentUser._id\" [routerLink]=\"['/home/users', friend.userId]\" > \n                    <img src=\"{{friend.profileImageUrl}}\" alt=\"\">\n                  </a>\n                  <a *ngIf=\"friend._id == currentUser._id\" [routerLink]=\"['/home/profile/current']\" > \n                    <img src=\"{{friend.profileImageUrl}}\" alt=\"\">\n                  </a>\n                  <div class=\"memmbername\">\n                    {{friend.firstName}}\n                  <div style=\"display: block; z-index: 1\" *ngIf=\"hasReceivedInviteFromCurrentUser(friend.received_invites)\">Invite Sent</div>\n                  <div style=\"display: block; z-index: 1\" *ngIf=\"isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id\">Your Friend</div>\n                  </div>\n              </span> \n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n      </div>\n      </div>\n<!--start here-->\n      \n <div class=\"col-md-8 col-sm-12 pull-left posttimeline\">\n        <div class=\"panel panel-default\">\n          <div class=\"panel-body\">\n            <div *ngIf=\"message\" class=\"status-upload nopaddingbtm\">\n\n              <form (submit)=\"shareMessage()\">\n                <textarea \n                  class=\"form-control\" \n                  name=\"content\"\n                  [(ngModel)]=\"message.content\"\n                  #content = \"ngModel\"\n                  placeholder=\"Write on {{user.firstName}}'s Wall\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Audio\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Video\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Picture\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Share</button>\n              </form>\n\n            </div>\n          </div>\n        </div>\n\n        <div *ngFor=\"let message of userMessages\" class=\"panel panel-default\">\n\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"{{currentUser.profileImageUrl}}\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">{{message._sender.firstName}} {{message._sender.lastName}}<br>\n                  <small><i class=\"fa fa-clock-o\"></i> {{formatDateTime(message.createdAt)}}</small> </h4>\n                <p>{{message.content}}</p>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a (click)=\"addLike(message._id)\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> {{message.likes}}</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> {{message._comments.length}}</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n\n          <div *ngFor=\"let comment of message._comments\" class=\"col-md-12 commentsblock border-top\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"{{comment.sender.profileImageUrl}}\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">{{comment.sender.firstName}} {{comment.sender.lastName}}</h4>\n                <p>{{comment.content}}</p>\n                <!--<div class=\"media\">\n                  <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n                  <div class=\"media-body\">\n                    <h4 class=\"media-heading\">Astha Smith</h4>\n                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n                  </div>\n                </div>-->\n              </div>\n            </div>\n          </div>\n          <div class=\"col-md-12 border-top\">\n            <div class=\"status-upload\">\n\n              <form (submit)=\"addComment(message._id, message.newComment)\">\n                <label>Comment</label>\n                <textarea \n                  class=\"form-control\" \n                  name=\"content\"\n                  [(ngModel)] = \"message.newComment.content\"\n                  placeholder=\"Comment here\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Comment</button>\n              </form>\n\n            </div>\n          </div>\n        </div>\n\n      </div>\n\n      <!--until here-->\n    </div>\n</div>\n\n<!---->\n\n\n\n     "
 
 /***/ }),
 
@@ -1697,7 +1697,7 @@ var OtherUserProfileComponent = (function () {
                 _this.getMessages();
             }
             else {
-                console.log('user not in session');
+                // console.log('user not in session');
                 _this._router.navigate(['']);
             }
         })
@@ -1752,29 +1752,29 @@ var OtherUserProfileComponent = (function () {
         this.message._owner = this.user._id;
         this._apicallService.addMessageToTargetUser(this.message)
             .then(function (data) {
-            console.log('then response shareMessage');
-            console.log(data);
+            // console.log('then response shareMessage');
+            // console.log(data);
             _this.message = new __WEBPACK_IMPORTED_MODULE_0__models_message__["a" /* Message */]();
             _this.getMessages();
         })
             .catch(function (error) {
-            console.log('catch response shareMessage');
+            // console.log('catch response shareMessage');
             console.log(error);
         });
     };
     OtherUserProfileComponent.prototype.getMessages = function () {
         var _this = this;
-        console.log('getting current profile messages');
+        // console.log('getting current profile messages');
         if (this.user) {
             this._apicallService.getMessagesAndCommentsOfTargetUser(this.user._id)
                 .then(function (data) {
-                console.log('Then response getting messages of current user profile');
+                // console.log('Then response getting messages of current user profile');
                 _this.userMessages = _this.sortMessages(data);
                 _this.populateMessagesWithNewCommentModels(_this.userMessages);
-                console.log(_this.userMessages);
+                // console.log(this.userMessages);
             })
                 .catch(function (error) {
-                console.log('Error response getting messages of current user profile');
+                // console.log('Error response getting messages of current user profile');
                 console.log(error);
             });
         }
@@ -1785,7 +1785,7 @@ var OtherUserProfileComponent = (function () {
         });
     };
     OtherUserProfileComponent.prototype.populateMessagesWithNewCommentModels = function (messages) {
-        console.log('populating comments');
+        // console.log('populating comments');
         if (messages) {
             for (var _i = 0, messages_1 = messages; _i < messages_1.length; _i++) {
                 var message = messages_1[_i];
@@ -1802,36 +1802,78 @@ var OtherUserProfileComponent = (function () {
     };
     OtherUserProfileComponent.prototype.addLike = function (messageId) {
         var _this = this;
-        console.log('liking');
+        // console.log('liking');
         var msgData = { messageId: messageId };
         this._apicallService.addLike(msgData)
             .then(function (data) {
-            console.log('then response');
+            // console.log('then response');
             console.log(data);
             _this.getMessages();
         })
             .catch(function (error) {
-            console.log('then response');
+            // console.log('then response');
             console.log(error);
         });
     };
     OtherUserProfileComponent.prototype.addComment = function (messageId, comment) {
         var _this = this;
-        console.log('adding comment');
+        // console.log('adding comment');
         comment._message = messageId;
         comment.owner = this.user._id;
         comment.sender = this.currentUser._id;
         console.log(comment);
         this._apicallService.addCommentToMessage(comment)
             .then(function (data) {
-            console.log('then response addComment');
-            console.log(data);
+            // console.log('then response addComment');
+            // console.log(data);
             _this.getMessages();
         })
             .catch(function (error) {
-            console.log('error response addComment');
+            // console.log('error response addComment');
             console.log(error);
         });
+    };
+    OtherUserProfileComponent.prototype.sendFriendRequest = function (userId) {
+        var _this = this;
+        // console.log('sendFriendRequest');
+        var user_Id = { userId: userId };
+        this._apicallService.sendInviteToUserById(user_Id)
+            .then(function (data) {
+            // console.log('sucess then response sendInvite');
+            // console.log(data);
+            _this.getCurrentUserInSession();
+            _this.subscribeToUserIdParams();
+        })
+            .catch(function (error) {
+            // console.log('error catch response sendInvite');
+            console.log(error);
+        });
+    };
+    OtherUserProfileComponent.prototype.isFriendOfCurrentUserId = function (userFriends) {
+        var _this = this;
+        // console.log(this.currentUser._id);
+        // console.log(userFriends);
+        var friend = userFriends.find(function (index) {
+            return index._id === _this.currentUser._id;
+        });
+        // console.log(friend);
+        if (friend) {
+            return true;
+        }
+        return false;
+    };
+    OtherUserProfileComponent.prototype.hasReceivedInviteFromCurrentUserId = function (userReceivedInvites) {
+        var _this = this;
+        // console.log(this.currentUser._id);
+        // console.log(userFriends);
+        var invite = userReceivedInvites.find(function (index) {
+            return index._id === _this.currentUser._id;
+        });
+        // console.log(friend);
+        if (invite) {
+            return true;
+        }
+        return false;
     };
     return OtherUserProfileComponent;
 }());
@@ -2173,7 +2215,7 @@ var ProfileComponent = (function () {
                     _this.getCurrentUserInSession();
                 })
                     .catch(function (error) {
-                    console.log('catch response rejectInvite');
+                    // console.log('catch response rejectInvite');
                     console.log(error);
                 });
             }
@@ -2191,7 +2233,7 @@ var ProfileComponent = (function () {
                     _this.getCurrentUserInSession();
                 })
                     .catch(function (error) {
-                    console.log('catch response removeFriend');
+                    // console.log('catch response removeFriend');
                     console.log(error);
                 });
             }
@@ -2229,17 +2271,17 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.shareMessage = function () {
         var _this = this;
-        console.log('sharing message');
+        // console.log('sharing message');
         this.message._owner = this.currentUser._id;
         this._apicallService.addMessageToCurrUser(this.message)
             .then(function (data) {
-            console.log('then response shareMessage');
-            console.log(data);
+            // console.log('then response shareMessage');
+            // console.log(data);
             _this.message = new __WEBPACK_IMPORTED_MODULE_1__models_message__["a" /* Message */]();
             _this.getMessages();
         })
             .catch(function (error) {
-            console.log('catch response shareMessage');
+            // console.log('catch response shareMessage');
             console.log(error);
         });
     };
@@ -2252,28 +2294,28 @@ var ProfileComponent = (function () {
         console.log(comment);
         this._apicallService.addCommentToMessage(comment)
             .then(function (data) {
-            console.log('then response addComment');
-            console.log(data);
+            // console.log('then response addComment');
+            // console.log(data);
             _this.getMessages();
         })
             .catch(function (error) {
-            console.log('error response addComment');
+            // console.log('error response addComment');
             console.log(error);
         });
     };
     ProfileComponent.prototype.getMessages = function () {
         var _this = this;
-        console.log('getting current profile messages');
+        // console.log('getting current profile messages');
         this._apicallService.getMessagesAndCommentsOfCurrUser()
             .then(function (data) {
-            console.log('Then response getting messages of current user profile');
+            // console.log('Then response getting messages of current user profile');
             _this.userMessages = _this.sortMessages(data);
             _this.populateMessagesWithNewCommentModels(_this.userMessages);
-            console.log(_this.userMessages);
+            // console.log(this.userMessages);
         })
             .catch(function (error) {
-            console.log('Error response getting messages of current user profile');
-            console.log(error);
+            // console.log('Error response getting messages of current user profile');
+            // console.log(error);
         });
     };
     ProfileComponent.prototype.sortMessages = function (messages) {
@@ -2289,21 +2331,21 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.addLike = function (messageId) {
         var _this = this;
-        console.log('liking');
+        // console.log('liking');
         var msgData = { messageId: messageId };
         this._apicallService.addLike(msgData)
             .then(function (data) {
-            console.log('then response');
-            console.log(data);
+            // console.log('then response');
+            // console.log(data);
             _this.getMessages();
         })
             .catch(function (error) {
-            console.log('then response');
-            console.log(error);
+            // console.log('catch response');
+            // console.log(error);
         });
     };
     ProfileComponent.prototype.populateMessagesWithNewCommentModels = function (messages) {
-        console.log('populating comments');
+        // console.log('populating comments');
         if (messages) {
             for (var _i = 0, messages_1 = messages; _i < messages_1.length; _i++) {
                 var message = messages_1[_i];

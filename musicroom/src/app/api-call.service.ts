@@ -24,7 +24,7 @@ export class ApiCallService {
   }
 
   getCurrentUserInSession() {
-    console.log('service getting current user session');
+    // console.log('service getting current user session');
     return this._http.get('/api/users/current')
       .map(response => response.json())
       .toPromise();
@@ -50,8 +50,8 @@ export class ApiCallService {
   }
 
   sendMessage(id, message){
-    console.log("MESSAGE");
-    console.log(message);
+    // console.log("MESSAGE");
+    // console.log(message);
     var msg = {message: message};
     return this._http.post('/api/rooms/'+id+'/messages/new', msg).map(data=>data.json()).toPromise();
   }
@@ -148,7 +148,7 @@ export class ApiCallService {
   }
 
   addLike(messageIdData) {
-    console.log('service adding like');
+    // console.log('service adding like');
     return this._http.post('/api/current/messages/like', messageIdData)
       .map(response => response.json())
       .toPromise();

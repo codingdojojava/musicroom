@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
           this.incorrectLogin = false;
           this._appComponent.getCurrentUserInSession();
           this.getCurrentUserInSession();
-          console.log(this.currentUser);
+          // console.log(this.currentUser);
           this._router.navigate(['home', 'main']);
           // }
         }
@@ -54,12 +54,12 @@ export class LoginComponent implements OnInit {
         }
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   }
 
   emitLoginEvent(friendsData) {
-    console.log('emitLoginEvent');
+    // console.log('emitLoginEvent');
     this._chatService.loginEvent(friendsData);
   }
 }
