@@ -11,6 +11,7 @@ var MessageSchema = new mongoose.Schema({
         type: Number
     },
     _owner: {type: Schema.Types.ObjectId, ref: 'User'},
+    _sender: {type: Schema.Types.ObjectId, ref: 'User'},
     _comments: [{type: Schema.Types.ObjectId, ref: 'Comment'}],
 }, {timestamps: true})
 

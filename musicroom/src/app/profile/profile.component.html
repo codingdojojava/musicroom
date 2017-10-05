@@ -146,7 +146,7 @@
             <div class="media">
               <div class="media-left"> <a href="javascript:void(0)"> <img src="{{currentUser.profileImageUrl}}" alt="" class="media-object"> </a> </div>
               <div class="media-body">
-                <h4 class="media-heading">{{currentUser.firstName}} {{currentUser.lastName}}<br>
+                <h4 class="media-heading">{{message._sender.firstName}} {{message._sender.lastName}}<br>
                   <small><i class="fa fa-clock-o"></i> {{formatDateTime(message.createdAt)}}</small> </h4>
                 <p>{{message.content}}</p>
                 <ul class="nav nav-pills pull-left ">
@@ -159,9 +159,9 @@
           <!--comments block-->
           <div *ngFor="let comment of message._comments" class="col-md-12 commentsblock border-top">
             <div class="media">
-              <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="{{comment.owner.profileImageUrl}}" class="media-object"> </a> </div>
+              <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="{{comment.sender.profileImageUrl}}" class="media-object"> </a> </div>
               <div class="media-body">
-                <h4 class="media-heading">{{comment.owner.firstName}} {{comment.owner.lastName}}</h4>
+                <h4 class="media-heading">{{comment.sender.firstName}} {{comment.sender.lastName}}</h4>
                 <p>{{comment.content}}</p>
                 <!--<div class="media">
                   <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="media-object"> </a> </div>

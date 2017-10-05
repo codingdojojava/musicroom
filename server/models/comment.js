@@ -8,6 +8,7 @@ var CommentSchema = new mongoose.Schema({
         type: String
     },
     owner: {type: Schema.Types.ObjectId, ref: 'User'},
+    sender: {type: Schema.Types.ObjectId, ref: 'User'},
     _comments: [{type: Schema.Types.ObjectId, ref: 'Comment'}],
     _message: {type: Schema.Types.ObjectId, ref: 'Message'},
 }, {timestamps: true})
