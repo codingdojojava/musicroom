@@ -146,6 +146,27 @@ var ApiCallService = (function () {
             .map(function (response) { return response.json(); })
             .toPromise();
     };
+    ApiCallService.prototype.addMessageToCurrUser = function (messageData) {
+        return this._http.post('/api/message/share', messageData)
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    ApiCallService.prototype.addCommentToMessage = function (commentData) {
+        return this._http.post('/api/comment/add', commentData)
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    ApiCallService.prototype.getMessagesAndCommentsOfCurrUser = function () {
+        return this._http.get('/api/current/messages')
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
+    ApiCallService.prototype.addLike = function (messageIdData) {
+        console.log('service adding like');
+        return this._http.post('/api/current/messages/like', messageIdData)
+            .map(function (response) { return response.json(); })
+            .toPromise();
+    };
     return ApiCallService;
 }());
 ApiCallService = __decorate([
@@ -246,7 +267,7 @@ AppRoutingModule = __decorate([
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<link href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" rel=\"stylesheet\">\n<link href=\"//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\" rel=\"stylesheet\">\n\n<div class=\"header\" style=\"position: fixed; width: 100%; z-index: 1000;\">\n  <nav class=\"navbar navbar-default navbar-inverse\" data-spy=\"affix\" role=\"navigation\" style=\"vertical-align: top; margin-bottom: 0; height: 60px; border-radius:0;\">\n    <div class=\"container-fluid\">\n\n      <div class=\"navbar-header\" dropdown>\n        <a class=\"navbar-brand\" [routerLink]=\"['/']\" style=\"padding-top:19px; color:white;\">CHATTERBOX</a>\n      </div>\n\n      <!-- Collect the nav links, forms, and other content for toggling -->\n      <div class=\"collapse navbar-collapse\" id=\"bs-navbar-collapse-1\">\n        <ul class=\"nav navbar-nav navbar-right\">\n          <li *ngIf=\"!currentUser\"><a [routerLink]=\"['/register']\" style=\"padding-top:19px;\"><b>Register</b> <span class=\"caret\"></span></a></li>\n          <li *ngIf=\"!currentUser\"><p class=\"navbar-text\" style=\"padding-top:4px;\">Already have an account?</p></li>\n          <li *ngIf=\"!currentUser\"><a  [routerLink]=\"['/login']\" style=\"padding-top:19px;\"><b>Login</b> <span class=\"caret\"></span></a></li>\n          \n          <li *ngIf=\"currentUser\"><a [routerLink]=\"['/home/main']\" style=\"padding-top:19px;\"><b>Home</b> <span class=\"caret\"></span></a></li>\n          <li *ngIf=\"currentUser\"><a [routerLink]=\"['/home/profile/current']\" style=\"padding-top:19px;\"><b>Profile</b> <span class=\"caret\"></span></a></li>\n\n\n          <li *ngIf=\"searchMode==='users' && currentUser\" style=\"display: inline-block; margin-top:15px;\">\n              <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchPageWithSearchVal()\">\n                <input type=\"text\" name=\"searchU\" placeholder=\"Search User\" [(ngModel)]=\"searchVal\" (keyup) = \"searchUsers()\" />\n                <input type=\"submit\" value=\"Search Users\" />\n              </form>\n            </li>\n            <li *ngIf=\"searchMode==='rooms' && currentUser\"style=\"display: inline-block; margin-top:15px;\">\n              <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchRoomPageWithSearchVal3()\">\n                <input type=\"text\" name=\"searchM\" placeholder=\"Search Chatrooms\" [(ngModel)]=\"searchVal3\" (keyup) = \"searchRooms()\"/>\n                <input type=\"submit\" value=\"Search Rooms\" />\n              </form>\n            </li>\n         \n            <li *ngIf=\"searchMode==='music' && currentUser\"style=\"display: inline-block; margin-top:15px;\">\n              <form *ngIf=\"currentUser\" (submit) = \"searchMusic()\">\n                <input type=\"text\" name=\"searchM\" placeholder=\"Search Music\" [(ngModel)]=\"searchVal2\" />\n                <input type=\"submit\" value=\"Search Music\" />\n              </form>\n            </li>\n            <li>\n            <select *ngIf=\"currentUser\" name=\"searchMode\" [(ngModel)]=\"searchMode\" style= \"margin-top:18px;\">\n              <option value=\"users\" >Users</option>\n              <option value=\"music\">Music</option>\n              <option value=\"rooms\">Chatrooms</option>\n            </select>\n          </li>\n          <li *ngIf=\"currentUser\"><a [routerLink]=\"['/home','logout']\" style=\"padding-top:19px;\"><b>Logout</b> <span class=\"caret\"></span></a></li>\n\n\n\n          <!-- <li><a *ngIf=\"!currentUser\" [routerLink]=\"['/']\" style=\"padding-top:19px;\">Home</a></li> -->\n        </ul>\n      </div><!-- /.navbar-collapse -->\n    </div><!-- /.container-fluid -->\n  </nav>\n  </div>\n\n\n<router-outlet  ></router-outlet>"
+module.exports = "<link href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" rel=\"stylesheet\">\n<link href=\"//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\" rel=\"stylesheet\">\n\n<div class=\"header\" style=\"position: fixed; width: 100%; z-index: 1000;\">\n  <nav class=\"navbar navbar-default navbar-inverse\" data-spy=\"affix\" role=\"navigation\" style=\"vertical-align: top; margin-bottom: 0; height: 60px; border-radius:0;\">\n    <div class=\"container-fluid\">\n\n      <div class=\"navbar-header\" dropdown>\n        <a class=\"navbar-brand\" [routerLink]=\"['/']\" style=\"padding-top:19px; color:white;\">CHATTERBOX</a>\n      </div>\n\n      <!-- Collect the nav links, forms, and other content for toggling -->\n      <div class=\"collapse navbar-collapse\" id=\"bs-navbar-collapse-1\">\n        <ul class=\"nav navbar-nav navbar-right\">\n          <li *ngIf=\"!currentUser\"><a [routerLink]=\"['/register']\" style=\"padding-top:19px;\"><b>Register</b> <span class=\"caret\"></span></a></li>\n          <li *ngIf=\"!currentUser\"><p class=\"navbar-text\" style=\"padding-top:4px;\">Already have an account?</p></li>\n          <li *ngIf=\"!currentUser\"><a  [routerLink]=\"['/login']\" style=\"padding-top:19px;\"><b>Login</b> <span class=\"caret\"></span></a></li>\n          \n          <li *ngIf=\"currentUser\"><a [routerLink]=\"['/home/main']\" style=\"padding-top:19px;\"><b>Home</b> <span class=\"caret\"></span></a></li>\n          <li *ngIf=\"currentUser\"><a [routerLink]=\"['/home/profile/current']\" style=\"padding-top:19px;\"><b>Profile</b> <span class=\"caret\"></span></a></li>\n\n\n          <li *ngIf=\"searchMode==='users' && currentUser\" style=\"display: inline-block; margin-top:15px;\">\n              <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchPageWithSearchVal()\">\n                <input type=\"text\" name=\"searchU\" placeholder=\"Search User\" [(ngModel)]=\"searchVal\" (keyup) = \"searchUsers()\" />\n                <input type=\"submit\" value=\"Search Users\" />\n              </form>\n            </li>\n            <li *ngIf=\"searchMode==='rooms' && currentUser\"style=\"display: inline-block; margin-top:15px;\">\n              <form *ngIf=\"currentUser\" (submit) = \"redirectToSearchRoomPageWithSearchVal3()\">\n                <input type=\"text\" name=\"searchM\" placeholder=\"Search Chatrooms\" [(ngModel)]=\"searchVal3\" (keyup) = \"searchRooms()\"/>\n                <input type=\"submit\" value=\"Search Rooms\" />\n              </form>\n            </li>\n         \n            <li *ngIf=\"searchMode==='music' && currentUser\"style=\"display: inline-block; margin-top:15px;\">\n              <form *ngIf=\"currentUser\" (submit) = \"searchMusic()\">\n                <input type=\"text\" name=\"searchM\" placeholder=\"Search Music\" [(ngModel)]=\"searchVal2\" />\n                <input type=\"submit\" value=\"Search Music\" />\n              </form>\n            </li>\n            <li>\n            <select *ngIf=\"currentUser\" name=\"searchMode\" [(ngModel)]=\"searchMode\" style= \"margin-top:18px;\">\n              <option value=\"users\" >Users</option>\n              <option value=\"music\">Music</option>\n              <option value=\"rooms\">Chatrooms</option>\n            </select>\n          </li>\n          <li *ngIf=\"currentUser\"><a [routerLink]=\"['/home','logout']\" style=\"padding-top:19px;\"><b>Logout</b> <span class=\"caret\"></span></a></li>\n\n\n\n          <!-- <li><a *ngIf=\"!currentUser\" [routerLink]=\"['/']\" style=\"padding-top:19px;\">Home</a></li> -->\n        </ul>\n      </div><!-- /.navbar-collapse -->\n    </div><!-- /.container-fluid -->\n  </nav>\n</div>\n\n<router-outlet  ></router-outlet>\n"
 
 /***/ }),
 
@@ -1021,7 +1042,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/index/index.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<link href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" rel=\"stylesheet\">\n<link href=\"//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\" rel=\"stylesheet\">\n\n\n \n\n  <!-- background video -->\n  <div class=\"bigwrapper\">\n    \n  <div class=\"header-container\">\n    <img src=\"/logo2.png\" style=\"max-height: 100px;\">\n    <div id=\"title\" class=\"col-sm-4 col-sm-offset-1\" style=\"max-width:500px;\">\n      <p style=\"color:white; font-size: 16pt; margin-bottom: 0;\">welcome to </p>\n      <h1>CHATTERBOX </h1>\n      <p style=\"color:white; font-size: 16pt;\">a place to chat about music</p>\n    </div>\n    <div class=\"video-container\">\n      <video preload=\"true\" autoplay=\"autoplay\" loop=\"loop\" volume=\"0\" poster=\"/record_player.jpg\">\n        <source src=\"/record_player.mp4\" type=\"video/mp4\">\n        <source src=\"/record_player.webm\" type=\"video/webm\">\n        <source src=\"/record_player.ogv\" type=\"video/ogg\">\n      </video>\n    </div>\n  </div>\n</div>\n\n\n  <!-- carousel box -->\n  <!-- <div id=\"carousel-box\" class=\"pad-section\">\n    <div class=\"container\">\n    <div class=\"row\"> -->\n    <div id=\"myCarousel\" class=\"carousel slide\" class=\"col-sm-4 col-sm-offset-2\" style=\"min-width:500px;\">\n      <carousel class=\"text-center\">\n\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-Alicia-Keys-03.jpg\" alt=\"Second slide\">\n          <!-- <div class=\"carousel-caption\">\n            <h4>Alicia Keys</h4>\n          </div> -->\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-Blake-shelton-01.jpg\" alt=\"Third slide\">\n          <!-- <div class=\"carousel-caption\">\n            <h4>Blake Shelton</h4>\n          </div> -->\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-Selena-Gomez-01.jpg\" alt=\"Fourth slide\">\n          <!-- <div class=\"carousel-caption\">\n            <h4>Selena Gomez</h4>\n          </div> -->\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-Rhianna-01.jpg\" alt=\"Fifth slide\">\n          <!-- <div class=\"carousel-caption\">\n            <h4>Rhianna</h4>\n          </div> -->\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-Lady-Gaga-01.jpg\" alt=\"Six slide\">\n          <!-- <div class=\"carousel-caption\">\n            <h4>Lady Gaga</h4>\n          </div> -->\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-bruno-mars-01.jpg\" alt=\"First slide\">\n          <!-- <div class=\"carousel-caption\">\n            <h4>Taylor Swift</h4>\n          </div> -->\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-justin-bieber-01.jpg\" alt=\"Seven slide\">\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-John-Legend-01.jpg\" alt=\"Eight slide\">\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-IZ-01.jpg\" alt=\"Nine slide\">\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-celine-dion-01.jpg\" alt=\"Ten slide\">\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-classical-01.jpg\" alt=\"Eleven slide\">\n        </slide>\n        <slide>\n          <img class=\"img-main-carousel\" src=\"/album/500-taylor-swift-01.jpg\" alt=\"Twelve slide\">\n        </slide>\n      </carousel>\n\n\n    <!-- </div>\n    </div>\n    </div> -->\n  </div>\n"
+module.exports = "<link href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" rel=\"stylesheet\">\n<link href=\"//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\" rel=\"stylesheet\">\n\n\n <div style=\"margin-top: 54px; position: fixed;\">\n    <div class=\"bigwrapper\">\n      \n    <div class=\"header-container\">\n      <img src=\"/logo2.png\" style=\"max-height: 100px;\">\n      <div id=\"title\" class=\"col-sm-4 col-sm-offset-1\" style=\"max-width:500px;\">\n        <p style=\"color:white; font-size: 16pt; margin-bottom: 0;\">welcome to </p>\n        <h1>CHATTERBOX </h1>\n        <p style=\"color:white; font-size: 16pt;\">a place to chat about music</p>\n      </div>\n      <div class=\"video-container\">\n        <video preload=\"true\" autoplay=\"autoplay\" loop=\"loop\" volume=\"0\" poster=\"/record_player.jpg\">\n          <source src=\"/record_player.mp4\" type=\"video/mp4\">\n          <source src=\"/record_player.webm\" type=\"video/webm\">\n          <source src=\"/record_player.ogv\" type=\"video/ogg\">\n        </video>\n      </div>\n    </div>\n  </div>\n\n\n    <!-- carousel box -->\n    <!-- <div id=\"carousel-box\" class=\"pad-section\">\n      <div class=\"container\">\n      <div class=\"row\"> -->\n      <div id=\"myCarousel\" class=\"carousel slide\" class=\"col-sm-4 col-sm-offset-2\" style=\"min-width:500px;\">\n        <carousel class=\"text-center\">\n\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-Alicia-Keys-03.jpg\" alt=\"Second slide\">\n            <!-- <div class=\"carousel-caption\">\n              <h4>Alicia Keys</h4>\n            </div> -->\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-Blake-shelton-01.jpg\" alt=\"Third slide\">\n            <!-- <div class=\"carousel-caption\">\n              <h4>Blake Shelton</h4>\n            </div> -->\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-Selena-Gomez-01.jpg\" alt=\"Fourth slide\">\n            <!-- <div class=\"carousel-caption\">\n              <h4>Selena Gomez</h4>\n            </div> -->\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-Rhianna-01.jpg\" alt=\"Fifth slide\">\n            <!-- <div class=\"carousel-caption\">\n              <h4>Rhianna</h4>\n            </div> -->\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-Lady-Gaga-01.jpg\" alt=\"Six slide\">\n            <!-- <div class=\"carousel-caption\">\n              <h4>Lady Gaga</h4>\n            </div> -->\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-bruno-mars-01.jpg\" alt=\"First slide\">\n            <!-- <div class=\"carousel-caption\">\n              <h4>Taylor Swift</h4>\n            </div> -->\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-justin-bieber-01.jpg\" alt=\"Seven slide\">\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-John-Legend-01.jpg\" alt=\"Eight slide\">\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-IZ-01.jpg\" alt=\"Nine slide\">\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-celine-dion-01.jpg\" alt=\"Ten slide\">\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-classical-01.jpg\" alt=\"Eleven slide\">\n          </slide>\n          <slide>\n            <img class=\"img-main-carousel\" src=\"/album/500-taylor-swift-01.jpg\" alt=\"Twelve slide\">\n          </slide>\n        </carousel>\n\n\n      <!-- </div>\n      </div>\n      </div> -->\n    </div>\n\n </div>\n\n  <!-- background video -->\n"
 
 /***/ }),
 
@@ -1356,6 +1377,64 @@ LogoutComponent = __decorate([
 
 var _a, _b, _c, _d;
 //# sourceMappingURL=logout.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/models/comment.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Comment; });
+var Comment = (function () {
+    function Comment(commentId, content, owner, _comments, _message, created_at, updated_at) {
+        if (commentId === void 0) { commentId = null; }
+        if (content === void 0) { content = ''; }
+        if (owner === void 0) { owner = ''; }
+        if (_comments === void 0) { _comments = []; }
+        if (_message === void 0) { _message = ''; }
+        if (created_at === void 0) { created_at = new Date(); }
+        if (updated_at === void 0) { updated_at = new Date(); }
+        this.commentId = commentId;
+        this.content = content;
+        this.owner = owner;
+        this._comments = _comments;
+        this._message = _message;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+    }
+    return Comment;
+}());
+
+//# sourceMappingURL=comment.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/models/message.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Message; });
+var Message = (function () {
+    function Message(messageId, content, likes, _owner, comments, created_at, updated_at) {
+        if (messageId === void 0) { messageId = null; }
+        if (content === void 0) { content = ''; }
+        if (likes === void 0) { likes = 0; }
+        if (_owner === void 0) { _owner = ''; }
+        if (comments === void 0) { comments = []; }
+        if (created_at === void 0) { created_at = new Date(); }
+        if (updated_at === void 0) { updated_at = new Date(); }
+        this.messageId = messageId;
+        this.content = content;
+        this.likes = likes;
+        this._owner = _owner;
+        this.comments = comments;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+    }
+    return Message;
+}());
+
+//# sourceMappingURL=message.js.map
 
 /***/ }),
 
@@ -1883,7 +1962,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/profile/profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"currentUser\">\n<div class=\"row\">\n      <div class=\"col-md-12 text-center \">\n        <div class=\"panel panel-default\">\n          <div class=\"userprofile social \">\n            <div class=\"userpic\" > <img src=\"{{currentUser.profileImageUrl}}\"  alt=\"\" class=\"userpicimg\"> </div>\n            <h3 class=\"username\">{{currentUser.firstName}} {{currentUser.lastName}}</h3>\n            <p>{{currentUser.username}}</p>\n            <div class=\"socials tex-center\"> <a href=\"\" class=\"btn btn-circle btn-primary \">\n            <i class=\"fa fa-facebook\"></i></a> <a href=\"\" class=\"btn btn-circle btn-danger \">\n            <i class=\"fa fa-google-plus\"></i></a> <a href=\"\" class=\"btn btn-circle btn-info \">\n            <i class=\"fa fa-twitter\"></i></a> <a href=\"\" class=\"btn btn-circle btn-warning \"><i class=\"fa fa-envelope\"></i></a>\n            </div>\n          </div>\n\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n      <!-- /.col-md-12 -->\n      <div class=\"col-md-4 col-sm-12 pull-right\">\n        <div class=\"panel panel-default\">\n          <div style=\"min-height: 330px;\" class=\"panel-heading\">\n            <h1 class=\"page-header small\">Personal Details</h1>\n            <router-outlet></router-outlet>\n          </div>\n\n          <div class=\"col-md-12 photolist\">\n            <div class=\"row\">\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"col-md-12\">\n            <div class=\"panel-body\">\n            <div class=\"tex-center\"> \n              <button (click)=\"checkRecentInvites()\" style=\"border-radius: 24px;\" class=\"btn btn-primary \">\n                Received {{currentUser.received_invites.length}} friend invites\n              </button> \n              <button (click)=\"checkSentInvites()\" style=\"border-radius: 24px;\" class=\"btn btn-info \">\n                Sent {{currentUser.sent_invites.length}} friend invites\n              </button> \n              <button (click)=\"disableCheckInvitesMode()\" class=\"btn btn-circle btn-danger \">\n                <i style=\"font-size: 14px;\" class=\"glyphicon glyphicon-remove\"></i>\n              </button> \n            </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div *ngIf=\"isCheckingRecent\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Most Recent Friend Invites</h1>\n          </div>\n          <div class=\"col-md-12\">\n            <ul class=\"list-group\">\n              <li class=\"list-group-item\" *ngIf=\"currentUser.received_invites.length == 0\">You have no friend invites at this time</li>\n              <li *ngFor=\"let invite of currentUser.received_invites\" class=\"list-group-item\">\n                    <button class=\"btn btn-circle btn-success\" (click)=\"acceptInvite(invite._id)\"><span class=\"glyphicon glyphicon-ok\"></span></button>\n                    <button class=\"btn btn-circle btn-danger\" (click)=\"rejectInvite(invite._id)\"><span class=\"glyphicon glyphicon-remove\"></span></button>\n                    <img style=\"height: 40px;\" src=\"https://bootdey.com/img/Content/avatar/avatar2.png\" alt=\"\">\n                    <a [routerLink]=\"['/home/users', invite.userId]\">{{invite.firstName}}</a> wants to be your friend\n              </li>\n            </ul>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div *ngIf=\"isCheckingSent\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Your Sent Invites</h1>\n          </div>\n          <div class=\"col-md-12\">\n            <ul class=\"list-group\">\n              <li class=\"list-group-item\" *ngIf=\"currentUser.sent_invites.length == 0\">You currently have not sent any invites</li>\n              <li *ngFor=\"let invite of currentUser.sent_invites\" class=\"list-group-item\">\n                    You have sent an invite to <img style=\"height: 40px;\" src=\"https://bootdey.com/img/Content/avatar/avatar2.png\" alt=\"\"> <a [routerLink]=\"['/home/users', invite.userId]\">{{invite.firstName}}</a>\n              </li>\n            </ul>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Friends <button class=\"btn btn-link\" (click)=\"setEditMode()\">Edit</button></h1>\n            <p class=\"page-subtitle small\">You have {{currentUser.friends.length}} friends</p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n              <span *ngFor=\"let friend of currentUser.friends\" class=\"member\">\n                <button *ngIf=\"editMode\" style=\"display: block; margin-left: 6%; z-index: 1\" class=\"btn btn-link\" (click)=\"removeFriend(friend._id)\">Remove</button>\n                <a [routerLink]=\"['/home/users', friend.userId]\" > \n                  <img src=\"{{friend.profileImageUrl}}\" alt=\"\">\n                </a>\n                <div class=\"memmbername\">{{friend.username}}</div>\n              </span> \n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n\n      <div class=\"col-md-8 col-sm-12 pull-left posttimeline\">\n        <div class=\"panel panel-default\">\n          <div class=\"panel-body\">\n            <div class=\"status-upload nopaddingbtm\">\n              <form>\n                <textarea class=\"form-control\" placeholder=\"What are you doing right now?\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Audio\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Video\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Picture\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Share</button>\n              </form>\n            </div>\n          </div>\n        </div>\n        <div class=\"panel panel-default\">\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"https://bootdey.com/img/Content/avatar/avatar3.png\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">Lucky Sans<br>\n                  <small><i class=\"fa fa-clock-o\"></i> Yesterday, 2:00 am</small> </h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>\n\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> 2015</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> 25</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-share-alt\"></i> 15</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n          <div class=\"col-md-12 commentsblock border-top\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">Astha Smith</h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n              </div>\n            </div>\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">Lucky Sans</h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. </p>\n                <div class=\"media\">\n                  <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n                  <div class=\"media-body\">\n                    <h4 class=\"media-heading\">Astha Smith</h4>\n                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n                  </div>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div class=\"panel panel-default\">\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\"> Lucky Sans<br>\n                  <small><i class=\"fa fa-clock-o\"></i> Yesterday, 2:00 am</small> </h4>\n                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> 2015</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> 25</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\"glyphicon glyphicon-share-alt\"></i> 15</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n          <div class=\"col-md-12 border-top\">\n            <div class=\"status-upload\">\n              <form>\n                <label>Comment</label>\n                <textarea class=\"form-control\" placeholder=\"Comment here\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Comment</button>\n              </form>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n</div>\n"
+module.exports = "<div *ngIf=\"currentUser\">\n<div class=\"row\">\n      <div class=\"col-md-12 text-center \">\n        <div class=\"panel panel-default\">\n          <div class=\"userprofile social \">\n            <div class=\"userpic\" > <img src=\"{{currentUser.profileImageUrl}}\"  alt=\"\" class=\"userpicimg\"> </div>\n            <h3 class=\"username\">{{currentUser.firstName}} {{currentUser.lastName}}</h3>\n            <p>{{currentUser.username}}</p>\n            <div class=\"socials tex-center\"> <a href=\"\" class=\"btn btn-circle btn-primary \">\n            <i class=\"fa fa-facebook\"></i></a> <a href=\"\" class=\"btn btn-circle btn-danger \">\n            <i class=\"fa fa-google-plus\"></i></a> <a href=\"\" class=\"btn btn-circle btn-info \">\n            <i class=\"fa fa-twitter\"></i></a> <a href=\"\" class=\"btn btn-circle btn-warning \"><i class=\"fa fa-envelope\"></i></a>\n            </div>\n          </div>\n\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n      <!-- /.col-md-12 -->\n      <div class=\"col-md-4 col-sm-12 pull-right\">\n        <div class=\"panel panel-default\">\n          <div style=\"min-height: 330px;\" class=\"panel-heading\">\n            <h1 class=\"page-header small\">Personal Details</h1>\n            <router-outlet></router-outlet>\n          </div>\n\n          <div class=\"col-md-12 photolist\">\n            <div class=\"row\">\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"col-md-12\">\n            <div class=\"panel-body\">\n            <div class=\"tex-center\"> \n              <button (click)=\"checkRecentInvites()\" style=\"border-radius: 24px;\" class=\"btn btn-primary \">\n                Received {{currentUser.received_invites.length}} friend invites\n              </button> \n              <button (click)=\"checkSentInvites()\" style=\"border-radius: 24px;\" class=\"btn btn-info \">\n                Sent {{currentUser.sent_invites.length}} friend invites\n              </button> \n              <button (click)=\"disableCheckInvitesMode()\" class=\"btn btn-circle btn-danger \">\n                <i style=\"font-size: 14px;\" class=\"glyphicon glyphicon-remove\"></i>\n              </button> \n            </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div *ngIf=\"isCheckingRecent\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Most Recent Friend Invites</h1>\n          </div>\n          <div class=\"col-md-12\">\n            <ul class=\"list-group\">\n              <li class=\"list-group-item\" *ngIf=\"currentUser.received_invites.length == 0\">You have no friend invites at this time</li>\n              <li *ngFor=\"let invite of currentUser.received_invites\" class=\"list-group-item\">\n                    <button class=\"btn btn-circle btn-success\" (click)=\"acceptInvite(invite._id)\"><span class=\"glyphicon glyphicon-ok\"></span></button>\n                    <button class=\"btn btn-circle btn-danger\" (click)=\"rejectInvite(invite._id)\"><span class=\"glyphicon glyphicon-remove\"></span></button>\n                    <img style=\"height: 40px;\" src=\"https://bootdey.com/img/Content/avatar/avatar2.png\" alt=\"\">\n                    <a [routerLink]=\"['/home/users', invite.userId]\">{{invite.firstName}}</a> wants to be your friend\n              </li>\n            </ul>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div *ngIf=\"isCheckingSent\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Your Sent Invites</h1>\n          </div>\n          <div class=\"col-md-12\">\n            <ul class=\"list-group\">\n              <li class=\"list-group-item\" *ngIf=\"currentUser.sent_invites.length == 0\">You currently have not sent any invites</li>\n              <li *ngFor=\"let invite of currentUser.sent_invites\" class=\"list-group-item\">\n                    You have sent an invite to <img style=\"height: 40px;\" src=\"https://bootdey.com/img/Content/avatar/avatar2.png\" alt=\"\"> <a [routerLink]=\"['/home/users', invite.userId]\">{{invite.firstName}}</a>\n              </li>\n            </ul>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Friends <button class=\"btn btn-link\" (click)=\"setEditMode()\">Edit</button></h1>\n            <p class=\"page-subtitle small\">You have {{currentUser.friends.length}} friends</p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n              <span *ngFor=\"let friend of currentUser.friends\" class=\"member\">\n                <button *ngIf=\"editMode\" style=\"display: block; margin-left: 6%; z-index: 1\" class=\"btn btn-link\" (click)=\"removeFriend(friend._id)\">Remove</button>\n                <a [routerLink]=\"['/home/users', friend.userId]\" > \n                  <img src=\"{{friend.profileImageUrl}}\" alt=\"\">\n                </a>\n                <div class=\"memmbername\">{{friend.username}}</div>\n              </span> \n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n\n      <div class=\"col-md-8 col-sm-12 pull-left posttimeline\">\n        <div class=\"panel panel-default\">\n          <div class=\"panel-body\">\n            <div *ngIf=\"message\" class=\"status-upload nopaddingbtm\">\n\n              <form (submit)=\"shareMessage()\">\n                <textarea \n                  class=\"form-control\" \n                  name=\"content\"\n                  [(ngModel)]=\"message.content\"\n                  #content = \"ngModel\"\n                  placeholder=\"What are you doing right now?\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Audio\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Video\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Picture\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Share</button>\n              </form>\n\n            </div>\n          </div>\n        </div>\n\n        <div *ngFor=\"let message of userMessages\" class=\"panel panel-default\">\n\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"{{currentUser.profileImageUrl}}\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">{{currentUser.firstName}} {{currentUser.lastName}}<br>\n                  <small><i class=\"fa fa-clock-o\"></i> {{formatDateTime(message.createdAt)}}</small> </h4>\n                <p>{{message.content}}</p>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a (click)=\"addLike(message._id)\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> {{message.likes}}</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> {{message._comments.length}}</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n          <!--comments block-->\n          <div *ngFor=\"let comment of message._comments\" class=\"col-md-12 commentsblock border-top\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"{{comment.owner.profileImageUrl}}\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">{{comment.owner.firstName}} {{comment.owner.lastName}}</h4>\n                <p>{{comment.content}}</p>\n                <!--<div class=\"media\">\n                  <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n                  <div class=\"media-body\">\n                    <h4 class=\"media-heading\">Astha Smith</h4>\n                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n                  </div>\n                </div>-->\n              </div>\n            </div>\n            \n\n          </div>\n\n          <div class=\"col-md-12 border-top\">\n            <div class=\"status-upload\">\n\n              <form (submit)=\"addComment(message._id, message.newComment)\">\n                <label>Comment</label>\n                <textarea \n                  class=\"form-control\" \n                  name=\"content\"\n                  [(ngModel)] = \"message.newComment.content\"\n                  placeholder=\"Comment here\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Comment</button>\n              </form>\n\n            </div>\n          </div>\n        <!-- -->\n        </div>\n\n      </div>\n\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -1892,11 +1971,15 @@ module.exports = "<div *ngIf=\"currentUser\">\n<div class=\"row\">\n      <div c
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProfileComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__models_comment__ = __webpack_require__("../../../../../src/app/models/comment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_message__ = __webpack_require__("../../../../../src/app/models/message.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__search_service__ = __webpack_require__("../../../../../src/app/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__chat_service__ = __webpack_require__("../../../../../src/app/chat.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__api_call_service__ = __webpack_require__("../../../../../src/app/api-call.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_moment__ = __webpack_require__("../../../../moment/moment.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_moment__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1911,6 +1994,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
+
 var ProfileComponent = (function () {
     function ProfileComponent(_apicallService, _router, _chatService, _searchService) {
         this._apicallService = _apicallService;
@@ -1920,7 +2006,10 @@ var ProfileComponent = (function () {
         this.editMode = false;
         this.isCheckingRecent = false;
         this.isCheckingSent = false;
+        this.message = new __WEBPACK_IMPORTED_MODULE_1__models_message__["a" /* Message */]();
+        this.comment = new __WEBPACK_IMPORTED_MODULE_0__models_comment__["a" /* Comment */]();
         this.getCurrentUserInSession();
+        console.log(this.message.content);
     }
     ProfileComponent.prototype.ngOnInit = function () {
         this.watchForEditUserEvent();
@@ -1939,6 +2028,7 @@ var ProfileComponent = (function () {
             .then(function (data) {
             if (data) {
                 _this.currentUser = data;
+                _this.getMessages();
             }
             else {
                 _this._router.navigate(['']);
@@ -2032,15 +2122,101 @@ var ProfileComponent = (function () {
             this.isCheckingSent = false;
         }
     };
+    ProfileComponent.prototype.shareMessage = function () {
+        var _this = this;
+        console.log('sharing message');
+        this._apicallService.addMessageToCurrUser(this.message)
+            .then(function (data) {
+            console.log('then response shareMessage');
+            console.log(data);
+            _this.message = new __WEBPACK_IMPORTED_MODULE_1__models_message__["a" /* Message */]();
+            _this.getMessages();
+        })
+            .catch(function (error) {
+            console.log('catch response shareMessage');
+            console.log(error);
+        });
+    };
+    ProfileComponent.prototype.addComment = function (messageId, comment) {
+        var _this = this;
+        console.log('adding comment');
+        comment._message = messageId;
+        console.log(comment);
+        this._apicallService.addCommentToMessage(comment)
+            .then(function (data) {
+            console.log('then response addComment');
+            console.log(data);
+            _this.getMessages();
+        })
+            .catch(function (error) {
+            console.log('error response addComment');
+            console.log(error);
+        });
+    };
+    ProfileComponent.prototype.getMessages = function () {
+        var _this = this;
+        console.log('getting current profile messages');
+        this._apicallService.getMessagesAndCommentsOfCurrUser()
+            .then(function (data) {
+            console.log('Then response getting messages of current user profile');
+            _this.userMessages = _this.sortMessages(data);
+            _this.populateMessagesWithNewCommentModels(_this.userMessages);
+            console.log(_this.userMessages);
+        })
+            .catch(function (error) {
+            console.log('Error response getting messages of current user profile');
+            console.log(error);
+        });
+    };
+    ProfileComponent.prototype.sortMessages = function (messages) {
+        return messages.sort(function (a, b) {
+            console.log('----------');
+            console.log(b.createdAt);
+            console.log(a.createdAt);
+            console.log('----------');
+            return +new Date(b.createdAt) - +new Date(a.createdAt);
+        });
+    };
+    // getTime(date?: Date) {
+    //     return date != null ? date.getTime() : 0;
+    // }
+    ProfileComponent.prototype.formatDateTime = function (date) {
+        return __WEBPACK_IMPORTED_MODULE_7_moment__(date).format('MMMM Do YYYY, h:mm:ss a');
+    };
+    ProfileComponent.prototype.addLike = function (messageId) {
+        var _this = this;
+        console.log('liking');
+        var msgData = { messageId: messageId };
+        this._apicallService.addLike(msgData)
+            .then(function (data) {
+            console.log('then response');
+            console.log(data);
+            _this.getMessages();
+        })
+            .catch(function (error) {
+            console.log('then response');
+            console.log(error);
+        });
+    };
+    ProfileComponent.prototype.populateMessagesWithNewCommentModels = function (messages) {
+        console.log('populating comments');
+        if (messages) {
+            for (var _i = 0, messages_1 = messages; _i < messages_1.length; _i++) {
+                var message = messages_1[_i];
+                var newComment = new __WEBPACK_IMPORTED_MODULE_0__models_comment__["a" /* Comment */]();
+                message.newComment = newComment;
+            }
+        }
+    };
     return ProfileComponent;
 }());
 ProfileComponent = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["o" /* Component */])({
+    Object(__WEBPACK_IMPORTED_MODULE_6__angular_core__["o" /* Component */])({
         selector: 'app-profile',
         template: __webpack_require__("../../../../../src/app/profile/profile.component.html"),
         styles: [__webpack_require__("../../../../../src/app/profile/profile.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__chat_service__["a" /* ChatService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__search_service__["a" /* SearchService */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_5__api_call_service__["a" /* ApiCallService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__api_call_service__["a" /* ApiCallService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__chat_service__["a" /* ChatService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__chat_service__["a" /* ChatService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__search_service__["a" /* SearchService */]) === "function" && _d || Object])
 ], ProfileComponent);
 
 var _a, _b, _c, _d;
@@ -2766,6 +2942,259 @@ if (__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment *
 Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_2__app_app_module__["a" /* AppModule */])
     .catch(function (err) { return console.log(err); });
 //# sourceMappingURL=main.js.map
+
+/***/ }),
+
+/***/ "../../../../moment/locale recursive ^\\.\\/.*$":
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./af": "../../../../moment/locale/af.js",
+	"./af.js": "../../../../moment/locale/af.js",
+	"./ar": "../../../../moment/locale/ar.js",
+	"./ar-dz": "../../../../moment/locale/ar-dz.js",
+	"./ar-dz.js": "../../../../moment/locale/ar-dz.js",
+	"./ar-kw": "../../../../moment/locale/ar-kw.js",
+	"./ar-kw.js": "../../../../moment/locale/ar-kw.js",
+	"./ar-ly": "../../../../moment/locale/ar-ly.js",
+	"./ar-ly.js": "../../../../moment/locale/ar-ly.js",
+	"./ar-ma": "../../../../moment/locale/ar-ma.js",
+	"./ar-ma.js": "../../../../moment/locale/ar-ma.js",
+	"./ar-sa": "../../../../moment/locale/ar-sa.js",
+	"./ar-sa.js": "../../../../moment/locale/ar-sa.js",
+	"./ar-tn": "../../../../moment/locale/ar-tn.js",
+	"./ar-tn.js": "../../../../moment/locale/ar-tn.js",
+	"./ar.js": "../../../../moment/locale/ar.js",
+	"./az": "../../../../moment/locale/az.js",
+	"./az.js": "../../../../moment/locale/az.js",
+	"./be": "../../../../moment/locale/be.js",
+	"./be.js": "../../../../moment/locale/be.js",
+	"./bg": "../../../../moment/locale/bg.js",
+	"./bg.js": "../../../../moment/locale/bg.js",
+	"./bn": "../../../../moment/locale/bn.js",
+	"./bn.js": "../../../../moment/locale/bn.js",
+	"./bo": "../../../../moment/locale/bo.js",
+	"./bo.js": "../../../../moment/locale/bo.js",
+	"./br": "../../../../moment/locale/br.js",
+	"./br.js": "../../../../moment/locale/br.js",
+	"./bs": "../../../../moment/locale/bs.js",
+	"./bs.js": "../../../../moment/locale/bs.js",
+	"./ca": "../../../../moment/locale/ca.js",
+	"./ca.js": "../../../../moment/locale/ca.js",
+	"./cs": "../../../../moment/locale/cs.js",
+	"./cs.js": "../../../../moment/locale/cs.js",
+	"./cv": "../../../../moment/locale/cv.js",
+	"./cv.js": "../../../../moment/locale/cv.js",
+	"./cy": "../../../../moment/locale/cy.js",
+	"./cy.js": "../../../../moment/locale/cy.js",
+	"./da": "../../../../moment/locale/da.js",
+	"./da.js": "../../../../moment/locale/da.js",
+	"./de": "../../../../moment/locale/de.js",
+	"./de-at": "../../../../moment/locale/de-at.js",
+	"./de-at.js": "../../../../moment/locale/de-at.js",
+	"./de-ch": "../../../../moment/locale/de-ch.js",
+	"./de-ch.js": "../../../../moment/locale/de-ch.js",
+	"./de.js": "../../../../moment/locale/de.js",
+	"./dv": "../../../../moment/locale/dv.js",
+	"./dv.js": "../../../../moment/locale/dv.js",
+	"./el": "../../../../moment/locale/el.js",
+	"./el.js": "../../../../moment/locale/el.js",
+	"./en-au": "../../../../moment/locale/en-au.js",
+	"./en-au.js": "../../../../moment/locale/en-au.js",
+	"./en-ca": "../../../../moment/locale/en-ca.js",
+	"./en-ca.js": "../../../../moment/locale/en-ca.js",
+	"./en-gb": "../../../../moment/locale/en-gb.js",
+	"./en-gb.js": "../../../../moment/locale/en-gb.js",
+	"./en-ie": "../../../../moment/locale/en-ie.js",
+	"./en-ie.js": "../../../../moment/locale/en-ie.js",
+	"./en-nz": "../../../../moment/locale/en-nz.js",
+	"./en-nz.js": "../../../../moment/locale/en-nz.js",
+	"./eo": "../../../../moment/locale/eo.js",
+	"./eo.js": "../../../../moment/locale/eo.js",
+	"./es": "../../../../moment/locale/es.js",
+	"./es-do": "../../../../moment/locale/es-do.js",
+	"./es-do.js": "../../../../moment/locale/es-do.js",
+	"./es.js": "../../../../moment/locale/es.js",
+	"./et": "../../../../moment/locale/et.js",
+	"./et.js": "../../../../moment/locale/et.js",
+	"./eu": "../../../../moment/locale/eu.js",
+	"./eu.js": "../../../../moment/locale/eu.js",
+	"./fa": "../../../../moment/locale/fa.js",
+	"./fa.js": "../../../../moment/locale/fa.js",
+	"./fi": "../../../../moment/locale/fi.js",
+	"./fi.js": "../../../../moment/locale/fi.js",
+	"./fo": "../../../../moment/locale/fo.js",
+	"./fo.js": "../../../../moment/locale/fo.js",
+	"./fr": "../../../../moment/locale/fr.js",
+	"./fr-ca": "../../../../moment/locale/fr-ca.js",
+	"./fr-ca.js": "../../../../moment/locale/fr-ca.js",
+	"./fr-ch": "../../../../moment/locale/fr-ch.js",
+	"./fr-ch.js": "../../../../moment/locale/fr-ch.js",
+	"./fr.js": "../../../../moment/locale/fr.js",
+	"./fy": "../../../../moment/locale/fy.js",
+	"./fy.js": "../../../../moment/locale/fy.js",
+	"./gd": "../../../../moment/locale/gd.js",
+	"./gd.js": "../../../../moment/locale/gd.js",
+	"./gl": "../../../../moment/locale/gl.js",
+	"./gl.js": "../../../../moment/locale/gl.js",
+	"./gom-latn": "../../../../moment/locale/gom-latn.js",
+	"./gom-latn.js": "../../../../moment/locale/gom-latn.js",
+	"./he": "../../../../moment/locale/he.js",
+	"./he.js": "../../../../moment/locale/he.js",
+	"./hi": "../../../../moment/locale/hi.js",
+	"./hi.js": "../../../../moment/locale/hi.js",
+	"./hr": "../../../../moment/locale/hr.js",
+	"./hr.js": "../../../../moment/locale/hr.js",
+	"./hu": "../../../../moment/locale/hu.js",
+	"./hu.js": "../../../../moment/locale/hu.js",
+	"./hy-am": "../../../../moment/locale/hy-am.js",
+	"./hy-am.js": "../../../../moment/locale/hy-am.js",
+	"./id": "../../../../moment/locale/id.js",
+	"./id.js": "../../../../moment/locale/id.js",
+	"./is": "../../../../moment/locale/is.js",
+	"./is.js": "../../../../moment/locale/is.js",
+	"./it": "../../../../moment/locale/it.js",
+	"./it.js": "../../../../moment/locale/it.js",
+	"./ja": "../../../../moment/locale/ja.js",
+	"./ja.js": "../../../../moment/locale/ja.js",
+	"./jv": "../../../../moment/locale/jv.js",
+	"./jv.js": "../../../../moment/locale/jv.js",
+	"./ka": "../../../../moment/locale/ka.js",
+	"./ka.js": "../../../../moment/locale/ka.js",
+	"./kk": "../../../../moment/locale/kk.js",
+	"./kk.js": "../../../../moment/locale/kk.js",
+	"./km": "../../../../moment/locale/km.js",
+	"./km.js": "../../../../moment/locale/km.js",
+	"./kn": "../../../../moment/locale/kn.js",
+	"./kn.js": "../../../../moment/locale/kn.js",
+	"./ko": "../../../../moment/locale/ko.js",
+	"./ko.js": "../../../../moment/locale/ko.js",
+	"./ky": "../../../../moment/locale/ky.js",
+	"./ky.js": "../../../../moment/locale/ky.js",
+	"./lb": "../../../../moment/locale/lb.js",
+	"./lb.js": "../../../../moment/locale/lb.js",
+	"./lo": "../../../../moment/locale/lo.js",
+	"./lo.js": "../../../../moment/locale/lo.js",
+	"./lt": "../../../../moment/locale/lt.js",
+	"./lt.js": "../../../../moment/locale/lt.js",
+	"./lv": "../../../../moment/locale/lv.js",
+	"./lv.js": "../../../../moment/locale/lv.js",
+	"./me": "../../../../moment/locale/me.js",
+	"./me.js": "../../../../moment/locale/me.js",
+	"./mi": "../../../../moment/locale/mi.js",
+	"./mi.js": "../../../../moment/locale/mi.js",
+	"./mk": "../../../../moment/locale/mk.js",
+	"./mk.js": "../../../../moment/locale/mk.js",
+	"./ml": "../../../../moment/locale/ml.js",
+	"./ml.js": "../../../../moment/locale/ml.js",
+	"./mr": "../../../../moment/locale/mr.js",
+	"./mr.js": "../../../../moment/locale/mr.js",
+	"./ms": "../../../../moment/locale/ms.js",
+	"./ms-my": "../../../../moment/locale/ms-my.js",
+	"./ms-my.js": "../../../../moment/locale/ms-my.js",
+	"./ms.js": "../../../../moment/locale/ms.js",
+	"./my": "../../../../moment/locale/my.js",
+	"./my.js": "../../../../moment/locale/my.js",
+	"./nb": "../../../../moment/locale/nb.js",
+	"./nb.js": "../../../../moment/locale/nb.js",
+	"./ne": "../../../../moment/locale/ne.js",
+	"./ne.js": "../../../../moment/locale/ne.js",
+	"./nl": "../../../../moment/locale/nl.js",
+	"./nl-be": "../../../../moment/locale/nl-be.js",
+	"./nl-be.js": "../../../../moment/locale/nl-be.js",
+	"./nl.js": "../../../../moment/locale/nl.js",
+	"./nn": "../../../../moment/locale/nn.js",
+	"./nn.js": "../../../../moment/locale/nn.js",
+	"./pa-in": "../../../../moment/locale/pa-in.js",
+	"./pa-in.js": "../../../../moment/locale/pa-in.js",
+	"./pl": "../../../../moment/locale/pl.js",
+	"./pl.js": "../../../../moment/locale/pl.js",
+	"./pt": "../../../../moment/locale/pt.js",
+	"./pt-br": "../../../../moment/locale/pt-br.js",
+	"./pt-br.js": "../../../../moment/locale/pt-br.js",
+	"./pt.js": "../../../../moment/locale/pt.js",
+	"./ro": "../../../../moment/locale/ro.js",
+	"./ro.js": "../../../../moment/locale/ro.js",
+	"./ru": "../../../../moment/locale/ru.js",
+	"./ru.js": "../../../../moment/locale/ru.js",
+	"./sd": "../../../../moment/locale/sd.js",
+	"./sd.js": "../../../../moment/locale/sd.js",
+	"./se": "../../../../moment/locale/se.js",
+	"./se.js": "../../../../moment/locale/se.js",
+	"./si": "../../../../moment/locale/si.js",
+	"./si.js": "../../../../moment/locale/si.js",
+	"./sk": "../../../../moment/locale/sk.js",
+	"./sk.js": "../../../../moment/locale/sk.js",
+	"./sl": "../../../../moment/locale/sl.js",
+	"./sl.js": "../../../../moment/locale/sl.js",
+	"./sq": "../../../../moment/locale/sq.js",
+	"./sq.js": "../../../../moment/locale/sq.js",
+	"./sr": "../../../../moment/locale/sr.js",
+	"./sr-cyrl": "../../../../moment/locale/sr-cyrl.js",
+	"./sr-cyrl.js": "../../../../moment/locale/sr-cyrl.js",
+	"./sr.js": "../../../../moment/locale/sr.js",
+	"./ss": "../../../../moment/locale/ss.js",
+	"./ss.js": "../../../../moment/locale/ss.js",
+	"./sv": "../../../../moment/locale/sv.js",
+	"./sv.js": "../../../../moment/locale/sv.js",
+	"./sw": "../../../../moment/locale/sw.js",
+	"./sw.js": "../../../../moment/locale/sw.js",
+	"./ta": "../../../../moment/locale/ta.js",
+	"./ta.js": "../../../../moment/locale/ta.js",
+	"./te": "../../../../moment/locale/te.js",
+	"./te.js": "../../../../moment/locale/te.js",
+	"./tet": "../../../../moment/locale/tet.js",
+	"./tet.js": "../../../../moment/locale/tet.js",
+	"./th": "../../../../moment/locale/th.js",
+	"./th.js": "../../../../moment/locale/th.js",
+	"./tl-ph": "../../../../moment/locale/tl-ph.js",
+	"./tl-ph.js": "../../../../moment/locale/tl-ph.js",
+	"./tlh": "../../../../moment/locale/tlh.js",
+	"./tlh.js": "../../../../moment/locale/tlh.js",
+	"./tr": "../../../../moment/locale/tr.js",
+	"./tr.js": "../../../../moment/locale/tr.js",
+	"./tzl": "../../../../moment/locale/tzl.js",
+	"./tzl.js": "../../../../moment/locale/tzl.js",
+	"./tzm": "../../../../moment/locale/tzm.js",
+	"./tzm-latn": "../../../../moment/locale/tzm-latn.js",
+	"./tzm-latn.js": "../../../../moment/locale/tzm-latn.js",
+	"./tzm.js": "../../../../moment/locale/tzm.js",
+	"./uk": "../../../../moment/locale/uk.js",
+	"./uk.js": "../../../../moment/locale/uk.js",
+	"./ur": "../../../../moment/locale/ur.js",
+	"./ur.js": "../../../../moment/locale/ur.js",
+	"./uz": "../../../../moment/locale/uz.js",
+	"./uz-latn": "../../../../moment/locale/uz-latn.js",
+	"./uz-latn.js": "../../../../moment/locale/uz-latn.js",
+	"./uz.js": "../../../../moment/locale/uz.js",
+	"./vi": "../../../../moment/locale/vi.js",
+	"./vi.js": "../../../../moment/locale/vi.js",
+	"./x-pseudo": "../../../../moment/locale/x-pseudo.js",
+	"./x-pseudo.js": "../../../../moment/locale/x-pseudo.js",
+	"./yo": "../../../../moment/locale/yo.js",
+	"./yo.js": "../../../../moment/locale/yo.js",
+	"./zh-cn": "../../../../moment/locale/zh-cn.js",
+	"./zh-cn.js": "../../../../moment/locale/zh-cn.js",
+	"./zh-hk": "../../../../moment/locale/zh-hk.js",
+	"./zh-hk.js": "../../../../moment/locale/zh-hk.js",
+	"./zh-tw": "../../../../moment/locale/zh-tw.js",
+	"./zh-tw.js": "../../../../moment/locale/zh-tw.js"
+};
+function webpackContext(req) {
+	return __webpack_require__(webpackContextResolve(req));
+};
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) // check for number or string
+		throw new Error("Cannot find module '" + req + "'.");
+	return id;
+};
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = "../../../../moment/locale recursive ^\\.\\/.*$";
 
 /***/ }),
 

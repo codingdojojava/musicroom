@@ -110,9 +110,15 @@
       <div class="col-md-8 col-sm-12 pull-left posttimeline">
         <div class="panel panel-default">
           <div class="panel-body">
-            <div class="status-upload nopaddingbtm">
-              <form>
-                <textarea class="form-control" placeholder="What are you doing right now?"></textarea>
+            <div *ngIf="message" class="status-upload nopaddingbtm">
+
+              <form (submit)="shareMessage()">
+                <textarea 
+                  class="form-control" 
+                  name="content"
+                  [(ngModel)]="message.content"
+                  #content = "ngModel"
+                  placeholder="What are you doing right now?"></textarea>
                 <br>
                 <ul class="nav nav-pills pull-left ">
                   <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Audio"><i class="glyphicon glyphicon-bullhorn"></i></a></li>
@@ -121,10 +127,13 @@
                 </ul>
                 <button type="submit" class="btn btn-success pull-right"> Share</button>
               </form>
+
             </div>
           </div>
         </div>
-        <div class="panel panel-default">
+
+        <div *ngFor="let message of userMessages" class="panel panel-default">
+
           <div class="btn-group pull-right postbtn">
             <button type="button" class="dotbtn dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="dots"></span> </button>
             <ul class="dropdown-menu pull-right" role="menu">
@@ -132,74 +141,51 @@
               <li><a href="javascript:void(0)">Report</a></li>
             </ul>
           </div>
+
           <div class="col-md-12">
             <div class="media">
-              <div class="media-left"> <a href="javascript:void(0)"> <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" class="media-object"> </a> </div>
+              <div class="media-left"> <a href="javascript:void(0)"> <img src="{{currentUser.profileImageUrl}}" alt="" class="media-object"> </a> </div>
               <div class="media-body">
-                <h4 class="media-heading">Lucky Sans<br>
-                  <small><i class="fa fa-clock-o"></i> Yesterday, 2:00 am</small> </h4>
-                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>
-
+                <h4 class="media-heading">{{currentUser.firstName}} {{currentUser.lastName}}<br>
+                  <small><i class="fa fa-clock-o"></i> {{formatDateTime(message.createdAt)}}</small> </h4>
+                <p>{{message.content}}</p>
                 <ul class="nav nav-pills pull-left ">
-                  <li><a href="" title=""><i class="glyphicon glyphicon-thumbs-up"></i> 2015</a></li>
-                  <li><a href="" title=""><i class=" glyphicon glyphicon-comment"></i> 25</a></li>
-                  <li><a href="" title=""><i class="glyphicon glyphicon-share-alt"></i> 15</a></li>
+                  <li><a (click)="addLike(message._id)" title=""><i class="glyphicon glyphicon-thumbs-up"></i> {{message.likes}}</a></li>
+                  <li><a href="" title=""><i class=" glyphicon glyphicon-comment"></i> {{message._comments.length}}</a></li>
                 </ul>
               </div>
             </div>
           </div>
-          <div class="col-md-12 commentsblock border-top">
+          <!--comments block-->
+          <div *ngFor="let comment of message._comments" class="col-md-12 commentsblock border-top">
             <div class="media">
-              <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="media-object"> </a> </div>
+              <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="{{comment.owner.profileImageUrl}}" class="media-object"> </a> </div>
               <div class="media-body">
-                <h4 class="media-heading">Astha Smith</h4>
-                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-              </div>
-            </div>
-            <div class="media">
-              <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="media-object"> </a> </div>
-              <div class="media-body">
-                <h4 class="media-heading">Lucky Sans</h4>
-                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. </p>
-                <div class="media">
+                <h4 class="media-heading">{{comment.owner.firstName}} {{comment.owner.lastName}}</h4>
+                <p>{{comment.content}}</p>
+                <!--<div class="media">
                   <div class="media-left"> <a href="javascript:void(0)"> <img alt="64x64" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="media-object"> </a> </div>
                   <div class="media-body">
                     <h4 class="media-heading">Astha Smith</h4>
                     <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
                   </div>
-                </div>
+                </div>-->
               </div>
             </div>
+            
+
           </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="btn-group pull-right postbtn">
-            <button type="button" class="dotbtn dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <span class="dots"></span> </button>
-            <ul class="dropdown-menu pull-right" role="menu">
-              <li><a href="javascript:void(0)">Hide this</a></li>
-              <li><a href="javascript:void(0)">Report</a></li>
-            </ul>
-          </div>
-          <div class="col-md-12">
-            <div class="media">
-              <div class="media-left"> <a href="javascript:void(0)"> <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="media-object"> </a> </div>
-              <div class="media-body">
-                <h4 class="media-heading"> Lucky Sans<br>
-                  <small><i class="fa fa-clock-o"></i> Yesterday, 2:00 am</small> </h4>
-                <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio. </p>
-                <ul class="nav nav-pills pull-left ">
-                  <li><a href="" title=""><i class="glyphicon glyphicon-thumbs-up"></i> 2015</a></li>
-                  <li><a href="" title=""><i class=" glyphicon glyphicon-comment"></i> 25</a></li>
-                  <li><a href="" title=""><i class="glyphicon glyphicon-share-alt"></i> 15</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
+
           <div class="col-md-12 border-top">
             <div class="status-upload">
-              <form>
+
+              <form (submit)="addComment(message._id, message.newComment)">
                 <label>Comment</label>
-                <textarea class="form-control" placeholder="Comment here"></textarea>
+                <textarea 
+                  class="form-control" 
+                  name="content"
+                  [(ngModel)] = "message.newComment.content"
+                  placeholder="Comment here"></textarea>
                 <br>
                 <ul class="nav nav-pills pull-left ">
                   <li><a title=""><i class="glyphicon glyphicon-bullhorn"></i></a></li>
@@ -208,9 +194,13 @@
                 </ul>
                 <button type="submit" class="btn btn-success pull-right"> Comment</button>
               </form>
+
             </div>
           </div>
+        <!-- -->
         </div>
+
       </div>
+
     </div>
 </div>

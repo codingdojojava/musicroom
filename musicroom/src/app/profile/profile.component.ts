@@ -1,3 +1,5 @@
+import { Comment } from './../models/comment';
+import { Message } from './../models/message';
 import { Subscription } from 'rxjs/Subscription';
 import { SearchService } from './../search.service';
 import { ChatService } from './../chat.service';
@@ -5,6 +7,7 @@ import { User } from './../models/user';
 import { Router } from '@angular/router';
 import { ApiCallService } from './../api-call.service';
 import { Component, OnInit } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-profile',
@@ -17,8 +20,12 @@ export class ProfileComponent implements OnInit {
   isCheckingRecent: Boolean = false;
   isCheckingSent: Boolean = false;
   subscription: Subscription;
+  message: Message = new Message();
+  comment: Comment = new Comment();
+  userMessages;
   constructor(private _apicallService: ApiCallService, private _router: Router, private _chatService: ChatService, private _searchService: SearchService) {
     this.getCurrentUserInSession();
+    console.log(this.message.content);
    }
 
   ngOnInit() {
@@ -38,6 +45,7 @@ export class ProfileComponent implements OnInit {
       .then((data) => {
         if (data) {
           this.currentUser = data;
+          this.getMessages();
         } else {
           this._router.navigate(['']);
         }
@@ -131,4 +139,93 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  shareMessage() {
+    console.log('sharing message');
+    this._apicallService.addMessageToCurrUser(this.message)
+      .then(data => {
+        console.log('then response shareMessage');
+        console.log(data);
+        this.message = new Message();
+        this.getMessages();
+      })
+      .catch(error => {
+        console.log('catch response shareMessage');
+        console.log(error);
+      });
+  }
+
+
+  addComment(messageId, comment) {
+    console.log('adding comment');
+    comment._message = messageId;
+    console.log(comment);
+    this._apicallService.addCommentToMessage(comment)
+      .then(data => {
+        console.log('then response addComment');
+        console.log(data);
+        this.getMessages();
+      })
+      .catch(error => {
+        console.log('error response addComment');
+        console.log(error);
+      });
+  }
+
+  getMessages() {
+    console.log('getting current profile messages');
+    this._apicallService.getMessagesAndCommentsOfCurrUser()
+      .then(data => {
+        console.log('Then response getting messages of current user profile');
+        this.userMessages = this.sortMessages(data);
+        this.populateMessagesWithNewCommentModels(this.userMessages);
+        console.log(this.userMessages);
+      })
+      .catch(error => {
+        console.log('Error response getting messages of current user profile');
+        console.log(error);
+      });
+  }
+
+  sortMessages(messages) {
+    return messages.sort((a, b) => {
+      console.log('----------');
+      console.log(b.createdAt);
+      console.log(a.createdAt);
+      console.log('----------');
+      return +new Date(b.createdAt) - +new Date(a.createdAt);
+    });
+  }
+
+  // getTime(date?: Date) {
+  //     return date != null ? date.getTime() : 0;
+  // }
+
+  formatDateTime(date) {
+    return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+  }
+
+  addLike(messageId) {
+    console.log('liking');
+    const msgData = {messageId: messageId};
+    this._apicallService.addLike(msgData)
+      .then(data => {
+        console.log('then response');
+        console.log(data);
+        this.getMessages();
+      })
+      .catch(error => {
+        console.log('then response');
+        console.log(error);
+      });
+  }
+
+  populateMessagesWithNewCommentModels(messages) {
+    console.log('populating comments');
+    if (messages) {
+      for (const message of messages) {
+        const newComment = new Comment();
+        message.newComment = newComment;
+      }
+    }
+  }
 }

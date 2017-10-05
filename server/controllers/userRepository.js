@@ -1,6 +1,8 @@
 let mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 let User = mongoose.model('User');
+let Message = mongoose.model('Message');
+let Comment = mongoose.model('Comment');
 
 module.exports = {
     registerAUser: (req, res) => {
@@ -24,7 +26,8 @@ module.exports = {
                     console.log('error registering user');
                     res.json(error);
                 } else {
-                    // console.log('success registering user');
+                    console.log('success registering user');
+                    // console.log(savedUser);
                     res.json(savedUser);
                 }
             });
@@ -62,7 +65,7 @@ module.exports = {
         // console.log('server getting current user');
         if(req.session.currentUser) {
             User.findOne({_id: req.session.currentUser._id})
-                .populate('friends favoriteSongs joinedRooms ownedRooms received_invites sent_invites onlineFriends')
+                .populate('friends favoriteSongs _messages joinedRooms ownedRooms received_invites sent_invites onlineFriends')
                 .exec((error, foundUser) => {
                     if (foundUser) {
                         // console.log('found current User');
@@ -274,5 +277,141 @@ module.exports = {
                 }
             })
         }
+    },
+
+    addMessageToCurrUser: (req, res) => {
+        if(req.session.currentUser) {
+             let newMessageId = 1;
+            Message.find({}).sort('-createdAt').exec((error, messages) => {
+                if (error) {
+                    console.log('something went wrong');
+                } else {
+                    if(messages && messages.length > 0) {
+                        // console.log('users true, got all users, now updating newUser id');
+                        newMessageId = messages[0].messageId + 1;
+                    }
+                    req.body.messageId = newMessageId;
+                }
+            });
+
+            let newMessage = new Message(req.body);
+            newMessage._owner = req.session.currentUser._id;
+            newMessage.save((error, savedMessage) => {
+                if(error) {
+                    console.log('error saving message');
+                    console.log(error);
+                } else {
+                    // console.log('success saving message');
+                    // console.log(savedMessage);
+                    User.findOneAndUpdate({_id: req.session.currentUser._id}, {$push: {_messages: savedMessage._id}}, {new: true}, 
+                            (error, updatedUser) => {
+                                if (error) {
+                                    console.log('error updating user with saved message');
+                                    console.log(error);
+                                } else {
+                                    // console.log('success updating user with saved message')
+                                    // console.log(updatedUser);
+                                    res.json(updatedUser);
+                                }
+                            })
+                }
+            });
+        } else {
+            console.log('no user session found');
+            res.json(false);
+        }
+    },
+
+    addCommentToMessage: (req, res) => {
+        console.log('repo adding comment to message');
+        if(req.session.currentUser) {
+            let newCommentId = 1;
+            Comment.find({}).sort('-createdAt').exec((error, comments) => {
+                if (error) {
+                    console.log('something went wrong');
+                } else {
+                    if(comments && comments.length > 0) {
+                        // console.log('users true, got all users, now updating newUser id');
+                        newCommentId = comments[0].commentId + 1;
+                    }
+                    req.body.commentId = newCommentId;
+                }
+            });
+
+            let newComment = new Comment(req.body);
+            newComment.owner = req.session.currentUser._id;
+            newComment.save((err, savedComment) => {
+                if (err) {
+                    console.log('error saving new comment');
+                    console.log(err);
+                    res.json(false);
+                } else{
+                    console.log('success saving new comment');
+                    console.log(savedComment);
+                    User.findOneAndUpdate({_id: req.session.currentUser._id}, {$push: {_comments: savedComment._id}}, {new: true}, 
+                        (err, updatedUser) => {
+                            if(err) {
+                                console.log('error updating message with comment');
+                                console.log(err);
+                            } else {
+                                // console.log('success updating message with comment');
+                                console.log(updatedUser);
+                            }
+                        });
+                    Message.findOneAndUpdate({_id: req.body._message}, {$push: {_comments: savedComment._id}}, {new: true},
+                        (err, updatedMessage) => {
+                            if(err) {
+                                console.log('error updating message with comment');
+                                console.log(err);
+                                res.json(false);
+                            } else {
+                                // console.log('success updating message with comment');
+                                // console.log(updatedMessage);
+                                res.json(updatedMessage);
+                            }
+                        })
+                }
+            });
+        } else {
+            console.log('no user session found');
+            res.json(false);
+        }
+    },
+
+    getMessagesAndCommentsOfCurrUser: (req, res) => {
+        console.log('server getting messages and comments');
+        Message.find({_owner: req.session.currentUser._id})
+            .populate({
+                path: '_comments',
+                populate: { path: 'owner' }
+            })
+            .exec((err, messages) => {
+                if (err) {
+                    console.log('error getting messsages from current user');
+                    console.log(err);
+                } else {
+                    console.log('success getting messsages from current user');
+                    res.json(messages);
+                }
+            });
+    },
+
+    addLike: (req,res) => {
+        Message.findOne({_id: req.body.messageId}, (err, message) => {
+            if(err) {
+                console.log('error finding message to like');
+                console.log(err);
+            } else [
+                Message.update({_id: message._id}, {likes: message.likes + 1},
+                        (err, updatedMessage)=> {
+                            if(err) {
+                                console.log('error updating message likes');
+                                console.log(err);
+                            } else {
+                                res.json(updatedMessage);
+                            }
+                        })
+            ]
+        });
     }
 }

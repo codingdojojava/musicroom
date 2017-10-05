@@ -56,6 +56,8 @@ var UserSchema = new mongoose.Schema({
     onlineFriends: [],
     favoriteSongs: [{type: Schema.Types.ObjectId, ref: 'Song'}],
     joinedRooms: [{type: Schema.Types.ObjectId, ref: 'MusicRoom'}],
+    _messages: [{type: Schema.Types.ObjectId, ref: 'Message'}],
+    _comments: [{type: Schema.Types.ObjectId, ref: 'Comment'}],
     ownedRooms: [{type: Schema.Types.ObjectId, ref: 'MusicRoom'}],
     friends: [{type: Schema.Types.ObjectId, ref: 'User'}],
     received_invites: [{type: Schema.Types.ObjectId, ref: 'User'}],
