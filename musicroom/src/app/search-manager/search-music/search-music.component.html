@@ -2,8 +2,8 @@
 
  <div *ngIf="trackSearchResults" class="panel panel-default">
           <div class="panel-heading">
-            <h1 class="page-header small">Tracks</h1>
-            <p class="page-subtitle small">Found {{tracks['opensearch:totalResults']}} songs based on "{{prevSearchVal}}" </p>
+            <h1 class="page-header small"><span *ngIf="!tracks">Top Ten </span>Tracks</h1>
+            <p *ngIf="tracks" class="page-subtitle small">Found {{tracks['opensearch:totalResults']}} songs based on "{{prevSearchVal}}" </p>
           </div>
           <div class="col-md-12">
             <div class="memberblock">
@@ -33,7 +33,7 @@
  <div *ngIf="albumSearchResults" class="panel panel-default">
           <div class="panel-heading">
             <h1 class="page-header small">Albums</h1>
-            <p class="page-subtitle small">Found {{albums['opensearch:totalResults']}} albums based on "{{prevSearchVal}}" </p>
+            <p *ngIf="albums" class="page-subtitle small">Found {{albums['opensearch:totalResults']}} albums based on "{{prevSearchVal}}" </p>
           </div>
           <div class="col-md-12">
             <div class="memberblock">
@@ -61,8 +61,8 @@
 
  <div *ngIf="artistSearchResults" class="panel panel-default">
           <div class="panel-heading">
-            <h1 class="page-header small">Artists</h1>
-            <p class="page-subtitle small">Found {{artists['opensearch:totalResults']}} artists based on "{{prevSearchVal}}" </p>
+            <h1 class="page-header small"><span *ngIf="!artists">Top Ten </span>Artists</h1>
+            <p *ngIf="artists" class="page-subtitle small">Found {{artists['opensearch:totalResults']}} artists based on "{{prevSearchVal}}" </p>
           </div>
           <div class="col-md-12">
             <div class="memberblock">

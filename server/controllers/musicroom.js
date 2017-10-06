@@ -12,8 +12,6 @@ module.exports = {
         id = rooms[0].roomId + 1;
       }
       req.body._owner = req.session.currentUser;
-      console.log("PUBLIC?");
-      console.log(req.body.isPublic);
       if(req.body.isPublic == "false"){
         req.body.isPublic = false;
       }
@@ -27,8 +25,6 @@ module.exports = {
       req.body.roomId = id;
       newRoom = new Room(req.body);
       newRoom.save(function(err){
-        console.log("SAVE ERR");
-        console.log(err);
 
         User.findOneAndUpdate({userId: req.session.currentUser.userId}, {$push: {joinedRooms: newRoom}}, {$push: {ownedRooms: newRoom}}, function(err2){
           if(err2)
@@ -53,10 +49,7 @@ module.exports = {
   },
 
   newMessage: function(req, res){
-    console.log("AHFAHSDBFLAFKDNA");
-    console.log(req.body.message);
     Room.findOne({roomId: req.params.id}, function(err, room){
-      console.log("HERE");
       room.chatlog.push({user: req.session.currentUser.username, message: req.body.message, id: req.session.currentUser.userId})
       room.save(function(err){
         if(err)
@@ -108,10 +101,7 @@ module.exports = {
 
   deleteRoom: function(req, res){
     Room.findOneAndRemove({roomId: req.params.id}, function(err, room){
-      console.log("ASHFABLSBFDLKADFKJBALKBA");
-      console.log(room);
       User.find({joinedRooms: room._id}, function(err, users){
-        console.log(users);
         for(var i = 0; i < users.length; i++){
           for(var j = 0; j < users[i].joinedRooms.length; j++){
             if(users[i].joinedRooms[j] == req.params.id){
@@ -123,8 +113,6 @@ module.exports = {
       })
 
       User.findOne({ownedRooms: room._id}, function(err, user){
-        console.log("PPPPPP");
-        console.log(user);
         if(user != null){
           for(var j = 0; j < user.ownedRooms.length; j++){
             if(users[i].ownedRooms[j] == req.params.id){
