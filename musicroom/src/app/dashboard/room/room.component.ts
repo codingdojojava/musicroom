@@ -24,15 +24,15 @@ export class RoomComponent implements OnInit {
     this._route.paramMap.subscribe(params=>{
       var self = this;
       this.apiService.getRoomById(params.get('id')).then(data=>{
-        console.log("GOT ROOM");
-        console.log(data);
+        // console.log("GOT ROOM");
+        // console.log(data);
         this.room = data;
-        console.log(this.room);
+        // console.log(this.room);
         this.checkUserInRoom();
         this.chatService
         .getMessage(this.room.roomId)
         .subscribe(data => {
-          console.log("GOT IT");
+          // console.log("GOT IT");
           self.refreshRoom();
         });
       })
@@ -57,10 +57,10 @@ export class RoomComponent implements OnInit {
   }
 
   sendMessage(){
-    console.log('SENDING');
+    // console.log('SENDING');
     var self = this;
     this.apiService.sendMessage(this.room.roomId, this.message).then(function(data){
-      console.log('SENT');
+      // console.log('SENT');
       if(data == false)
         console.log("FALSE");
       else
@@ -71,10 +71,10 @@ export class RoomComponent implements OnInit {
 
   checkUserInRoom(){
     this.apiService.getCurrentUserInSession().then(result=>{
-      console.log("RESULT");
-      console.log(result);
-      console.log(this.room._roomMembers);
-      console.log(this.room._owner);
+      // console.log("RESULT");
+      // console.log(result);
+      // console.log(this.room._roomMembers);
+      // console.log(this.room._owner);
       this.userInRoom = false;
       for(var i = 0; i < this.room._roomMembers.length; i++){
         if(this.room._roomMembers[i]._id == result._id)
@@ -84,7 +84,7 @@ export class RoomComponent implements OnInit {
         this.userInRoom = true;
         this.isOwner = true;
       }
-      console.log(this.userInRoom);
+      // console.log(this.userInRoom);
     })
   }
 

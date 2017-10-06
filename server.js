@@ -25,9 +25,7 @@ var server = app.listen(8000, function() {
 var savedMessages = [];
 var io = require('socket.io').listen(server);
 io.on('connection', (client)=>{
-  console.log("CLIENT CONNECTED!");
   client.on("msg", (data)=>{
-    console.log("QQQQQQQQQQ");
     io.emit("msg"+data);
   })
 

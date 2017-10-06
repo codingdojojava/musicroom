@@ -872,7 +872,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/dashboard/room/room.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class='panel panel-default'>\n  <div class='panel-heading'>\n    <h3 style='display:inline-block;' class='panel-title'>{{room.title}}</h3>\n    <button class='btn btn-link details' (click)=\"changeArrow()\" data-toggle=\"collapse\" data-target=\"#details\" aria-expanded=\"false\" aria-controls=\"details\">\n      <span class='glyphicon glyphicon-chevron-up' *ngIf=\"arrow=='^'\"></span>\n      <span class='glyphicon glyphicon-chevron-down' *ngIf=\"arrow=='v'\"></span>\n    </button>\n    <div *ngIf=\"arrow=='^'\">\n      <hr class='style2'>\n      <div style='display: inline-block'>\n        <p>Owner: <a [routerLink]=\"['users', room._owner.userId]\">{{room._owner.username}}</a></p>\n        <p>Description: {{room.description}}</p>\n        <p>Users in room:</p>\n        <div id='usersInRoom'>\n          <p *ngFor=\"let user of room._roomMembers\">\n            <span class='glyphicon glyphicon-record' *ngIf=\"user.isLoggedIn\" style='color: green;'></span>\n            <span class='glyphicon glyphicon-record' *ngIf=\"!user.isLoggedIn\" style='color: red;'></span>\n            <a [routerLink]=\"['users', user.userId]\">{{user.username}}</a>\n          </p>\n        </div>\n      </div>\n      <div>\n        <button *ngIf=\"!isOwner && userInRoom\" class='btn btn-danger' (click)=\"leaveRoom()\">Leave Room</button>\n        <button *ngIf=\"isOwner\" class='btn btn-danger' (click)=\"deleteRoom()\">Delete Room</button>\n      </div>\n    </div>\n  </div>\n  <div class=\"panel-body\">\n    <div *ngIf=\"userInRoom\">\n      <div #scroll id=\"allMessages\">\n        <p class='msg col-md-12' *ngFor=\"let msg of room.chatlog\"><a [routerLink]=\"['users', msg.id]\">{{msg.user}}</a>: {{msg.message}}</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"panel-footer\">\n    <form *ngIf=\"userInRoom\" (submit)=\"sendMessage()\">\n      <input class='col-md-11 msgform' type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <button type='submit' class='btn btn-primary msgform'>Send <span class='glyphicon glyphicon-send'></span></button>\n      <!-- <input class=\"btn btn-primary msgform\" type=\"submit\" value=\"Send\"> -->\n    </form>\n    <div *ngIf=\"!userInRoom\">\n      <div *ngIf=\"room.isPublic\">\n        <button (click)=\"joinRoom()\" class='btn btn-primary'>Join Room</button>\n      </div>\n      <div *ngIf=\"!room.isPublic\">\n        <input type=\"password\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n        <button (click)=\"joinRoom()\" class='btn btn-primary' [ngClass]=\"{'disabled':roomPW != room.password}\" [disabled]=\"roomPW != room.password\">Join Room</button>\n      </div>\n    </div>\n  </div>\n</div>"
+module.exports = "<div class='panel panel-default' *ngIf=\"room\">\n  <div class='panel-heading'>\n    <h3 style='display:inline-block;' class='panel-title'>{{room.title}}</h3>\n    <button class='btn btn-link details' (click)=\"changeArrow()\" data-toggle=\"collapse\" data-target=\"#details\" aria-expanded=\"false\" aria-controls=\"details\">\n      <span class='glyphicon glyphicon-chevron-up' *ngIf=\"arrow=='^'\"></span>\n      <span class='glyphicon glyphicon-chevron-down' *ngIf=\"arrow=='v'\"></span>\n    </button>\n    <div *ngIf=\"arrow=='^'\">\n      <hr class='style2'>\n      <div style='display: inline-block'>\n        <p>Owner: <a [routerLink]=\"['users', room._owner.userId]\">{{room._owner.username}}</a></p>\n        <p>Description: {{room.description}}</p>\n        <p>Users in room:</p>\n        <div id='usersInRoom'>\n          <p *ngFor=\"let user of room._roomMembers\">\n            <span class='glyphicon glyphicon-record' *ngIf=\"user.isLoggedIn\" style='color: green;'></span>\n            <span class='glyphicon glyphicon-record' *ngIf=\"!user.isLoggedIn\" style='color: red;'></span>\n            <a [routerLink]=\"['users', user.userId]\">{{user.username}}</a>\n          </p>\n        </div>\n      </div>\n      <div>\n        <button *ngIf=\"!isOwner && userInRoom\" class='btn btn-danger' (click)=\"leaveRoom()\">Leave Room</button>\n        <button *ngIf=\"isOwner\" class='btn btn-danger' (click)=\"deleteRoom()\">Delete Room</button>\n      </div>\n    </div>\n  </div>\n  <div class=\"panel-body\">\n    <div *ngIf=\"userInRoom\">\n      <div #scroll id=\"allMessages\">\n        <p class='msg col-md-12' *ngFor=\"let msg of room.chatlog\"><a [routerLink]=\"['users', msg.id]\">{{msg.user}}</a>: {{msg.message}}</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"panel-footer\">\n    <form *ngIf=\"userInRoom\" (submit)=\"sendMessage()\">\n      <input class='col-md-11 msgform' type=\"text\" placeholder=\"Message\" [(ngModel)]=\"message\" name=\"msg\">\n      <button type='submit' class='btn btn-primary msgform'>Send <span class='glyphicon glyphicon-send'></span></button>\n      <!-- <input class=\"btn btn-primary msgform\" type=\"submit\" value=\"Send\"> -->\n    </form>\n    <div *ngIf=\"!userInRoom && room\">\n      <div *ngIf=\"room.isPublic\">\n        <button (click)=\"joinRoom()\" class='btn btn-primary'>Join Room</button>\n      </div>\n      <div *ngIf=\"!room.isPublic\">\n        <input type=\"password\" name=\"roomPassword\" [(ngModel)]=\"roomPW\" placeholder=\"Enter password\">\n        <button (click)=\"joinRoom()\" class='btn btn-primary' [ngClass]=\"{'disabled':roomPW != room.password}\" [disabled]=\"roomPW != room.password\">Join Room</button>\n      </div>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -919,15 +919,15 @@ var RoomComponent = (function () {
         this._route.paramMap.subscribe(function (params) {
             var self = _this;
             _this.apiService.getRoomById(params.get('id')).then(function (data) {
-                console.log("GOT ROOM");
-                console.log(data);
+                // console.log("GOT ROOM");
+                // console.log(data);
                 _this.room = data;
-                console.log(_this.room);
+                // console.log(this.room);
                 _this.checkUserInRoom();
                 _this.chatService
                     .getMessage(_this.room.roomId)
                     .subscribe(function (data) {
-                    console.log("GOT IT");
+                    // console.log("GOT IT");
                     self.refreshRoom();
                 });
             });
@@ -950,10 +950,10 @@ var RoomComponent = (function () {
         });
     };
     RoomComponent.prototype.sendMessage = function () {
-        console.log('SENDING');
+        // console.log('SENDING');
         var self = this;
         this.apiService.sendMessage(this.room.roomId, this.message).then(function (data) {
-            console.log('SENT');
+            // console.log('SENT');
             if (data == false)
                 console.log("FALSE");
             else
@@ -964,10 +964,10 @@ var RoomComponent = (function () {
     RoomComponent.prototype.checkUserInRoom = function () {
         var _this = this;
         this.apiService.getCurrentUserInSession().then(function (result) {
-            console.log("RESULT");
-            console.log(result);
-            console.log(_this.room._roomMembers);
-            console.log(_this.room._owner);
+            // console.log("RESULT");
+            // console.log(result);
+            // console.log(this.room._roomMembers);
+            // console.log(this.room._owner);
             _this.userInRoom = false;
             for (var i = 0; i < _this.room._roomMembers.length; i++) {
                 if (_this.room._roomMembers[i]._id == result._id)
@@ -977,7 +977,7 @@ var RoomComponent = (function () {
                 _this.userInRoom = true;
                 _this.isOwner = true;
             }
-            console.log(_this.userInRoom);
+            // console.log(this.userInRoom);
         });
     };
     RoomComponent.prototype.joinRoom = function () {
@@ -1115,37 +1115,37 @@ var LastFmApiService = (function () {
         this._http = _http;
     }
     LastFmApiService.prototype.searchTrack = function (searchVal) {
-        console.log('calling last fm api to search tracks by search value');
+        // console.log('calling last fm api to search tracks by search value');
         return this._http.get('http://ws.audioscrobbler.com/2.0/?method=track.search&track=' + searchVal + '&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     LastFmApiService.prototype.searchAlbum = function (searchVal) {
-        console.log('calling last fm api to search albus by search value');
+        // console.log('calling last fm api to search albus by search value');
         return this._http.get('http://ws.audioscrobbler.com/2.0/?method=album.search&album=' + searchVal + '&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     LastFmApiService.prototype.searchArtist = function (searchVal) {
-        console.log('calling last fm api to search artist by search value');
+        // console.log('calling last fm api to search artist by search value');
         return this._http.get('http://ws.audioscrobbler.com/2.0/?method=artist.search&artist=' + searchVal + '&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     LastFmApiService.prototype.getTopArtist = function () {
-        console.log('calling last fm api to get current top artisst');
+        // console.log('calling last fm api to get current top artisst');
         return this._http.get('http://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     LastFmApiService.prototype.getTopTracks = function () {
-        console.log('calling last fm api to get current top tracks');
+        // console.log('calling last fm api to get current top tracks');
         return this._http.get('http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&limit=10&api_key=c595e718d23c51ef68c0d547f1511fe7&format=json')
             .map(function (response) { return response.json(); })
             .toPromise();
     };
     LastFmApiService.prototype.getAuthSession = function (token, sig) {
-        console.log('calling last fm api to get current top tracks');
+        // console.log('calling last fm api to get current top tracks');
         return this._http.get('http://ws.audioscrobbler.com/2.0/?method=auth.getSession&token=' + token + '&api_key=c595e718d23c51ef68c0d547f1511fe7&api_sig=' + sig + '&format=json')
             .map(function (response) { return response.json(); })
             .toPromise();
@@ -1549,7 +1549,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/new-room/new-room.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--<form (submit)=\"createRoom()\">\n  <div><label>Title: </label><input [(ngModel)] = \"room.title\" type=\"text\" name='roomtitle'></div>\n  <div>\n      <label>Privacy:</label>\n      <select name=\"public\" id=\"\" [(ngModel)]=\"room.isPublic\">\n          <option selected value=\"true\">Public</option>\n          <option value=\"false\">Private</option>\n      </select>\n  </div>\n  <div><label>Password: </label><input type=\"text\" [disabled]=\"room.isPublic == 'true'\" name=\"pw\" [(ngModel)]=\"room.password\"></div>\n  <div><label>Description: </label><input [(ngModel)]=\"room.description\" type=\"text\" name='description'></div>\n  <div><input type=\"submit\" value=\"Create Room\"></div>\n</form>-->\n\n    <div class=\"col-sm-6 col-centered\">\n        <div class=\"panel panel-default\">\n            <!--<div class=\"panel-heading\" >\n                <h1>Edit Personal Details</h1>\n            </div>-->\n      <form (submit)=\"createRoom()\">\n        <div class=\"panel-body\">\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-envelope blue\"></i></span>\n                    <input [(ngModel)] = \"room.title\" type=\"text\" name='roomtitle' placeholder=\"Title\" class=\"form-control\" />\n                </div>\n            </div>\n\n                      <label for=\"privacy\">Privacy</label>\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-user blue\"></i></span>\n                    <select name=\"public\" id=\"privacy\" [(ngModel)]=\"room.isPublic\" class=\"form-control\">\n                        <option selected value=\"true\">Public</option>\n                        <option value=\"false\">Private</option>\n                    </select>\n                </div>\n            </div>\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-user blue\"></i></span>\n                    <input type=\"text\" [disabled]=\"room.isPublic == 'true'\" name=\"pw\" [(ngModel)]=\"room.password\" placeholder=\"Password\" class=\"form-control\" />\n                </div>\n            </div>\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-comment blue\"></i></span>\n                    <textarea \n                      name=\"description\"\n                      placeholder=\"Description(optional)\"\n                      rows=\"6\" \n                      class=\"form-control\" \n                      [(ngModel)]=\"room.description\"\n                      #description='ngModel'\n                      type=\"text\" ></textarea>\n                </div>\n            </div>\n            <div class=\"\">\n            <input type=\"submit\" class=\"btn btn-success pull-right\" [disabled] = \"lastName.invalid || firstName.invalid || email.invalid\" />\n            </div>\n        </div>\n        </form>\n    </div>\n</div>\n"
+module.exports = "<!--<form (submit)=\"createRoom()\">\n  <div><label>Title: </label><input [(ngModel)] = \"room.title\" type=\"text\" name='roomtitle'></div>\n  <div>\n      <label>Privacy:</label>\n      <select name=\"public\" id=\"\" [(ngModel)]=\"room.isPublic\">\n          <option selected value=\"true\">Public</option>\n          <option value=\"false\">Private</option>\n      </select>\n  </div>\n  <div><label>Password: </label><input type=\"text\" [disabled]=\"room.isPublic == 'true'\" name=\"pw\" [(ngModel)]=\"room.password\"></div>\n  <div><label>Description: </label><input [(ngModel)]=\"room.description\" type=\"text\" name='description'></div>\n  <div><input type=\"submit\" value=\"Create Room\"></div>\n</form>-->\n\n    <div class=\"col-sm-6 col-centered\">\n        <div class=\"panel panel-default\">\n            <!--<div class=\"panel-heading\" >\n                <h1>Edit Personal Details</h1>\n            </div>-->\n      <form (submit)=\"createRoom()\">\n        <div class=\"panel-body\">\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-envelope blue\"></i></span>\n                    <input [(ngModel)] = \"room.title\" type=\"text\" name='roomtitle' placeholder=\"Title\" class=\"form-control\" />\n                </div>\n            </div>\n\n                      <label for=\"privacy\">Privacy</label>\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-user blue\"></i></span>\n                    <select name=\"public\" id=\"privacy\" [(ngModel)]=\"room.isPublic\" class=\"form-control\">\n                        <option selected value=\"true\">Public</option>\n                        <option value=\"false\">Private</option>\n                    </select>\n                </div>\n            </div>\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-user blue\"></i></span>\n                    <input type=\"text\" [disabled]=\"room.isPublic == 'true'\" name=\"pw\" [(ngModel)]=\"room.password\" placeholder=\"Password\" class=\"form-control\" />\n                </div>\n            </div>\n\n            <div class=\"form-group\">\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-comment blue\"></i></span>\n                    <textarea \n                      name=\"description\"\n                      placeholder=\"Description(optional)\"\n                      rows=\"6\" \n                      class=\"form-control\" \n                      [(ngModel)]=\"room.description\"\n                      #description='ngModel'\n                      type=\"text\" ></textarea>\n                </div>\n            </div>\n            <div class=\"\">\n            <input type=\"submit\" class=\"btn btn-success pull-right\" />\n            </div>\n        </div>\n        </form>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -1585,11 +1585,11 @@ var NewRoomComponent = (function () {
     };
     NewRoomComponent.prototype.createRoom = function () {
         var self = this;
-        console.log("ROOM");
-        console.log(this.room);
+        // console.log("ROOM");
+        // console.log(this.room);
         this._apicallService.createRoom(this.room).then(function (data) {
-            console.log("ROOM CREATION");
-            console.log(data);
+            // console.log("ROOM CREATION");
+            // console.log(data);
             self.dashComp.getCurrentUserInSession();
         });
         this.room = new __WEBPACK_IMPORTED_MODULE_2__models_room__["a" /* Room */]();
@@ -1631,7 +1631,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/other-user-profile/other-user-profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<div *ngIf=\"user && currentUser\">\n<div class=\"row\">\n      <div class=\"col-md-12 text-center \">\n        <div class=\"panel panel-default\">\n          <div class=\"userprofile social \">\n            <div class=\"userpic\" > <img src=\"{{user.profileImageUrl}}\"  alt=\"\" class=\"userpicimg\"> </div>\n            <h3 class=\"username\">{{user.firstName}} {{user.lastName}}</h3>\n            <p>{{user.username}}</p>\n            <div class=\"socials tex-center\"> <a href=\"\" class=\"btn btn-circle btn-primary \">\n            <i class=\"fa fa-facebook\"></i></a> <a href=\"\" class=\"btn btn-circle btn-danger \">\n            <i class=\"fa fa-google-plus\"></i></a> <a href=\"\" class=\"btn btn-circle btn-info \">\n            <i class=\"fa fa-twitter\"></i></a> <a href=\"\" class=\"btn btn-circle btn-warning \"><i class=\"fa fa-envelope\"></i></a>\n            </div>\n          </div>\n\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n      <!-- /.col-md-12 -->\n      <div class=\"col-md-4 col-sm-12 pull-right\">\n        <div class=\"panel panel-default\">\n          <div style=\"min-height: 330px;\" class=\"panel-heading\">\n            <h1 class=\"page-header small\">Personal Details</h1>\n              <p>Username: {{user.username}}</p>\n              <p>Email: {{user.email}}</p>\n              <p>First Name: {{user.firstName}}</p>\n              <p>Last Name: {{user.lastName}}</p>\n              <p>Description: {{user.description}}</p>\n            </div>\n\n\n\n          </div>\n\n          <div class=\"col-md-12 photolist\">\n            <div class=\"row\">\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"col-md-12\">\n            <div class=\"panel-body\">\n            <div class=\"tex-center\"> \n              <button *ngIf=\"!hasReceivedInviteFromCurrentUserId(user.received_invites) && !isFriendOfCurrentUserId(user.friends) && user._id != currentUser._id\" (click)=\"sendFriendRequest(user.userId)\" style=\"border-radius: 24px;\" class=\"btn btn-link \">\n                Send Friend Request\n              </button> \n              <p *ngIf=\"hasReceivedInviteFromCurrentUserId(user.received_invites)\">Friend Request Sent</p>\n              <p *ngIf=\"isFriendOfCurrentUserId(user.friends)\">This User is your Friend</p>\n            </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Friends</h1>\n            <p class=\"page-subtitle small\"> {{user.friends.length}} friends</p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n              <span *ngFor=\"let friend of user.friends\" class=\"member\">\n                  <button *ngIf=\"!hasReceivedInviteFromCurrentUser(friend.received_invites) && !isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id\" style=\"display: block; margin-left: -12%; z-index: 1\" class=\"btn btn-link\" (click)=\"sendInvite(friend.userId)\">Friend Request</button>\n                  <a *ngIf=\"friend._id != currentUser._id\" [routerLink]=\"['/home/users', friend.userId]\" > \n                    <img src=\"{{friend.profileImageUrl}}\" alt=\"\">\n                  </a>\n                  <a *ngIf=\"friend._id == currentUser._id\" [routerLink]=\"['/home/profile/current']\" > \n                    <img src=\"{{friend.profileImageUrl}}\" alt=\"\">\n                  </a>\n                  <div class=\"memmbername\">\n                    {{friend.firstName}}\n                  <div style=\"display: block; z-index: 1\" *ngIf=\"hasReceivedInviteFromCurrentUser(friend.received_invites)\">Invite Sent</div>\n                  <div style=\"display: block; z-index: 1\" *ngIf=\"isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id\">Your Friend</div>\n                  </div>\n              </span> \n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n      </div>\n      </div>\n<!--start here-->\n      \n <div class=\"col-md-8 col-sm-12 pull-left posttimeline\">\n        <div class=\"panel panel-default\">\n          <div class=\"panel-body\">\n            <div *ngIf=\"message\" class=\"status-upload nopaddingbtm\">\n\n              <form (submit)=\"shareMessage()\">\n                <textarea \n                  class=\"form-control\" \n                  name=\"content\"\n                  [(ngModel)]=\"message.content\"\n                  #content = \"ngModel\"\n                  placeholder=\"Write on {{user.firstName}}'s Wall\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Audio\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Video\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Picture\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Share</button>\n              </form>\n\n            </div>\n          </div>\n        </div>\n\n        <div *ngFor=\"let message of userMessages\" class=\"panel panel-default\">\n\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"{{currentUser.profileImageUrl}}\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">{{message._sender.firstName}} {{message._sender.lastName}}<br>\n                  <small><i class=\"fa fa-clock-o\"></i> {{formatDateTime(message.createdAt)}}</small> </h4>\n                <p>{{message.content}}</p>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a (click)=\"addLike(message._id)\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> {{message.likes}}</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> {{message._comments.length}}</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n\n          <div *ngFor=\"let comment of message._comments\" class=\"col-md-12 commentsblock border-top\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"{{comment.sender.profileImageUrl}}\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">{{comment.sender.firstName}} {{comment.sender.lastName}}</h4>\n                <p>{{comment.content}}</p>\n                <!--<div class=\"media\">\n                  <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n                  <div class=\"media-body\">\n                    <h4 class=\"media-heading\">Astha Smith</h4>\n                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n                  </div>\n                </div>-->\n              </div>\n            </div>\n          </div>\n          <div class=\"col-md-12 border-top\">\n            <div class=\"status-upload\">\n\n              <form (submit)=\"addComment(message._id, message.newComment)\">\n                <label>Comment</label>\n                <textarea \n                  class=\"form-control\" \n                  name=\"content\"\n                  [(ngModel)] = \"message.newComment.content\"\n                  placeholder=\"Comment here\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Comment</button>\n              </form>\n\n            </div>\n          </div>\n        </div>\n\n      </div>\n\n      <!--until here-->\n    </div>\n</div>\n\n<!---->\n\n\n\n     "
+module.exports = "\n<div *ngIf=\"user && currentUser\">\n<div class=\"row\">\n      <div class=\"col-md-12 text-center \">\n        <div class=\"panel panel-default\">\n          <div class=\"userprofile social \">\n            <div class=\"userpic\" > <img src=\"{{user.profileImageUrl}}\"  alt=\"\" class=\"userpicimg\"> </div>\n            <h3 class=\"username\">{{user.firstName}} {{user.lastName}}</h3>\n            <p>{{user.username}}</p>\n            <div class=\"socials tex-center\"> <a href=\"\" class=\"btn btn-circle btn-primary \">\n            <i class=\"fa fa-facebook\"></i></a> <a href=\"\" class=\"btn btn-circle btn-danger \">\n            <i class=\"fa fa-google-plus\"></i></a> <a href=\"\" class=\"btn btn-circle btn-info \">\n            <i class=\"fa fa-twitter\"></i></a> <a href=\"\" class=\"btn btn-circle btn-warning \"><i class=\"fa fa-envelope\"></i></a>\n            </div>\n          </div>\n\n          <div class=\"clearfix\"></div>\n        </div>\n      </div>\n      <!-- /.col-md-12 -->\n      <div class=\"col-md-4 col-sm-12 pull-right\">\n        <div class=\"panel panel-default\">\n          <div style=\"min-height: 330px;\" class=\"panel-heading\">\n            <h1 class=\"page-header small\">Personal Details</h1>\n              <p>Username: {{user.username}}</p>\n              <p>Email: {{user.email}}</p>\n              <p>First Name: {{user.firstName}}</p>\n              <p>Last Name: {{user.lastName}}</p>\n              <p>Description: {{user.description}}</p>\n            </div>\n\n\n\n          </div>\n\n          <div class=\"col-md-12 photolist\">\n            <div class=\"row\">\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n              <div class=\"col-sm-3 col-xs-3\"><img src=\"http://style.anu.edu.au/_anu/4/images/placeholders/person.png\" class=\"\" alt=\"\"> </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"col-md-12\">\n            <div class=\"panel-body\">\n            <div class=\"tex-center\"> \n              <button *ngIf=\"!hasReceivedInviteFromCurrentUserId(user.received_invites) && !isFriendOfCurrentUserId(user.friends) && user._id != currentUser._id\" (click)=\"sendFriendRequest(user.userId)\" style=\"border-radius: 24px;\" class=\"btn btn-link \">\n                Send Friend Request\n              </button> \n              <p *ngIf=\"hasReceivedInviteFromCurrentUserId(user.received_invites)\">Friend Request Sent</p>\n              <p *ngIf=\"isFriendOfCurrentUserId(user.friends)\">This User is your Friend</p>\n            </div>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n        <div class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Friends</h1>\n            <p class=\"page-subtitle small\"> {{user.friends.length}} friends</p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n              <span *ngFor=\"let friend of user.friends\" class=\"member\">\n                  <button *ngIf=\"!hasReceivedInviteFromCurrentUser(friend.received_invites) && !isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id\" style=\"display: block; margin-left: -12%; z-index: 1\" class=\"btn btn-link\" (click)=\"sendInvite(friend.userId)\">Friend Request</button>\n                  <a *ngIf=\"friend._id != currentUser._id\" [routerLink]=\"['/home/users', friend.userId]\" > \n                    <img src=\"{{friend.profileImageUrl}}\" alt=\"\">\n                  </a>\n                  <a *ngIf=\"friend._id == currentUser._id\" [routerLink]=\"['/home/profile/current']\" > \n                    <img src=\"{{friend.profileImageUrl}}\" alt=\"\">\n                  </a>\n                  <div class=\"memmbername\">\n                    {{friend.firstName}}\n                  <div style=\"display: block; z-index: 1\" *ngIf=\"hasReceivedInviteFromCurrentUser(friend.received_invites)\">Invite Sent</div>\n                  <div style=\"display: block; z-index: 1\" *ngIf=\"isFriendOfCurrentUser(friend.friends) && friend._id != currentUser._id\">Your Friend</div>\n                  </div>\n              </span> \n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n      </div>\n      </div>\n<!--start here-->\n      \n <div class=\"col-md-8 col-sm-12 pull-left posttimeline\">\n        <div class=\"panel panel-default\">\n          <div class=\"panel-body\">\n            <div *ngIf=\"message\" class=\"status-upload nopaddingbtm\">\n\n              <form (submit)=\"shareMessage()\">\n                <textarea \n                  class=\"form-control\" \n                  name=\"content\"\n                  [(ngModel)]=\"message.content\"\n                  #content = \"ngModel\"\n                  placeholder=\"Write on {{user.firstName}}'s Wall\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Audio\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Video\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" data-original-title=\"Picture\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Share</button>\n              </form>\n\n            </div>\n          </div>\n        </div>\n\n        <div *ngFor=\"let message of userMessages\" class=\"panel panel-default\">\n\n          <div class=\"btn-group pull-right postbtn\">\n            <button type=\"button\" class=\"dotbtn dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"> <span class=\"dots\"></span> </button>\n            <ul class=\"dropdown-menu pull-right\" role=\"menu\">\n              <li><a href=\"javascript:void(0)\">Hide this</a></li>\n              <li><a href=\"javascript:void(0)\">Report</a></li>\n            </ul>\n          </div>\n\n          <div class=\"col-md-12\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img src=\"{{message._sender.profileImageUrl}}\" alt=\"\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">{{message._sender.firstName}} {{message._sender.lastName}}<br>\n                  <small><i class=\"fa fa-clock-o\"></i> {{formatDateTime(message.createdAt)}}</small> </h4>\n                <p>{{message.content}}</p>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a (click)=\"addLike(message._id)\" title=\"\"><i class=\"glyphicon glyphicon-thumbs-up\"></i> {{message.likes}}</a></li>\n                  <li><a href=\"\" title=\"\"><i class=\" glyphicon glyphicon-comment\"></i> {{message._comments.length}}</a></li>\n                </ul>\n              </div>\n            </div>\n          </div>\n\n          <div *ngFor=\"let comment of message._comments\" class=\"col-md-12 commentsblock border-top\">\n            <div class=\"media\">\n              <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"{{comment.sender.profileImageUrl}}\" class=\"media-object\"> </a> </div>\n              <div class=\"media-body\">\n                <h4 class=\"media-heading\">{{comment.sender.firstName}} {{comment.sender.lastName}}</h4>\n                <p>{{comment.content}}</p>\n                <!--<div class=\"media\">\n                  <div class=\"media-left\"> <a href=\"javascript:void(0)\"> <img alt=\"64x64\" src=\"https://bootdey.com/img/Content/avatar/avatar1.png\" class=\"media-object\"> </a> </div>\n                  <div class=\"media-body\">\n                    <h4 class=\"media-heading\">Astha Smith</h4>\n                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>\n                  </div>\n                </div>-->\n              </div>\n            </div>\n          </div>\n          <div class=\"col-md-12 border-top\">\n            <div class=\"status-upload\">\n\n              <form (submit)=\"addComment(message._id, message.newComment)\">\n                <label>Comment</label>\n                <textarea \n                  class=\"form-control\" \n                  name=\"content\"\n                  [(ngModel)] = \"message.newComment.content\"\n                  placeholder=\"Comment here\"></textarea>\n                <br>\n                <ul class=\"nav nav-pills pull-left \">\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-bullhorn\"></i></a></li>\n                  <li><a title=\"\"><i class=\" glyphicon glyphicon-facetime-video\"></i></a></li>\n                  <li><a title=\"\"><i class=\"glyphicon glyphicon-picture\"></i></a></li>\n                </ul>\n                <button type=\"submit\" class=\"btn btn-success pull-right\"> Comment</button>\n              </form>\n\n            </div>\n          </div>\n        </div>\n\n      </div>\n\n      <!--until here-->\n    </div>\n</div>\n\n<!---->\n\n\n\n     "
 
 /***/ }),
 
@@ -1821,7 +1821,7 @@ var OtherUserProfileComponent = (function () {
         comment._message = messageId;
         comment.owner = this.user._id;
         comment.sender = this.currentUser._id;
-        console.log(comment);
+        // console.log(comment);
         this._apicallService.addCommentToMessage(comment)
             .then(function (data) {
             // console.log('then response addComment');
@@ -2156,7 +2156,7 @@ var ProfileComponent = (function () {
         this.message = new __WEBPACK_IMPORTED_MODULE_1__models_message__["a" /* Message */]();
         this.comment = new __WEBPACK_IMPORTED_MODULE_0__models_comment__["a" /* Comment */]();
         this.getCurrentUserInSession();
-        console.log(this.message.content);
+        // console.log(this.message.content);
     }
     ProfileComponent.prototype.ngOnInit = function () {
         this.watchForEditUserEvent();
@@ -2287,11 +2287,11 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.addComment = function (messageId, comment) {
         var _this = this;
-        console.log('adding comment');
+        // console.log('adding comment');
         comment._message = messageId;
         comment.owner = this.currentUser._id;
         comment.sender = this.currentUser._id;
-        console.log(comment);
+        // console.log(comment);
         this._apicallService.addCommentToMessage(comment)
             .then(function (data) {
             // console.log('then response addComment');
@@ -2300,7 +2300,7 @@ var ProfileComponent = (function () {
         })
             .catch(function (error) {
             // console.log('error response addComment');
-            console.log(error);
+            // console.log(error);
         });
     };
     ProfileComponent.prototype.getMessages = function () {
@@ -2582,7 +2582,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/search-manager/search-music/search-music.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n\n <div *ngIf=\"trackSearchResults\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Tracks</h1>\n            <p class=\"page-subtitle small\">Found {{tracks['opensearch:totalResults']}} songs based on \"{{prevSearchVal}}\" </p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n              <span *ngFor=\"let track of trackSearchResults\">\n                <span style=\"width:19%;\" *ngIf=\"track.image[2]['#text'] != ''\" class=\"member\">\n                  <a href=\"{{track.url}}\" target=\"_blank\" > \n                    <img src=\"{{track.image[2]['#text']}}\" alt=\"\">\n                  </a>\n                  <div *ngIf=\"!track.artist.name\" class=\"memmbername\">{{track.name}} by {{track.artist}}</div>\n                  <div *ngIf=\"track.artist.name\" class=\"memmbername\">{{track.name}} by {{track.artist.name}}</div>\n                </span> \n                \n                <span style=\"width:19%;\" *ngIf=\"track.image[2]['#text'] == ''\" class=\"member\">\n                  <a href=\"{{track.url}}\" target=\"_blank\" > \n                    <img style=\"margin-top: 33%;\" src=\"http://colonieems.org/wp-content/uploads/2015/05/placeholder.jpg\" alt=\"\">\n                  </a>\n                  <div *ngIf=\"!track.artist.name\" class=\"memmbername\">{{track.name}} by {{track.artist}}</div>\n                  <div *ngIf=\"track.artist.name\" class=\"memmbername\">{{track.name}} by {{track.artist.name}}</div>\n                </span> \n              </span>\n\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n <div *ngIf=\"albumSearchResults\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Albums</h1>\n            <p class=\"page-subtitle small\">Found {{albums['opensearch:totalResults']}} albums based on \"{{prevSearchVal}}\" </p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n            <span *ngFor=\"let album of albumSearchResults\">\n\n              <span style=\"width:19%;\" *ngIf=\"album.image[2]['#text'] != ''\" class=\"member\">\n                <a href=\"{{album.url}}\" target=\"_blank\" > \n                  <img src=\"{{album.image[2]['#text']}}\" alt=\"\">\n                </a>\n                <div class=\"memmbername\">{{album.name}} by {{album.artist}}</div>\n              </span>\n              <span style=\"width:19%; \" *ngIf=\"album.image[2]['#text'] == ''\" class=\"member\">\n                <a href=\"{{album.url}}\" target=\"_blank\" > \n                  <img style=\"margin-top: 33%;\" src=\"http://colonieems.org/wp-content/uploads/2015/05/placeholder.jpg\" alt=\"\">\n                </a>\n                <div class=\"memmbername\">{{album.name}} by {{album.artist}}</div>\n              </span>\n\n            </span>\n\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n <div *ngIf=\"artistSearchResults\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Artists</h1>\n            <p class=\"page-subtitle small\">Found {{artists['opensearch:totalResults']}} artists based on \"{{prevSearchVal}}\" </p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n\n              <span *ngFor=\"let artist of artistSearchResults\">\n\n                <span style=\"width:19%;\" *ngIf=\"artist.image[2]['#text'] != ''\" class=\"member\">\n                  <a href=\"{{artist.url}}\" target=\"_blank\" > \n                    <img src=\"{{artist.image[2]['#text']}}\" alt=\"\">\n                  </a>\n                  <div class=\"memmbername\">{{artist.name}}</div>\n                </span> \n                <span style=\"width:19%; \" *ngIf=\"artist.image[2]['#text'] == ''\" class=\"member\">\n                  <a href=\"{{artist.url}}\" target=\"_blank\" > \n                    <img style=\"margin-top: 33%;\" src=\"http://colonieems.org/wp-content/uploads/2015/05/placeholder.jpg\" alt=\"\">\n                  </a>\n                  <div class=\"memmbername\">{{artist.name}}</div>\n                </span> \n                \n              </span>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>"
+module.exports = "\n\n <div *ngIf=\"trackSearchResults\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\"><span *ngIf=\"!tracks\">Top Ten </span>Tracks</h1>\n            <p *ngIf=\"tracks\" class=\"page-subtitle small\">Found {{tracks['opensearch:totalResults']}} songs based on \"{{prevSearchVal}}\" </p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n              <span *ngFor=\"let track of trackSearchResults\">\n                <span style=\"width:19%;\" *ngIf=\"track.image[2]['#text'] != ''\" class=\"member\">\n                  <a href=\"{{track.url}}\" target=\"_blank\" > \n                    <img src=\"{{track.image[2]['#text']}}\" alt=\"\">\n                  </a>\n                  <div *ngIf=\"!track.artist.name\" class=\"memmbername\">{{track.name}} by {{track.artist}}</div>\n                  <div *ngIf=\"track.artist.name\" class=\"memmbername\">{{track.name}} by {{track.artist.name}}</div>\n                </span> \n                \n                <span style=\"width:19%;\" *ngIf=\"track.image[2]['#text'] == ''\" class=\"member\">\n                  <a href=\"{{track.url}}\" target=\"_blank\" > \n                    <img style=\"margin-top: 33%;\" src=\"http://colonieems.org/wp-content/uploads/2015/05/placeholder.jpg\" alt=\"\">\n                  </a>\n                  <div *ngIf=\"!track.artist.name\" class=\"memmbername\">{{track.name}} by {{track.artist}}</div>\n                  <div *ngIf=\"track.artist.name\" class=\"memmbername\">{{track.name}} by {{track.artist.name}}</div>\n                </span> \n              </span>\n\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n <div *ngIf=\"albumSearchResults\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\">Albums</h1>\n            <p *ngIf=\"albums\" class=\"page-subtitle small\">Found {{albums['opensearch:totalResults']}} albums based on \"{{prevSearchVal}}\" </p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n            <span *ngFor=\"let album of albumSearchResults\">\n\n              <span style=\"width:19%;\" *ngIf=\"album.image[2]['#text'] != ''\" class=\"member\">\n                <a href=\"{{album.url}}\" target=\"_blank\" > \n                  <img src=\"{{album.image[2]['#text']}}\" alt=\"\">\n                </a>\n                <div class=\"memmbername\">{{album.name}} by {{album.artist}}</div>\n              </span>\n              <span style=\"width:19%; \" *ngIf=\"album.image[2]['#text'] == ''\" class=\"member\">\n                <a href=\"{{album.url}}\" target=\"_blank\" > \n                  <img style=\"margin-top: 33%;\" src=\"http://colonieems.org/wp-content/uploads/2015/05/placeholder.jpg\" alt=\"\">\n                </a>\n                <div class=\"memmbername\">{{album.name}} by {{album.artist}}</div>\n              </span>\n\n            </span>\n\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>\n\n <div *ngIf=\"artistSearchResults\" class=\"panel panel-default\">\n          <div class=\"panel-heading\">\n            <h1 class=\"page-header small\"><span *ngIf=\"!artists\">Top Ten </span>Artists</h1>\n            <p *ngIf=\"artists\" class=\"page-subtitle small\">Found {{artists['opensearch:totalResults']}} artists based on \"{{prevSearchVal}}\" </p>\n          </div>\n          <div class=\"col-md-12\">\n            <div class=\"memberblock\">\n\n              <span *ngFor=\"let artist of artistSearchResults\">\n\n                <span style=\"width:19%;\" *ngIf=\"artist.image[2]['#text'] != ''\" class=\"member\">\n                  <a href=\"{{artist.url}}\" target=\"_blank\" > \n                    <img src=\"{{artist.image[2]['#text']}}\" alt=\"\">\n                  </a>\n                  <div class=\"memmbername\">{{artist.name}}</div>\n                </span> \n                <span style=\"width:19%; \" *ngIf=\"artist.image[2]['#text'] == ''\" class=\"member\">\n                  <a href=\"{{artist.url}}\" target=\"_blank\" > \n                    <img style=\"margin-top: 33%;\" src=\"http://colonieems.org/wp-content/uploads/2015/05/placeholder.jpg\" alt=\"\">\n                  </a>\n                  <div class=\"memmbername\">{{artist.name}}</div>\n                </span> \n                \n              </span>\n            </div>\n          </div>\n          <div class=\"clearfix\"></div>\n        </div>"
 
 /***/ }),
 
@@ -2638,7 +2638,7 @@ var SearchMusicComponent = (function () {
     SearchMusicComponent.prototype.subscribeToSearchVal = function () {
         var _this = this;
         this.subscription2 = this._searchService.searchValueMusic$.subscribe(function (music) {
-            console.log('hiiiii');
+            // console.log('hiiiii');
             // console.log(search);
             _this.searchMusic(music);
             _this.prevSearchVal = music;
@@ -2650,32 +2650,32 @@ var SearchMusicComponent = (function () {
             this._lastFmApiService.searchTrack(search)
                 .then(function (data) {
                 _this.tracks = data.results;
-                console.log(_this.tracks);
+                // console.log(this.tracks);
                 _this.trackSearchResults = data.results.trackmatches.track;
-                console.log(_this.trackSearchResults);
+                // console.log(this.trackSearchResults);
             })
                 .catch(function (error) {
-                console.log(error);
+                // console.log(error);
             });
             this._lastFmApiService.searchAlbum(search)
                 .then(function (data) {
                 _this.albums = data.results;
-                console.log(_this.albums);
+                // console.log(this.albums);
                 _this.albumSearchResults = data.results.albummatches.album;
-                console.log(_this.albumSearchResults);
+                // console.log(this.albumSearchResults);
             })
                 .catch(function (error) {
-                console.log(error);
+                // console.log(error);
             });
             this._lastFmApiService.searchArtist(search)
                 .then(function (data) {
                 _this.artists = data.results;
-                console.log(_this.artists);
+                // console.log(this.artists);
                 _this.artistSearchResults = data.results.artistmatches.artist;
-                console.log(_this.artistSearchResults);
+                // console.log(this.artistSearchResults);
             })
                 .catch(function (error) {
-                console.log(error);
+                // console.log(error);
             });
         }
     };
@@ -2684,22 +2684,22 @@ var SearchMusicComponent = (function () {
         this._lastFmApiService.getTopArtist()
             .then(function (data) {
             _this.artistSearchResults = data.artists.artist;
-            console.log(_this.artistSearchResults);
+            // console.log(this.artistSearchResults);
         })
             .catch(function (error) {
-            console.log(error);
+            // console.log(error);
         });
         this._lastFmApiService.getTopTracks()
             .then(function (data) {
             _this.trackSearchResults = data.tracks.track;
-            console.log(_this.trackSearchResults);
+            // console.log(this.trackSearchResults);
         })
             .catch(function (error) {
-            console.log(error);
+            // console.log(error);
         });
     };
     SearchMusicComponent.prototype.ngOnDestroy = function () {
-        console.log('search music component destroy');
+        // console.log('search music component destroy');
         this._appComponent.setIsInMusicBrowser();
         this.subscription.unsubscribe();
         this.subscription2.unsubscribe();

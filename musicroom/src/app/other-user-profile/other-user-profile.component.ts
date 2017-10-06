@@ -170,7 +170,7 @@ export class OtherUserProfileComponent implements OnInit, OnDestroy {
     comment._message = messageId;
     comment.owner = this.user._id;
     comment.sender = this.currentUser._id;
-    console.log(comment);
+    // console.log(comment);
     this._apicallService.addCommentToMessage(comment)
       .then(data => {
         // console.log('then response addComment');

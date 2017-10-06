@@ -25,7 +25,7 @@ export class ProfileComponent implements OnInit {
   userMessages;
   constructor(private _apicallService: ApiCallService, private _router: Router, private _chatService: ChatService, private _searchService: SearchService) {
     this.getCurrentUserInSession();
-    console.log(this.message.content);
+    // console.log(this.message.content);
    }
 
   ngOnInit() {
@@ -157,11 +157,11 @@ export class ProfileComponent implements OnInit {
 
 
   addComment(messageId, comment) {
-    console.log('adding comment');
+    // console.log('adding comment');
     comment._message = messageId;
     comment.owner = this.currentUser._id;
     comment.sender = this.currentUser._id;
-    console.log(comment);
+    // console.log(comment);
     this._apicallService.addCommentToMessage(comment)
       .then(data => {
         // console.log('then response addComment');
@@ -170,7 +170,7 @@ export class ProfileComponent implements OnInit {
       })
       .catch(error => {
         // console.log('error response addComment');
-        console.log(error);
+        // console.log(error);
       });
   }
 

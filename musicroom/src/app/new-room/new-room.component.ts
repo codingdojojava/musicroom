@@ -16,11 +16,11 @@ export class NewRoomComponent implements OnInit {
 
   createRoom(){
     var self = this;
-    console.log("ROOM");
-    console.log(this.room);
+    // console.log("ROOM");
+    // console.log(this.room);
     this._apicallService.createRoom(this.room).then(function(data){
-      console.log("ROOM CREATION");
-      console.log(data);
+      // console.log("ROOM CREATION");
+      // console.log(data);
       self.dashComp.getCurrentUserInSession();
     });
     this.room = new Room();

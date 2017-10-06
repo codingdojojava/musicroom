@@ -46,7 +46,7 @@ export class SearchMusicComponent implements OnInit, OnDestroy {
 
   subscribeToSearchVal() {
     this.subscription2 = this._searchService.searchValueMusic$.subscribe(music => {
-      console.log('hiiiii');
+      // console.log('hiiiii');
       // console.log(search);
       this.searchMusic(music);
       this.prevSearchVal = music;
@@ -58,33 +58,33 @@ export class SearchMusicComponent implements OnInit, OnDestroy {
       this._lastFmApiService.searchTrack(search)
         .then(data => {
           this.tracks = data.results;
-          console.log(this.tracks);
+          // console.log(this.tracks);
           this.trackSearchResults = data.results.trackmatches.track;
-          console.log(this.trackSearchResults);
+          // console.log(this.trackSearchResults);
         })
         .catch(error => {
-          console.log(error);
+          // console.log(error);
         });
 
       this._lastFmApiService.searchAlbum(search)
         .then(data => {
           this.albums = data.results;
-          console.log(this.albums);
+          // console.log(this.albums);
           this.albumSearchResults = data.results.albummatches.album;
-          console.log(this.albumSearchResults);
+          // console.log(this.albumSearchResults);
         })
         .catch(error => {
-          console.log(error);
+          // console.log(error);
         });
       this._lastFmApiService.searchArtist(search)
         .then(data => {
           this.artists = data.results;
-          console.log(this.artists);
+          // console.log(this.artists);
           this.artistSearchResults = data.results.artistmatches.artist;
-          console.log(this.artistSearchResults);
+          // console.log(this.artistSearchResults);
         })
         .catch(error => {
-          console.log(error);
+          // console.log(error);
         });
     }
   }
@@ -93,23 +93,23 @@ export class SearchMusicComponent implements OnInit, OnDestroy {
     this._lastFmApiService.getTopArtist()
       .then(data => {
         this.artistSearchResults = data.artists.artist;
-        console.log(this.artistSearchResults);
+        // console.log(this.artistSearchResults);
       })
       .catch(error => {
-        console.log(error);
+        // console.log(error);
       });
     this._lastFmApiService.getTopTracks()
       .then(data => {
         this.trackSearchResults = data.tracks.track;
-        console.log(this.trackSearchResults);
+        // console.log(this.trackSearchResults);
       })
       .catch(error => {
-        console.log(error);
+        // console.log(error);
       });
   }
 
   ngOnDestroy() {
-    console.log('search music component destroy');
+    // console.log('search music component destroy');
     this._appComponent.setIsInMusicBrowser();
     this.subscription.unsubscribe();
     this.subscription2.unsubscribe();
