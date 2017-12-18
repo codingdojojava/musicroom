@@ -1,5 +1,5 @@
 let mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 let User = mongoose.model('User');
 let Message = mongoose.model('Message');
 let Comment = mongoose.model('Comment');

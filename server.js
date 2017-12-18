@@ -1,7 +1,7 @@
 var express = require("express");
 var path = require("path");
 var session = require('express-session');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt-nodejs');
 // create the express app
 var app = express();
 // require bodyParser since we need to handle post data for adding a user
